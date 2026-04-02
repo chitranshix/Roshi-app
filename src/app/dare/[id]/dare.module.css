@@ -1,0 +1,253 @@
+/* ── Shared dare flow layout ── */
+.screen {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - 70px);
+  padding: 8px 20px 40px;
+  max-width: 430px;
+  margin: 0 auto;
+  gap: 14px;
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 12px 0 4px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+}
+
+.challenger {
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ── Hero word ── */
+.heroWord {
+  font-family: var(--font-display);
+  font-size: clamp(44px, 12vw, 60px);
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  text-align: center;
+}
+
+.wordPos {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--accent);
+  text-align: center;
+  margin-top: -6px;
+}
+
+/* ── MCQ options ── */
+.mcqPrompt {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.option {
+  padding: 14px 16px;
+  background: var(--surface2);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text);
+  border: 2px solid transparent;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: border-color 0.15s, background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.option:active { background: var(--surface); }
+
+.option.selected {
+  border-color: var(--accent);
+  background: var(--surface);
+}
+
+/* ── Definition input ── */
+.defPrompt {
+  font-size: 14px;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.5;
+}
+
+.defInput {
+  width: 100%;
+  min-height: 110px;
+  background: var(--surface2);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border);
+  padding: 14px 16px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+  resize: none;
+  transition: border-color 0.15s;
+}
+
+.defInput:focus { border-color: var(--accent); }
+.defInput::placeholder { color: var(--muted); }
+
+.defHint {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ── Hint reveal ── */
+.hintBox {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  border: 1px solid var(--border);
+}
+
+.hintLabel {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.hintSentence {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+  font-style: italic;
+}
+
+.hintSentence em {
+  font-style: normal;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ── Feedback label (not quite / nice) ── */
+.feedbackLabel {
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  font-family: var(--font-display);
+}
+
+.feedbackLabel.correct { color: var(--correct); }
+.feedbackLabel.wrong   { color: var(--wrong); }
+
+/* ── Result ── */
+.pointsBadge {
+  font-family: var(--font-display);
+  font-size: 64px;
+  font-weight: 700;
+  color: var(--accent);
+  text-align: center;
+  line-height: 1;
+}
+
+.pointsLabel {
+  font-size: 14px;
+  color: var(--muted);
+  text-align: center;
+  margin-top: -4px;
+}
+
+.definitionReveal {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  border: 1px solid var(--border);
+}
+
+.definitionWord {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.definitionPos {
+  font-size: 11px;
+  color: var(--accent);
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.definitionText {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text);
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+}
+
+.scoreRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+
+.scoreName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.scoreBar {
+  flex: 1;
+  height: 6px;
+  background: var(--surface2);
+  border-radius: 3px;
+  margin: 0 12px;
+  overflow: hidden;
+}
+
+.scoreBarFill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+
+.scorePoints {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 40px;
+  text-align: right;
+}
+
+.spacer { flex: 1; }
