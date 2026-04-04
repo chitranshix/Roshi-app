@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { DM_Sans, Shizuru, Kiwi_Maru } from 'next/font/google'
+import { Nunito, Shizuru, Sunshiney } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
 import { MascotProvider } from '@/lib/mascot-context'
 import './globals.css'
@@ -11,14 +11,14 @@ const shizuru = Shizuru({
   display: 'swap',
 })
 
-const kiwiMaru = Kiwi_Maru({
+const sunshiney = Sunshiney({
   subsets: ['latin'],
   variable: '--font-roshi',
   weight: '400',
   display: 'swap',
 })
 
-const dmSans = DM_Sans({
+const nunito = Nunito({
   subsets: ['latin'],
   variable: '--font-ui',
   display: 'swap',
@@ -43,7 +43,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${dmSans.variable} ${kiwiMaru.variable} ${shizuru.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${nunito.variable} ${sunshiney.variable} ${shizuru.variable}`}>
       <body>
         <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem>
           <MascotProvider>
