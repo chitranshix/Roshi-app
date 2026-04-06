@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Button from '@/components/ui/Button'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import RoshiDisplay from '@/components/mascot/RoshiDisplay'
+import SpeechBubble from '@/components/ui/SpeechBubble'
 import type { RoshiExpression } from '@/components/mascot/Roshi'
 import styles from './page.module.css'
 
@@ -96,11 +97,11 @@ export default function OnboardingPage() {
         </div>
 
         {/* Speech bubble */}
-        <div className={styles.bubble} key={page}>
+        <SpeechBubble key={page} className={styles.bubbleAnim}>
           {slide.lines.map((line, i) => (
             <p key={i} className={styles.bubbleLine}>{line}</p>
           ))}
-        </div>
+        </SpeechBubble>
 
         {/* Name input on last page */}
         {isLastPage && (

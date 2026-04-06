@@ -5,6 +5,7 @@ import Link from 'next/link'
 import AppShell from '@/components/layout/AppShell'
 import Button from '@/components/ui/Button'
 import RoshiDisplay from '@/components/mascot/RoshiDisplay'
+import SpeechBubble from '@/components/ui/SpeechBubble'
 import { MOCK_PLAYER } from '@/lib/mock'
 import type { Dare } from '@/lib/mock'
 import type { Sentence } from '@/lib/gre-words'
@@ -162,14 +163,16 @@ export default function DareFlow({ dare, sentences, definition }: DareFlowProps)
               <RoshiDisplay expression={resultExpression} size={140} />
             </div>
 
-            <div className={styles.pointsBadge}>+{points}</div>
-            <div className={styles.pointsLabel}>
-              {!sentenceCorrect
-                ? 'Better luck next time.'
-                : defCorrect === true
-                  ? 'You nailed it.'
-                  : 'Close, but not quite.'}
-            </div>
+            <SpeechBubble>
+              <div className={styles.pointsBadge}>+{points}</div>
+              <div className={styles.pointsLabel}>
+                {!sentenceCorrect
+                  ? 'Better luck next time.'
+                  : defCorrect === true
+                    ? 'You nailed it.'
+                    : 'Close, but not quite.'}
+              </div>
+            </SpeechBubble>
 
             {definition && (
               <div className={styles.definitionReveal}>

@@ -92,15 +92,7 @@
 }
 
 /* ── Speech bubble ── */
-.bubble {
-  background: var(--surface);
-  border: 2px solid var(--border);
-  border-radius: 20px;
-  padding: 20px 22px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.bubbleAnim {
   animation: slideIn 0.3s cubic-bezier(0.34, 1.2, 0.64, 1) both;
 }
 
@@ -110,10 +102,6 @@
 }
 
 .bubbleLine {
-  font-family: var(--font-roshi);
-  font-size: 15px;
-  color: var(--text);
-  line-height: 1.65;
   margin: 0;
 }
 
