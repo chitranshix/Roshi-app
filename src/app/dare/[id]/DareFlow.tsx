@@ -24,18 +24,11 @@ const MOCK_SCORES = [
   { name: 'Alex',      pts: 9  },
 ]
 
-interface FeedbackBar {
-  variant: 'correct' | 'wrong'
-  headline: string
-  sub: string
-}
-
 export default function DareFlow({ dare, sentences, definition }: DareFlowProps) {
   const [stage, setStage]                   = useState<Stage>('sentence')
   const [selected, setSelected]             = useState<number | null>(null)
   const [answerResult, setAnswerResult]     = useState<'correct' | 'wrong' | null>(null)
   const [sentenceCorrect, setSentenceCorrect] = useState(false)
-  const [feedback, setFeedback]             = useState<FeedbackBar | null>(null)
   const [userDef, setUserDef]               = useState('')
   const [points, setPoints]                 = useState(0)
   const [checking, setChecking]             = useState(false)
@@ -72,21 +65,11 @@ export default function DareFlow({ dare, sentences, definition }: DareFlowProps)
       const earned = correct ? 10 : 3
       setDefCorrect(correct)
       setPoints(earned)
-      setFeedback({
-        variant: correct ? 'correct' : 'wrong',
-        headline: correct ? 'You nailed it!' : 'Close, but not quite.',
-        sub: correct ? `+${earned} points` : `+${earned} points for trying`,
-      })
-      setTimeout(() => { setFeedback(null); setStage('result') }, 1500)
+      setStage('result')
     } catch {
       setDefCorrect(null)
       setPoints(3)
-      setFeedback({
-        variant: 'wrong',
-        headline: 'Hmm, something went wrong.',
-        sub: '+3 points for trying',
-      })
-      setTimeout(() => { setFeedback(null); setStage('result') }, 1500)
+      setStage('result')
     } finally {
       setChecking(false)
     }
@@ -221,17 +204,6 @@ export default function DareFlow({ dare, sentences, definition }: DareFlowProps)
 
       </div>
 
-      {/* ── SLIDE-UP FEEDBACK BAR (definition result only) ── */}
-      {feedback && stage === 'definition' && (
-        <div className={[styles.feedbackBar, styles[`feedbackBar_${feedback.variant}`]].join(' ')}>
-          <div className={styles.feedbackBarContent}>
-            <div className={styles.feedbackBarHeadline}>{feedback.headline}</div>
-            {feedback.sub && (
-              <div className={styles.feedbackBarSub}>{feedback.sub}</div>
-            )}
-          </div>
-        </div>
-      )}
 
     </AppShell>
   )
