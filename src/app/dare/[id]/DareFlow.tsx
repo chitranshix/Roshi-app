@@ -28,7 +28,6 @@ interface FeedbackBar {
   variant: 'correct' | 'wrong'
   headline: string
   sub: string
-  onContinue: () => void
 }
 
 export default function DareFlow({ dare, sentences, definition }: DareFlowProps) {
@@ -77,8 +76,8 @@ export default function DareFlow({ dare, sentences, definition }: DareFlowProps)
         variant: correct ? 'correct' : 'wrong',
         headline: correct ? 'You nailed it!' : 'Close, but not quite.',
         sub: correct ? `+${earned} points` : `+${earned} points for trying`,
-        onContinue: () => { setFeedback(null); setStage('result') },
       })
+      setTimeout(() => { setFeedback(null); setStage('result') }, 1500)
     } catch {
       setDefCorrect(null)
       setPoints(3)
@@ -86,8 +85,8 @@ export default function DareFlow({ dare, sentences, definition }: DareFlowProps)
         variant: 'wrong',
         headline: 'Hmm, something went wrong.',
         sub: '+3 points for trying',
-        onContinue: () => { setFeedback(null); setStage('result') },
       })
+      setTimeout(() => { setFeedback(null); setStage('result') }, 1500)
     } finally {
       setChecking(false)
     }
@@ -231,9 +230,6 @@ export default function DareFlow({ dare, sentences, definition }: DareFlowProps)
               <div className={styles.feedbackBarSub}>{feedback.sub}</div>
             )}
           </div>
-          <button className={styles.feedbackBarBtn} onClick={feedback.onContinue}>
-            Continue →
-          </button>
         </div>
       )}
 
