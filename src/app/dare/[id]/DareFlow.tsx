@@ -5,13 +5,18 @@ import Link from 'next/link'
 import AppShell from '@/components/layout/AppShell'
 import Button from '@/components/ui/Button'
 import RoshiDisplay from '@/components/mascot/RoshiDisplay'
-import { MOCK_PLAYER, MOCK_SENTENCES } from '@/lib/mock'
+import { MOCK_PLAYER } from '@/lib/mock'
 import type { Dare } from '@/lib/mock'
+import type { Sentence } from '@/lib/gre-words'
 import styles from './dare.module.css'
 
 type Stage = 'sentence' | 'definition' | 'result'
 
-interface DareFlowProps { dare: Dare }
+interface DareFlowProps {
+  dare: Dare
+  sentences: Sentence[]
+  definition: string | null
+}
 
 const MOCK_SCORES = [
   { name: MOCK_PLAYER, pts: 18 },
@@ -19,12 +24,6 @@ const MOCK_SCORES = [
   { name: 'Alex',      pts: 9  },
 ]
 
-const DEFINITION_MAP: Record<string, { pos: string; text: string }> = {
-  loquacious: { pos: 'adjective', text: 'Tending to talk a great deal; garrulous.' },
-  ephemeral:  { pos: 'adjective', text: 'Lasting for a very short time.' },
-  luminous:   { pos: 'adjective', text: 'Bright or shining, especially in the dark.' },
-  pellucid:   { pos: 'adjective', text: 'Translucently clear; easily understood.' },
-}
 
 interface FeedbackBar {
   variant: 'correct' | 'wrong'
@@ -33,7 +32,7 @@ interface FeedbackBar {
   onContinue: () => void
 }
 
-export default function DareFlow({ dare }: DareFlowProps) {
+export default function DareFlow({ dare, sentences, definition }: DareFlowProps) {
   const [stage, setStage]                   = useState<Stage>('sentence')
   const [selected, setSelected]             = useState<number | null>(null)
   const [answerResult, setAnswerResult]     = useState<'correct' | 'wrong' | null>(null)
@@ -44,8 +43,6 @@ export default function DareFlow({ dare }: DareFlowProps) {
   const [checking, setChecking]             = useState(false)
   const [defCorrect, setDefCorrect]         = useState<boolean | null>(null)
 
-  const sentences = MOCK_SENTENCES[dare.word] ?? []
-  const defInfo   = DEFINITION_MAP[dare.word]
 
   const confirmSentence = useCallback(() => {
     if (selected === null) return
@@ -206,11 +203,10 @@ export default function DareFlow({ dare }: DareFlowProps) {
                   : 'Close, but not quite.'}
             </div>
 
-            {defInfo && (
+            {definition && (
               <div className={styles.definitionReveal}>
                 <div className={styles.definitionWord}>{dare.word}</div>
-                <div className={styles.definitionPos}>{defInfo.pos}</div>
-                <div className={styles.definitionText}>{defInfo.text}</div>
+                <div className={styles.definitionText}>{definition}</div>
               </div>
             )}
 
