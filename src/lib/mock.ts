@@ -38,6 +38,15 @@ export const MOCK_DARES: Dare[] = [
   { id: 'd5', word: 'avarice',    from: 'Priya',      to: MOCK_PLAYER, status: 'complete',     sentAt: '3d ago', yourPoints: 3 },
 ]
 
+export const MOCK_DEFINITIONS: Record<string, string> = {
+  pellucid:   'Translucently clear; easily understood.',
+  loquacious: 'Tending to talk a great deal; garrulous.',
+  luminous:   'Bright or shining, especially in the dark.',
+  ephemeral:  'Lasting for a very short time.',
+  solipsism:  'The view that the self is all that exists or can be known.',
+  avarice:    'Extreme greed for wealth or material gain.',
+}
+
 export const MOCK_SENTENCES: Record<string, { sentence: string; correct: boolean }[]> = {
   pellucid: [
     { sentence: 'The pellucid waters of the lagoon revealed every stone below.', correct: true },
@@ -56,5 +65,23 @@ export const MOCK_SENTENCES: Record<string, { sentence: string; correct: boolean
     { sentence: 'Her luminous eyes caught the light as she smiled.', correct: true },
     { sentence: 'He spoke in a luminous, barely audible whisper.', correct: false },
     { sentence: 'The luminous stone sank slowly to the riverbed.', correct: false },
+  ],
+  ephemeral: [
+    { sentence: 'The ephemeral beauty of cherry blossoms makes them all the more precious.', correct: true },
+    { sentence: 'Her ephemeral patience made her an ideal mentor for struggling students.', correct: false },
+    { sentence: 'The ephemeral bridge had stood for over three centuries without repair.', correct: false },
+    { sentence: 'He kept an ephemeral record of every transaction going back decades.', correct: false },
+  ],
+  solipsism: [
+    { sentence: 'His solipsism made it impossible to convince him that others had valid perspectives.', correct: true },
+    { sentence: "The team's solipsism brought everyone together toward a single shared goal.", correct: false },
+    { sentence: 'Solipsism in her writing style made her essays clear and easy to follow.', correct: false },
+    { sentence: "Their solipsism meant they always considered other people's feelings first.", correct: false },
+  ],
+  avarice: [
+    { sentence: 'His avarice drove him to hoard gold even as his family went hungry.', correct: true },
+    { sentence: 'She showed great avarice by donating half her salary to charity each year.', correct: false },
+    { sentence: "The monk's avarice was evident in his vow of poverty and simple lifestyle.", correct: false },
+    { sentence: 'Her avarice for knowledge led her to read every book in the library.', correct: false },
   ],
 }
