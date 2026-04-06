@@ -16,17 +16,14 @@ export interface GREWord {
   sentences: Sentence[]
 }
 
-let _cache: GREWord[] | null = null
+const _levelCache: Map<number, GREWord[]> = new Map()
 
-export async function getGREWords(): Promise<GREWord[]> {
-  if (_cache) return _cache
-  const res = await fetch('/data/gre-words.json')
-  _cache = await res.json() as GREWord[]
-  return _cache
-}
-
-export function getWordsByLevel(words: GREWord[], level: number): GREWord[] {
-  return words.filter(w => w.level === level)
+export async function getGRELevel(level: number): Promise<GREWord[]> {
+  if (_levelCache.has(level)) return _levelCache.get(level)!
+  const res = await fetch(`/data/gre-level-${level}.json`)
+  const words = await res.json() as GREWord[]
+  _levelCache.set(level, words)
+  return words
 }
 
 export function getWordByName(words: GREWord[], word: string): GREWord | undefined {
@@ -34,8 +31,6 @@ export function getWordByName(words: GREWord[], word: string): GREWord | undefin
 }
 
 /** Pick a random word from a level (for daily word / dare creation) */
-export function randomWordFromLevel(words: GREWord[], level: number): GREWord | undefined {
-  const pool = getWordsByLevel(words, level)
-  if (pool.length === 0) return undefined
-  return pool[Math.floor(Math.random() * pool.length)]
+export function randomWordFromLevel(words: GREWord[]): GREWord {
+  return words[Math.floor(Math.random() * words.length)]
 }

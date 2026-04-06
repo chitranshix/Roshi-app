@@ -38,7 +38,7 @@ export default function DareFlow({ dare, sentences, definition }: DareFlowProps)
   const [answerResult, setAnswerResult]     = useState<'correct' | 'wrong' | null>(null)
   const [sentenceCorrect, setSentenceCorrect] = useState(false)
   const [feedback, setFeedback]             = useState<FeedbackBar | null>(null)
-  const [definition, setDefinition]         = useState('')
+  const [userDef, setUserDef]               = useState('')
   const [points, setPoints]                 = useState(0)
   const [checking, setChecking]             = useState(false)
   const [defCorrect, setDefCorrect]         = useState<boolean | null>(null)
@@ -75,7 +75,7 @@ export default function DareFlow({ dare, sentences, definition }: DareFlowProps)
       const res = await fetch('/api/evaluate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ word: dare.word, definition }),
+        body: JSON.stringify({ word: dare.word, definition: userDef }),
       })
       const { correct } = await res.json()
       const earned = correct ? 10 : 3
@@ -99,7 +99,7 @@ export default function DareFlow({ dare, sentences, definition }: DareFlowProps)
     } finally {
       setChecking(false)
     }
-  }, [dare.word, definition])
+  }, [dare.word, userDef])
 
   const maxPts = Math.max(...MOCK_SCORES.map(s => s.pts), points + 18)
 
@@ -175,13 +175,13 @@ export default function DareFlow({ dare, sentences, definition }: DareFlowProps)
             <textarea
               className={styles.defInput}
               placeholder="Type your definition..."
-              value={definition}
-              onChange={e => setDefinition(e.target.value)}
+              value={userDef}
+              onChange={e => setUserDef(e.target.value)}
             />
             <div className={styles.defHint}>Plain English is fine.</div>
 
             <div className={styles.spacer} />
-            <Button onClick={submitDefinition} disabled={definition.trim().length < 4 || checking}>
+            <Button onClick={submitDefinition} disabled={userDef.trim().length < 4 || checking}>
               {checking ? 'Checking…' : 'Submit →'}
             </Button>
           </>

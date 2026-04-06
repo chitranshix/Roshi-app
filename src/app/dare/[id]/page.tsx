@@ -9,12 +9,17 @@ interface GREWord { word: string; definition: string; level: number; sentences: 
 
 interface Props { params: Promise<{ id: string }> }
 
-function loadWordData(word: string): { sentences: Sentence[]; definition: string; pos: string } | null {
+function loadWordData(word: string): { sentences: Sentence[]; definition: string } | null {
   try {
-    const filePath = path.join(process.cwd(), 'public/data/gre-words.json')
-    const data: GREWord[] = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
-    const found = data.find(w => w.word === word)
-    if (found) return { sentences: found.sentences, definition: found.definition, pos: 'word' }
+    // Look up the word's level from the small index, then load only that level file
+    const indexPath = path.join(process.cwd(), 'public/data/gre-word-index.json')
+    const index: Record<string, number> = JSON.parse(fs.readFileSync(indexPath, 'utf-8'))
+    const level = index[word]
+    if (!level) return null
+    const levelPath = path.join(process.cwd(), `public/data/gre-level-${level}.json`)
+    const words: GREWord[] = JSON.parse(fs.readFileSync(levelPath, 'utf-8'))
+    const found = words.find(w => w.word === word)
+    if (found) return { sentences: found.sentences, definition: found.definition }
   } catch { /* fall through */ }
   return null
 }
