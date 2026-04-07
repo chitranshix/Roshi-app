@@ -42,6 +42,19 @@
   50%       { transform: translateY(5px); }
 }
 
+/* ── Leaf chew ── */
+.leafChew {
+  transform-box: fill-box;
+  transform-origin: 0% 80%;
+  animation: chew 0.5s ease-in-out infinite;
+}
+
+@keyframes chew {
+  0%, 100% { transform: rotate(0deg);   }
+  40%       { transform: rotate(-14deg); }
+  70%       { transform: rotate(5deg);  }
+}
+
 /* ── Eye roll: pupils linger at top, slow contemptuous sweep ── */
 .pupilL, .pupilR {
   transform-box: fill-box;
