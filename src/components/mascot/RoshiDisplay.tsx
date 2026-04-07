@@ -18,22 +18,22 @@ export default function RoshiDisplay({ expression = 'idle', size = 120 }: {
         <path d="M96 92 Q100 106 90 114 Q78 116 76 106 Q78 94 90 92Z"
           fill="#4AA820" stroke="#1A1A08" strokeWidth="1.8" />
 
-        {/* ── SHELL — side dome profile, warm brown ── */}
-        <path d="M42 94 Q36 58 62 38 Q88 22 112 48 Q126 68 118 94Z"
+        {/* ── SHELL — wide oval side profile, warm brown ── */}
+        <path d="M38 90 Q34 62 58 44 Q82 28 114 50 Q130 66 122 90Z"
           fill="#8B6420" stroke="#1A1A08" strokeWidth="2.2" />
         {/* shell highlight */}
-        <path d="M52 86 Q48 60 68 46 Q88 34 106 54 Q114 68 108 86Z"
-          fill="#A87830" opacity="0.5" />
+        <path d="M50 82 Q46 62 66 50 Q86 38 110 56 Q120 68 114 82Z"
+          fill="#A87830" opacity="0.45" />
         {/* scute lines */}
-        <path d="M80 38 Q82 64 80 94"   stroke="#6B4C18" strokeWidth="1.6" fill="none" />
-        <path d="M80 50 Q62 60 44 78"   stroke="#6B4C18" strokeWidth="1.3" fill="none" />
-        <path d="M80 66 Q62 72 44 86"   stroke="#6B4C18" strokeWidth="1.2" fill="none" />
-        <path d="M80 50 Q98 60 116 72"  stroke="#6B4C18" strokeWidth="1.3" fill="none" />
-        <path d="M80 66 Q98 72 116 82"  stroke="#6B4C18" strokeWidth="1.2" fill="none" />
-        <path d="M44 82 Q80 76 118 82"  stroke="#6B4C18" strokeWidth="1.1" fill="none" />
+        <path d="M80 38 Q82 66 80 90"    stroke="#6B4C18" strokeWidth="1.6" fill="none" />
+        <path d="M80 52 Q62 60 42 76"    stroke="#6B4C18" strokeWidth="1.3" fill="none" />
+        <path d="M80 68 Q62 74 40 84"    stroke="#6B4C18" strokeWidth="1.2" fill="none" />
+        <path d="M80 52 Q100 60 120 70"  stroke="#6B4C18" strokeWidth="1.3" fill="none" />
+        <path d="M80 68 Q100 74 120 80"  stroke="#6B4C18" strokeWidth="1.2" fill="none" />
+        <path d="M42 82 Q80 76 122 82"   stroke="#6B4C18" strokeWidth="1.1" fill="none" />
 
-        {/* ── PLASTRON — cream belly peeking at front-bottom ── */}
-        <path d="M42 94 Q54 104 74 102 Q78 96 70 94Z"
+        {/* ── PLASTRON — follows shell bottom edge as a proper strip ── */}
+        <path d="M38 90 Q60 100 90 98 Q106 96 122 90 Q106 100 80 102 Q56 102 38 90Z"
           fill="#D4C878" stroke="#1A1A08" strokeWidth="1.4" />
 
         {/* ── FRONT-RIGHT LEG — under front-center of shell ── */}
