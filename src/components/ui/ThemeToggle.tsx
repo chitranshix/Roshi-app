@@ -15,12 +15,10 @@ function useIsMounted() {
 function MountainIcon() {
   return (
     <svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* back peak */}
-      <path d="M2 17 L8 6 L14 17Z" fill="currentColor" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
-      {/* front peak */}
-      <path d="M9 17 L15 4 L21 17Z" fill="currentColor" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
-      {/* snow cap */}
-      <path d="M13 8 L15 4 L17 8Z" fill="var(--bg)" stroke="currentColor" strokeWidth="0.8" strokeLinejoin="round" />
+      {/* back peak — solid, drawn first so front overlaps it naturally */}
+      <path d="M2 17 L8 7 L14 17Z" fill="currentColor" />
+      {/* front peak — solid, taller, overlaps back */}
+      <path d="M8 17 L14 3 L20 17Z" fill="currentColor" />
     </svg>
   )
 }
@@ -28,9 +26,10 @@ function MountainIcon() {
 function OceanIcon() {
   return (
     <svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* filled wave shape */}
-      <path d="M1 7 Q4 3 7 7 Q10 11 13 7 Q16 3 19 7 L21 7 L21 18 L1 18Z"
-        fill="currentColor" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" strokeLinecap="round" />
+      <path d="M1 6 Q4.5 2 8 6 Q11.5 10 15 6 Q18.5 2 21 6"
+        stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+      <path d="M1 11 Q4.5 7 8 11 Q11.5 15 15 11 Q18.5 7 21 11"
+        stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" fill="none" />
     </svg>
   )
 }

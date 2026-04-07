@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTheme } from 'next-themes'
 import Button from '@/components/ui/Button'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import RoshiDisplay from '@/components/mascot/RoshiDisplay'
@@ -25,7 +26,7 @@ const SLIDES: Slide[] = [
   {
     expression: 'idle',
     lines: [
-      "So here's the game —",
+      "Here's the game —",
       "You dare your friends with a word you know. They dare you back.",
       "No friends? You can play with me.",
     ],
@@ -33,8 +34,8 @@ const SLIDES: Slide[] = [
   {
     expression: 'happy',
     lines: [
-      "Each dare comes with a word and 4 sentences. 1 of the sentences is correct. The others exist purely to embarrass you.",
-      "Get the sentence right and you get to define the word. Get that right too and you get points. Fail either one and well... what can I do... you try again.",
+      "Each dare comes with a word and 4 sentences. 1 of the sentences is correct. (The others exist purely to embarrass you...)",
+      "Get the sentence right and you get to define the word. Get that right too and you get points. Fail either one and well... you try again.",
     ],
   },
   {
@@ -50,6 +51,7 @@ export default function OnboardingPage() {
   const [page, setPage] = useState(0)
   const [name, setName] = useState('')
 
+  const { resolvedTheme } = useTheme()
   const slide      = SLIDES[page]
   const isLastPage = page === SLIDES.length - 1
 
@@ -68,7 +70,11 @@ export default function OnboardingPage() {
 
       {/* ── Header: full-width, logo left, toggle right ── */}
       <div className={styles.header}>
-        <div className={styles.logo}>Roshi&apos;s Word Game</div>
+        <img
+          src={resolvedTheme === 'dark' ? '/logo-dark.png' : '/logo-light.png'}
+          alt="Roshi's Word Game"
+          className={styles.logo}
+        />
         <ThemeToggle />
       </div>
 
@@ -113,7 +119,7 @@ export default function OnboardingPage() {
                 maxLength={20}
               />
               <Button onClick={handleContinue} disabled={name.trim().length < 2}>
-                Let&apos;s go
+                Let&apos;s go!
               </Button>
             </div>
           ) : (

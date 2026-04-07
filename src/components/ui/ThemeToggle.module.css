@@ -1,11 +1,11 @@
 .toggle {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 8px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 20px;
-  padding: 4px 6px;
+  padding: 5px 10px;
   transition: background 0.15s;
   -webkit-tap-highlight-color: transparent;
 }

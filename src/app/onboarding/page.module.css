@@ -3,38 +3,27 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 0 110px;   /* no side padding — header handles its own */
-  max-width: 430px;
-  margin: 0 auto;
   gap: 20px;
 }
 
-/* ── Header — full width, logo at left edge, toggle at right edge ── */
+/* ── Header — true full screen width, logo/toggle at screen edges ── */
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 24px 20px 8px;
+  padding: 24px 24px 8px;
 }
 
 /* ── Logo ── */
 .logo {
-  font-family: var(--font-logo);
-  font-size: 24px;
-  font-weight: 400;
-  color: var(--text);
-  line-height: 1;
+  height: 60px;
+  width: auto;
+  display: block;
   user-select: none;
-  /* fill-in the thin Shizuru glyphs */
-  text-shadow:
-    0.4px  0    0 var(--text),
-   -0.4px  0    0 var(--text),
-    0      0.4px 0 var(--text),
-    0     -0.4px 0 var(--text);
 }
 
-/* ── Body ── */
+/* ── Body — constrained width, button pinned to bottom ── */
 .body {
   flex: 1;
   display: flex;
@@ -42,7 +31,8 @@
   justify-content: flex-start;
   gap: 12px;
   width: 100%;
-  padding: 0 28px;
+  max-width: 430px;
+  padding: 0 28px 110px;
 }
 
 /* ── Dots — clickable ── */
@@ -69,28 +59,26 @@
   transform: scale(1.3);
 }
 
-/* Bubble — fixed height, bubble sticks to bottom so it ends where Roshi begins */
+/* Bubble — margin-top: auto absorbs all space above, pulling bubble+Roshi together to the bottom */
 .bubbleWrap {
   width: calc(100% - 60px);
-  min-height: 260px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  margin-top: auto;
 }
 
-/* Bottom section — negative margin pulls it up closer to the bubble */
+/* Bottom section — follows bubble naturally, no gap tricks needed */
 .bottomSection {
   display: flex;
   flex-direction: column;
   gap: 12px;
   width: 100%;
-  margin-top: -20px;
+  margin-top: -16px;
 }
 
 /* Roshi always right-aligned */
 .mascotArea {
   display: flex;
   justify-content: flex-end;
+  margin-bottom: 12px;
 }
 
 /* ── Speech bubble animation ── */
