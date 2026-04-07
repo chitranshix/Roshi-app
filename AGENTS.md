@@ -33,7 +33,8 @@ npm run lint   # ESLint — primary code quality check
 - `src/lib/mock.ts` — all mock data (replace with Supabase later)
 - `src/app/api/evaluate/route.ts` — Claude Haiku definition grader
 - `src/components/layout/AppShell.tsx` — main shell with sticky header
-- `src/components/mascot/RoshiDisplay.tsx` — static turtle SVG (idle/happy)
+- `src/components/mascot/RoshiDisplay.tsx` — Roshi SVG, expressions: `idle` (chewing leaf + eye roll), `happy` (arc eyes + big smile), `disappointed`
+- `src/components/ui/SpeechBubble.tsx` — Roshi's speech bubble, `tail` prop: `bottom-right` (onboarding), `top` (dare result), `right` (default)
 - `src/components/ui/ThemeToggle.tsx` — mountain/ocean theme pill
 
 ### Fonts (3 only — do not add more)

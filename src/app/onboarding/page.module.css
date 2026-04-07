@@ -95,12 +95,7 @@
 .bottomSection {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
   gap: 12px;
-  width: 100%;
-}
-
-.bottomSection > * {
   width: 100%;
 }
 
@@ -108,7 +103,6 @@
 .mascotArea {
   display: flex;
   justify-content: flex-end;
-  width: 100%;
 }
 
 /* ── Speech bubble ── */
