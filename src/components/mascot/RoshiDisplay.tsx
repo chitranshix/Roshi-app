@@ -58,10 +58,10 @@ export default function RoshiDisplay({ expression = 'idle', size = 120 }: {
           </> : <>
             <circle cx="38" cy="24" r="10"  fill="white" stroke="#1A1A08" strokeWidth="1.8" />
             <circle cx="62" cy="24" r="10"  fill="white" stroke="#1A1A08" strokeWidth="1.8" />
-            <circle cx="39" cy="25" r="5.5" fill="#1A1A08" />
-            <circle cx="63" cy="25" r="5.5" fill="#1A1A08" />
-            <circle cx="41" cy="22" r="2.2" fill="white" />
-            <circle cx="65" cy="22" r="2.2" fill="white" />
+            <circle cx="39" cy="25" r="5.5" fill="#1A1A08" className={styles.pupilL} />
+            <circle cx="63" cy="25" r="5.5" fill="#1A1A08" className={styles.pupilR} />
+            <circle cx="41" cy="22" r="2.2" fill="white" className={styles.pupilL} />
+            <circle cx="65" cy="22" r="2.2" fill="white" className={styles.pupilR} />
           </>}
 
           {/* ── MOUTH ── */}
