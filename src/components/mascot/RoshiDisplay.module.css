@@ -45,14 +45,16 @@
 /* ── Leaf chew ── */
 .leafChew {
   transform-box: fill-box;
-  transform-origin: 0% 80%;
-  animation: chew 0.5s ease-in-out infinite;
+  transform-origin: 0% 50%;
+  animation: chew 0.7s ease-in-out infinite;
 }
 
 @keyframes chew {
-  0%, 100% { transform: rotate(0deg);   }
-  40%       { transform: rotate(-14deg); }
-  70%       { transform: rotate(5deg);  }
+  0%   { transform: rotate(0deg);   }
+  30%  { transform: rotate(-22deg); }  /* bite down hard */
+  50%  { transform: rotate(-22deg); }  /* hold the bite */
+  75%  { transform: rotate(4deg);   }  /* spring back past neutral */
+  100% { transform: rotate(0deg);   }
 }
 
 /* ── Eye roll: pupils linger at top, slow contemptuous sweep ── */
