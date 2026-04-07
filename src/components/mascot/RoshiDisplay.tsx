@@ -12,11 +12,11 @@ export default function RoshiDisplay({ expression = 'idle', size = 120 }: {
 
         {/* ── REAR-RIGHT FLIPPER — behind plastron, pointing right ── */}
         <path d="M112 82 Q124 80 136 96 Q138 102 134 108 Q126 112 116 96 Q112 90 112 82Z"
-          fill="#4AA820" stroke="#1A1A08" strokeWidth="1.8" />
+          fill="#2DAF7A" stroke="#1A1A08" strokeWidth="1.8" />
 
         {/* ── REAR-LEFT FLIPPER — behind plastron, pointing back-down ── */}
         <path d="M84 88 Q78 100 76 114 Q76 120 82 120 Q88 118 92 106 Q92 94 84 88Z"
-          fill="#4AA820" stroke="#1A1A08" strokeWidth="1.8" />
+          fill="#2DAF7A" stroke="#1A1A08" strokeWidth="1.8" />
 
         {/* ── PLASTRON — snug oval under shell, rear flippers behind it ── */}
         <ellipse cx="80" cy="96" rx="38" ry="9"
@@ -38,22 +38,22 @@ export default function RoshiDisplay({ expression = 'idle', size = 120 }: {
 
         {/* ── FRONT-RIGHT FLIPPER — pointing forward-down ── */}
         <path d="M60 88 Q54 100 52 112 Q52 118 58 118 Q64 116 68 104 Q68 92 60 88Z"
-          fill="#5CB828" stroke="#1A1A08" strokeWidth="1.8" />
+          fill="#3DBF90" stroke="#1A1A08" strokeWidth="1.8" />
 
         {/* ── FRONT-LEFT FLIPPER — most visible, pointing left ── */}
         <path d="M44 82 Q26 78 8 96 Q6 102 8 108 Q18 116 40 96 Q44 88 44 82Z"
-          fill="#5CB828" stroke="#1A1A08" strokeWidth="2" />
+          fill="#3DBF90" stroke="#1A1A08" strokeWidth="2" />
 
         {/* ── NECK — green connector from shell to head ── */}
         <path d="M42 68 Q34 60 28 56 Q26 50 30 46 Q38 42 46 50 Q50 58 46 68Z"
-          fill="#5CB828" stroke="#1A1A08" strokeWidth="2" />
+          fill="#3DBF90" stroke="#1A1A08" strokeWidth="2" />
 
         {/* ── HEAD GROUP — front-facing, bobs independently ── */}
         {/* head center: (28, 36) radius 22 */}
         <g className={expression === 'idle' ? styles.headBob : ''}>
 
           {/* ── HEAD ── */}
-          <circle cx="28" cy="36" r="22" fill="#5CB828" stroke="#1A1A08" strokeWidth="2.2" />
+          <circle cx="28" cy="36" r="22" fill="#3DBF90" stroke="#1A1A08" strokeWidth="2.2" />
 
           {/* ── EYES ── */}
           {expression === 'happy' ? <>

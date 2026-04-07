@@ -66,28 +66,24 @@ export default function OnboardingPage() {
   return (
     <div className={styles.screen}>
 
-      {/* ── Header: logo left, toggle right ── */}
+      {/* ── Header: full-width, logo left, toggle right ── */}
       <div className={styles.header}>
         <div className={styles.logo}>Roshi&apos;s Word Game</div>
-        <div className={styles.headerRight}>
-          <ThemeToggle />
-        </div>
+        <ThemeToggle />
       </div>
 
       <div className={styles.body}>
 
-        {/* ── Nav row: back left, dots right ── */}
-        <div className={styles.navRow}>
-          {page > 0 ? (
-            <button className={styles.backBtn} onClick={() => setPage(p => p - 1)} aria-label="Back">
-              ←
-            </button>
-          ) : <span />}
-          <div className={styles.dots}>
-            {SLIDES.map((_, i) => (
-              <div key={i} className={[styles.dot, i === page ? styles.dotActive : ''].join(' ')} />
-            ))}
-          </div>
+        {/* ── Dots — clickable for direct navigation ── */}
+        <div className={styles.dots}>
+          {SLIDES.map((_, i) => (
+            <button
+              key={i}
+              className={[styles.dot, i === page ? styles.dotActive : ''].join(' ')}
+              onClick={() => setPage(i)}
+              aria-label={`Go to slide ${i + 1}`}
+            />
+          ))}
         </div>
 
         {/* Only the bubble changes — Roshi and button stay fixed below */}

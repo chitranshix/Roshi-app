@@ -14,19 +14,23 @@ function useIsMounted() {
 
 function MountainIcon() {
   return (
-    <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M7 14 L12.5 4 L18 14Z" fill="currentColor" opacity="0.9" />
-      <path d="M2 14 L6.5 7 L11 14Z" fill="currentColor" opacity="0.5" />
+    <svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* back peak */}
+      <path d="M2 17 L8 6 L14 17Z" fill="currentColor" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
+      {/* front peak */}
+      <path d="M9 17 L15 4 L21 17Z" fill="currentColor" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
+      {/* snow cap */}
+      <path d="M13 8 L15 4 L17 8Z" fill="var(--bg)" stroke="currentColor" strokeWidth="0.8" strokeLinejoin="round" />
     </svg>
   )
 }
 
 function OceanIcon() {
   return (
-    <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M1 5 Q4.5 2 8 5 Q11.5 8 15 5 Q18.5 2 19 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9" />
-      <path d="M1 9 Q4.5 6 8 9 Q11.5 12 15 9 Q18.5 6 19 9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.6" />
-      <path d="M1 13 Q4.5 10 8 13 Q11.5 16 15 13 Q18.5 10 19 13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.3" />
+    <svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* filled wave shape */}
+      <path d="M1 7 Q4 3 7 7 Q10 11 13 7 Q16 3 19 7 L21 7 L21 18 L1 18Z"
+        fill="currentColor" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" strokeLinecap="round" />
     </svg>
   )
 }
