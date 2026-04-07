@@ -91,37 +91,40 @@ export default function OnboardingPage() {
           </div>
         </div>
 
-        {/* Roshi */}
-        <div className={styles.mascotArea}>
-          <RoshiDisplay expression={slide.expression} size={140} />
+        {/* Only the bubble changes — Roshi and button stay fixed below */}
+        <div className={styles.bubbleWrap}>
+          <SpeechBubble key={page} className={styles.bubbleAnim} tail="bottom-right">
+            {slide.lines.map((line, i) => (
+              <p key={i} className={styles.bubbleLine}>{line}</p>
+            ))}
+          </SpeechBubble>
         </div>
 
-        {/* Speech bubble */}
-        <SpeechBubble key={page} className={styles.bubbleAnim}>
-          {slide.lines.map((line, i) => (
-            <p key={i} className={styles.bubbleLine}>{line}</p>
-          ))}
-        </SpeechBubble>
+        {/* Fixed bottom section — never shifts */}
+        <div className={styles.bottomSection}>
+          <div className={styles.mascotArea}>
+            <RoshiDisplay expression={slide.expression} size={130} />
+          </div>
 
-        {/* Name input on last page */}
-        {isLastPage && (
-          <input
-            className={styles.input}
-            placeholder="Your name..."
-            value={name}
-            onChange={e => setName(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleContinue()}
-            autoFocus
-            maxLength={20}
-          />
-        )}
-
-        <Button
-          onClick={handleContinue}
-          disabled={isLastPage && name.trim().length < 2}
-        >
-          {isLastPage ? "Let's go" : 'Continue'}
-        </Button>
+          {isLastPage ? (
+            <div className={styles.nameRow}>
+              <input
+                className={styles.input}
+                placeholder="Your name..."
+                value={name}
+                onChange={e => setName(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleContinue()}
+                autoFocus
+                maxLength={20}
+              />
+              <Button onClick={handleContinue} disabled={name.trim().length < 2}>
+                Let&apos;s go
+              </Button>
+            </div>
+          ) : (
+            <Button onClick={handleContinue}>Continue</Button>
+          )}
+        </div>
 
       </div>
 

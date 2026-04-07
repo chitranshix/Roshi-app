@@ -163,7 +163,7 @@ export default function DareFlow({ dare, sentences, definition }: DareFlowProps)
               <RoshiDisplay expression={resultExpression} size={140} />
             </div>
 
-            <SpeechBubble>
+            <SpeechBubble tail="top">
               <div className={styles.pointsBadge}>+{points}</div>
               <div className={styles.pointsLabel}>
                 {!sentenceCorrect

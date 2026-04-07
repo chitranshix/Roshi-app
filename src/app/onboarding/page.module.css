@@ -75,20 +75,40 @@
   transform: scale(1.4);
 }
 
-/* ── Body (vertically centered content) ── */
+/* ── Body ── */
 .body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 18px;
   width: 100%;
 }
 
-/* ── Mascot ── */
+/* Bubble — fixed height so Roshi never moves between slides */
+.bubbleWrap {
+  width: calc(100% - 108px);
+  min-height: 250px;   /* tall enough for slide 3 (longest) */
+}
+
+/* Fixed bottom section — Roshi + button, never moves */
+.bottomSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  width: 100%;
+}
+
+.bottomSection > * {
+  width: 100%;
+}
+
+/* Roshi always right-aligned */
 .mascotArea {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
+  width: 100%;
 }
 
 /* ── Speech bubble ── */
@@ -105,9 +125,16 @@
   margin: 0;
 }
 
-/* ── Name input ── */
-.input {
+/* ── Name row (input + button side by side) ── */
+.nameRow {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
   width: 100%;
+}
+
+.input {
+  flex: 1;
   background: var(--surface);
   border: 2px solid var(--border);
   border-radius: var(--radius-md);

@@ -10,13 +10,17 @@ export default function RoshiDisplay({ expression = 'idle', size = 120 }: {
     <div className={[styles.wrapper, styles[expression]].join(' ')} style={{ width: size, height: size * 0.86 }}>
       <svg viewBox="0 0 140 120" xmlns="http://www.w3.org/2000/svg">
 
-        {/* ── REAR-RIGHT LEG — peeks from far-right of shell ── */}
-        <path d="M112 86 Q128 88 132 100 Q126 112 114 106 Q108 98 110 88Z"
+        {/* ── REAR-RIGHT FLIPPER — behind plastron, pointing right ── */}
+        <path d="M112 82 Q124 80 136 96 Q138 102 134 108 Q126 112 116 96 Q112 90 112 82Z"
           fill="#4AA820" stroke="#1A1A08" strokeWidth="1.8" />
 
-        {/* ── REAR-LEFT LEG — under rear of shell, well separated from front legs ── */}
-        <path d="M96 92 Q100 106 90 114 Q78 116 76 106 Q78 94 90 92Z"
+        {/* ── REAR-LEFT FLIPPER — behind plastron, pointing back-down ── */}
+        <path d="M84 88 Q78 100 76 114 Q76 120 82 120 Q88 118 92 106 Q92 94 84 88Z"
           fill="#4AA820" stroke="#1A1A08" strokeWidth="1.8" />
+
+        {/* ── PLASTRON — snug oval under shell, rear flippers behind it ── */}
+        <ellipse cx="80" cy="96" rx="38" ry="9"
+          fill="#D4C878" stroke="#1A1A08" strokeWidth="1.4" />
 
         {/* ── SHELL — wide oval side profile, warm brown ── */}
         <path d="M38 90 Q34 62 58 44 Q82 28 114 50 Q130 66 122 90Z"
@@ -32,16 +36,12 @@ export default function RoshiDisplay({ expression = 'idle', size = 120 }: {
         <path d="M80 68 Q100 74 120 80"  stroke="#6B4C18" strokeWidth="1.2" fill="none" />
         <path d="M42 82 Q80 76 122 82"   stroke="#6B4C18" strokeWidth="1.1" fill="none" />
 
-        {/* ── PLASTRON — follows shell bottom edge as a proper strip ── */}
-        <path d="M38 90 Q60 100 90 98 Q106 96 122 90 Q106 100 80 102 Q56 102 38 90Z"
-          fill="#D4C878" stroke="#1A1A08" strokeWidth="1.4" />
-
-        {/* ── FRONT-RIGHT LEG — under front-center of shell ── */}
-        <path d="M58 92 Q64 104 56 112 Q46 114 44 104 Q46 94 56 92Z"
+        {/* ── FRONT-RIGHT FLIPPER — pointing forward-down ── */}
+        <path d="M60 88 Q54 100 52 112 Q52 118 58 118 Q64 116 68 104 Q68 92 60 88Z"
           fill="#5CB828" stroke="#1A1A08" strokeWidth="1.8" />
 
-        {/* ── FRONT-LEFT LEG — most visible, wide paddle angling forward-left ── */}
-        <path d="M44 86 Q30 86 16 98 Q18 112 34 108 Q46 104 50 92 Q50 88 46 86Z"
+        {/* ── FRONT-LEFT FLIPPER — most visible, pointing left ── */}
+        <path d="M44 82 Q26 78 8 96 Q6 102 8 108 Q18 116 40 96 Q44 88 44 82Z"
           fill="#5CB828" stroke="#1A1A08" strokeWidth="2" />
 
         {/* ── NECK — green connector from shell to head ── */}

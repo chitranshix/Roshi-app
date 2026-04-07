@@ -1,40 +1,67 @@
 .bubble {
   position: relative;
   background: var(--surface);
-  border: 2px solid var(--border);
+  border: 1.5px solid var(--text);
   border-radius: 20px;
-  padding: 20px 22px;
-  width: 100%;
+  padding: 14px 18px;
   font-family: var(--font-roshi);
-  font-size: 20px;
-  line-height: 1.45;
+  font-size: 17px;
+  line-height: 1.5;
   color: var(--text);
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-/* Tail pointing up, centered under Roshi */
-.tail {
-  position: absolute;
-  top: -14px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 14px solid var(--border);
-}
-
-.tail::after {
+/*
+ * Tail pointing RIGHT — Roshi is to the right of the bubble.
+ * Rotated-box trick: top-right corner of a square pokes out from the right edge.
+ */
+.tailRight::before {
   content: '';
   position: absolute;
-  top: 3px;
-  left: -8px;
-  width: 0;
-  height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-bottom: 12px solid var(--surface);
+  right: -10px;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  background: var(--surface);
+  border-top: 1.5px solid var(--text);
+  border-right: 1.5px solid var(--text);
+  border-radius: 0 4px 0 0;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+/*
+ * Tail pointing BOTTOM-RIGHT — Roshi is below-right of the bubble.
+ * Bottom-right corner of rotated box pokes out below the bubble's right side.
+ */
+.tailBottomRight::before {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  right: 22px;
+  width: 18px;
+  height: 18px;
+  background: var(--surface);
+  border-right: 1.5px solid var(--text);
+  border-bottom: 1.5px solid var(--text);
+  border-radius: 0 0 4px 0;
+  transform: rotate(45deg);
+}
+
+/*
+ * Tail pointing UP — Roshi is above the bubble (dare result screen).
+ */
+.tailTop::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: calc(22% - 9px);
+  width: 18px;
+  height: 18px;
+  background: var(--surface);
+  border-top: 1.5px solid var(--text);
+  border-left: 1.5px solid var(--text);
+  border-radius: 4px 0 0 0;
+  transform: rotate(45deg);
 }
