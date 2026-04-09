@@ -114,7 +114,7 @@ export default function PlayClient({ level, words }: Props) {
             <RoshiDisplay expression="happy" size={140} />
           </div>
           <SpeechBubble tail="top">
-            <div className={styles.pointsBadge}>Level {level} complete.</div>
+            <div className={styles.pointsBadge}>Mission {level} complete.</div>
             <div className={styles.pointsLabel}>You cracked all {WORDS_PER_LEVEL} words. Not bad at all.</div>
           </SpeechBubble>
           <Link href="/" style={{ display: 'block' }}>
@@ -134,7 +134,7 @@ export default function PlayClient({ level, words }: Props) {
             <RoshiDisplay expression="happy" size={140} />
           </div>
           <SpeechBubble tail="top">
-            <div className={styles.pointsLabel}>You&apos;ve already completed Level {level}.</div>
+            <div className={styles.pointsLabel}>You&apos;ve already completed Mission {level}.</div>
           </SpeechBubble>
           <Link href="/" style={{ display: 'block' }}>
             <Button>Back to home</Button>
@@ -152,7 +152,7 @@ export default function PlayClient({ level, words }: Props) {
 
         {/* ── Top bar: level info + progress ── */}
         <div className={styles.topBar}>
-          <Link href="/" className={styles.backBtn}>← Level {level}</Link>
+          <Link href="/" className={styles.backBtn}>← Mission {level}</Link>
           <div className={styles.progressWrap}>
             <div className={styles.progressBar}>
               <div className={styles.progressFill} style={{ width: `${pct}%` }} />

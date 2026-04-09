@@ -2,7 +2,7 @@ import Link from 'next/link'
 import AppShell from '@/components/layout/AppShell'
 import LevelHero from '@/components/home/LevelHero'
 import Avatar from '@/components/ui/Avatar'
-import { MOCK_DARES, MOCK_PLAYER } from '@/lib/mock'
+import { MOCK_DARES } from '@/lib/mock'
 import styles from './page.module.css'
 
 export default function Home() {

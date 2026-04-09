@@ -18,131 +18,72 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  overflow: hidden;
   transition: background 0.15s;
 }
 
 .heroLink:active .heroCard { background: var(--surface2); }
 
-/* ── Header row ── */
-.heroHeader {
+.heroBody {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
 }
 
-.heroMeta {
+.heroLeft {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
   min-width: 0;
 }
 
-.levelNum {
-  font-size: 12px;
+.heroEyebrow {
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--muted);
-  flex-shrink: 0;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.dot {
-  color: var(--border);
+.heroEyebrowDot { opacity: 0.5; }
+
+.heroTitle {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.heroStats {
+  margin-top: 2px;
   font-size: 14px;
 }
 
-.levelTitle {
-  font-size: 18px;
+.heroStatNum {
   font-weight: 700;
   color: var(--text);
-  letter-spacing: -0.02em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-/* difficulty tag — LeetCode style */
-.diffTag {
-  flex-shrink: 0;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 3px 10px;
-  border-radius: 20px;
-  letter-spacing: 0.03em;
-}
-
-.easy   { background: color-mix(in srgb, #2a9d8f 15%, var(--surface)); color: #2a9d8f; }
-.medium { background: color-mix(in srgb, #e9a23b 15%, var(--surface)); color: #c47d10; }
-.hard   { background: color-mix(in srgb, #e05a3a 15%, var(--surface)); color: #c0442a; }
-
-/* ── Stat row ── */
-.statRow {
-  display: flex;
-  align-items: center;
-  gap: 0;
-}
-
-.stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  flex: 1;
-}
-
-.statVal {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--text);
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-
-.statLabel {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+.heroStatLabel {
+  font-weight: 500;
   color: var(--muted);
 }
 
-.statDivider {
-  width: 1px;
-  height: 32px;
-  background: var(--border);
-  flex-shrink: 0;
-}
-
-/* ── Progress bar ── */
-.progressWrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.progressBar {
-  flex: 1;
-  height: 6px;
-  background: var(--surface2);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.progressFill {
-  height: 100%;
-  background: var(--accent);
-  border-radius: 3px;
-  transition: width 0.6s ease;
-  min-width: 3px;
-}
-
-.pct {
-  font-size: 11px;
-  font-weight: 700;
+.heroStatSub {
   color: var(--muted);
-  min-width: 30px;
-  text-align: right;
+  font-weight: 400;
+}
+
+/* ── World silhouette (mountain / ocean) ── */
+.worldSvg {
+  flex-shrink: 0;
+  margin-top: 4px;
 }
 
 /* ── Play button ── */
@@ -159,70 +100,95 @@
   letter-spacing: 0.01em;
 }
 
-/* ── Level strip ── */
-.stripWrap {
-  overflow: hidden;
-}
-
-.levelStrip {
+/* ── Mission strip ── */
+.strip {
   display: flex;
   gap: 8px;
   overflow-x: auto;
   scrollbar-width: none;
-  padding-bottom: 2px;
+  padding-bottom: 4px;
 }
 
-.levelStrip::-webkit-scrollbar { display: none; }
+.strip::-webkit-scrollbar { display: none; }
 
-/* ── Pills ── */
-.pill {
+/* ── Mini cards ── */
+.miniCard {
   flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 12px;
-  background: var(--surface);
+  width: 136px;
+  background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 20px;
-  white-space: nowrap;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 0.15s;
 }
 
-.pillActive {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+.miniActive  { border-color: var(--accent); }
+.miniLocked  { opacity: 0.45; pointer-events: none; }
+
+.miniDone .miniBarFill  { background: var(--correct); }
+.miniDone .doneIcon     { color: var(--correct); }
+
+.miniTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 10px 10px 4px;
+  background: var(--surface);
 }
 
-.pillLocked { opacity: 0.38; }
-
-.pillDone {
-  border-color: var(--correct);
-  background: color-mix(in srgb, var(--correct) 8%, var(--surface));
+.miniNum {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--muted);
+  line-height: 1;
 }
 
-.pillNum {
+.miniRight {
+  padding-top: 4px;
+}
+
+.lockIcon {
+  color: var(--muted);
+  opacity: 0.5;
+}
+
+.doneIcon {
+  color: var(--correct);
+}
+
+.miniDiff {
   font-size: 10px;
   font-weight: 700;
+  text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--muted);
 }
 
-.pillName {
+.miniName {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text);
+  padding: 6px 10px 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  flex: 1;
 }
 
-.pillDiff {
-  font-size: 10px;
-  font-weight: 700;
-  padding: 1px 7px;
-  border-radius: 10px;
+/* ── Thin progress bar at card bottom ── */
+.miniBar {
+  height: 3px;
+  background: var(--surface2);
 }
 
-.pillCheck {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--correct);
+.miniBarFill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.4s ease;
+  min-width: 0;
 }
-
-.pillLockIcon { font-size: 10px; }
