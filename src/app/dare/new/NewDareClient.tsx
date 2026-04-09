@@ -4,11 +4,12 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import AppShell from '@/components/layout/AppShell'
 import Button from '@/components/ui/Button'
+import Avatar from '@/components/ui/Avatar'
 import Link from 'next/link'
 import type { GREWord } from '@/lib/gre-words'
 import styles from './page.module.css'
 
-const FRIENDS = ['Sam', 'Alex', 'Priya']
+const FRIENDS = ['Sam', 'Alex', 'Vansh']
 
 export default function NewDareClient({ words }: { words: GREWord[] }) {
   const router = useRouter()
@@ -72,11 +73,7 @@ export default function NewDareClient({ words }: { words: GREWord[] }) {
               className={[styles.friendChip, selectedFriends.includes(name) ? styles.selected : ''].join(' ')}
               onClick={() => toggleFriend(name)}
             >
-              <img
-                src={`https://api.dicebear.com/9.x/thumbs/svg?backgroundColor=transparent&seed=${name}`}
-                className={styles.friendAvatar}
-                alt={name}
-              />
+              <Avatar name={name} size={36} />
               <div className={styles.friendName}>{name}</div>
             </div>
           ))}

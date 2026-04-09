@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import AppShell from '@/components/layout/AppShell'
 import LevelHero from '@/components/home/LevelHero'
+import Avatar from '@/components/ui/Avatar'
 import { MOCK_DARES, MOCK_PLAYER } from '@/lib/mock'
 import styles from './page.module.css'
 
@@ -24,11 +25,7 @@ export default function Home() {
             <div className={styles.chipRow}>
               {pendingDares.map(dare => (
                 <Link key={dare.id} href={`/dare/${dare.id}`} className={styles.chip}>
-                  <img
-                    className={styles.avatar}
-                    src={`https://api.dicebear.com/9.x/thumbs/svg?backgroundColor=transparent&seed=${encodeURIComponent(dare.from)}`}
-                    alt={dare.from}
-                  />
+                  <Avatar name={dare.from} size={28} />
                   <span className={styles.chipName}>{dare.from}</span>
                   <span className={styles.chipDot} />
                 </Link>
@@ -54,11 +51,7 @@ export default function Home() {
 
                 return (
                   <div key={dare.id} className={[styles.dareRow, isComplete ? styles.dimmed : ''].join(' ')}>
-                    <img
-                      className={styles.avatarSm}
-                      src={`https://api.dicebear.com/9.x/thumbs/svg?backgroundColor=transparent&seed=${encodeURIComponent(seed)}`}
-                      alt={seed}
-                    />
+                    <Avatar name={seed} size={32} />
                     <div className={styles.dareInfo}>
                       <span className={styles.dareWord}>{dare.word}</span>
                       <span className={styles.dareMeta}>{fromLine} · {dare.sentAt}</span>

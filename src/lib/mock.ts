@@ -27,15 +27,15 @@ export const MOCK_DAILY: DailyWord = {
     { name: 'Sam',  points: 5 },
     { name: 'Alex', points: 3 },
   ],
-  allPlayers: ['Sam', 'Alex', 'Priya', MOCK_PLAYER],
+  allPlayers: ['Sam', 'Alex', 'Vansh', MOCK_PLAYER],
 }
 
 export const MOCK_DARES: Dare[] = [
   { id: 'd1', word: 'loquacious', from: 'Sam',        to: MOCK_PLAYER, status: 'pending_you',  sentAt: '2h ago' },
-  { id: 'd3', word: 'luminous',   from: 'Priya',      to: MOCK_PLAYER, status: 'pending_you',  sentAt: '1d ago' },
+  { id: 'd3', word: 'luminous',   from: 'Vansh',      to: MOCK_PLAYER, status: 'pending_you',  sentAt: '1d ago' },
   { id: 'd2', word: 'ephemeral',  from: MOCK_PLAYER,  to: 'Alex',      status: 'pending_them', sentAt: '6h ago' },
   { id: 'd4', word: 'solipsism',  from: MOCK_PLAYER,  to: 'Sam',       status: 'complete',     sentAt: '2d ago', theirPoints: 5 },
-  { id: 'd5', word: 'avarice',    from: 'Priya',      to: MOCK_PLAYER, status: 'complete',     sentAt: '3d ago', yourPoints: 3 },
+  { id: 'd5', word: 'avarice',    from: 'Vansh',      to: MOCK_PLAYER, status: 'complete',     sentAt: '3d ago', yourPoints: 3 },
 ]
 
 export const MOCK_DEFINITIONS: Record<string, string> = {
