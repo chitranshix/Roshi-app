@@ -4,11 +4,15 @@ import { NextRequest, NextResponse } from 'next/server'
 const client = new Anthropic()
 
 export async function POST(req: NextRequest) {
-  const { word, definition } = await req.json()
+  const { word, definition, actualDefinition } = await req.json()
 
   if (!word || !definition) {
     return NextResponse.json({ error: 'Missing word or definition' }, { status: 400 })
   }
+
+  const context = actualDefinition
+    ? `The correct definition is: "${actualDefinition}".`
+    : ''
 
   const message = await client.messages.create({
     model: 'claude-haiku-4-5',
@@ -16,7 +20,7 @@ export async function POST(req: NextRequest) {
     messages: [
       {
         role: 'user',
-        content: `You are grading a vocabulary game. Word: "${word}". Player's definition: "${definition}". Say "yes" only if the definition captures the core meaning of the word — a vague association, loose synonym, or surface-level guess does not count. For example, "ice-like" for "polar" is no. "Relating to opposites" or "of or near the poles" would be yes. Reply with only "yes" or "no".`,
+        content: `You are grading a vocabulary game. Word: "${word}". ${context} Player's definition: "${definition}". Say "yes" if the player's definition demonstrates they understand the word's meaning — even if informal, incomplete, or just a synonym. Be generous: "lie, cheating" for "bluff" is yes. Only say "no" if it's clearly wrong or shows no understanding. Reply with only "yes" or "no".`,
       },
     ],
   })

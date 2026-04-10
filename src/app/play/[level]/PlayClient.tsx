@@ -77,7 +77,7 @@ export default function PlayClient({ level, words }: Props) {
       const res = await fetch('/api/evaluate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ word: currentWord.word, definition: userDef }),
+        body: JSON.stringify({ word: currentWord.word, definition: userDef, actualDefinition: currentWord.definition }),
       })
       const { correct } = await res.json()
       const earned = correct ? 10 : 3

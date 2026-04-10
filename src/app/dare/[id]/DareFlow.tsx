@@ -66,7 +66,7 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
       const res = await fetch('/api/evaluate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ word: dare.word, definition: userDef }),
+        body: JSON.stringify({ word: dare.word, definition: userDef, actualDefinition: definition }),
       })
       const { correct } = await res.json()
       const earned = correct ? 10 : 3
