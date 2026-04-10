@@ -138,6 +138,52 @@
     ]
   },
   {
+    "word": "plumber",
+    "definition": "one who installs and repairs pipes and plumbing (pipes)",
+    "level": 1,
+    "sentences": [
+      {
+        "sentence": "The plumber arrived to fix the burst pipe under the kitchen sink.",
+        "correct": true
+      },
+      {
+        "sentence": "She hired a plumber to repaint the living room walls a warm beige.",
+        "correct": false
+      },
+      {
+        "sentence": "The plumber installed a new electrical panel in the garage.",
+        "correct": false
+      },
+      {
+        "sentence": "A skilled plumber is essential when rewiring the house for fibre internet.",
+        "correct": false
+      }
+    ]
+  },
+  {
+    "word": "mat",
+    "definition": "not shiny; matte; having a dull finish; N: flat piece of material used as a floor covering; V.",
+    "level": 1,
+    "sentences": [
+      {
+        "sentence": "She chose a mat finish for the walls so they would not reflect glare.",
+        "correct": true
+      },
+      {
+        "sentence": "The mat surface of the mirror made reflections sharp and vivid.",
+        "correct": false
+      },
+      {
+        "sentence": "He preferred a mat personality — loud, shiny and attention-seeking.",
+        "correct": false
+      },
+      {
+        "sentence": "The photographer requested a mat lens filter to increase brightness.",
+        "correct": false
+      }
+    ]
+  },
+  {
     "word": "historic",
     "definition": "important in history; Ex. historic battle",
     "level": 1,
@@ -460,6 +506,29 @@
     ]
   },
   {
+    "word": "filing",
+    "definition": "particle removed by a file",
+    "level": 1,
+    "sentences": [
+      {
+        "sentence": "The bench was covered in metal filings from hours of shaping the iron rod.",
+        "correct": true
+      },
+      {
+        "sentence": "She collected the filings of fresh bread and used them to bake a cake.",
+        "correct": false
+      },
+      {
+        "sentence": "The filing from the candle was bright and warm, lighting the whole room.",
+        "correct": false
+      },
+      {
+        "sentence": "He swept up the wood filings and used them to start a fire.",
+        "correct": true
+      }
+    ]
+  },
+  {
     "word": "mute",
     "definition": "silent; without speech; not pronounced; unable to speak; N: one who is incapable of speech; V: soften the sound, color.",
     "level": 1,
@@ -713,6 +782,29 @@
     ]
   },
   {
+    "word": "tickle",
+    "definition": "touch (the body) lightly so as to cause laughter; please",
+    "level": 1,
+    "sentences": [
+      {
+        "sentence": "The unexpected compliment tickled her vanity more than she cared to admit.",
+        "correct": true
+      },
+      {
+        "sentence": "The harsh criticism tickled him greatly and left him devastated for weeks.",
+        "correct": false
+      },
+      {
+        "sentence": "Nothing could tickle his interest — he was passionate about the project.",
+        "correct": false
+      },
+      {
+        "sentence": "The film tickled no one; audiences left in tears of sorrow.",
+        "correct": false
+      }
+    ]
+  },
+  {
     "word": "curfew",
     "definition": "regulation requiring all people to leave the streets at stated times; signal (as a bell) announcing the hour of a curfew",
     "level": 1,
@@ -920,6 +1012,29 @@
     ]
   },
   {
+    "word": "flick",
+    "definition": "light stroke as with a whip; V: move with a light quick blow; strike with a light quick blow (as from a whip); Ex..",
+    "level": 1,
+    "sentences": [
+      {
+        "sentence": "With a flick of his wrist, he sent the coin spinning across the table.",
+        "correct": true
+      },
+      {
+        "sentence": "She gave the boulder a gentle flick and sent it rolling down the hill.",
+        "correct": false
+      },
+      {
+        "sentence": "He opened the heavy door with a flick using both hands and all his strength.",
+        "correct": false
+      },
+      {
+        "sentence": "The flick of the crane lifted the car high into the air effortlessly.",
+        "correct": false
+      }
+    ]
+  },
+  {
     "word": "hale",
     "definition": "healthy",
     "level": 1,
@@ -1007,6 +1122,29 @@
       },
       {
         "sentence": "His new business plan was a catastrophe, earning record profits and expanding into five new markets.",
+        "correct": false
+      }
+    ]
+  },
+  {
+    "word": "shaving",
+    "definition": "very thin piece, usually of wood (cut from a surface with a sharp blade)",
+    "level": 1,
+    "sentences": [
+      {
+        "sentence": "The carpenter brushed away the wood shavings that curled off the plane.",
+        "correct": true
+      },
+      {
+        "sentence": "She added shavings of whole timber to the soup for flavour.",
+        "correct": false
+      },
+      {
+        "sentence": "The shavings of concrete poured smoothly into the foundation mould.",
+        "correct": false
+      },
+      {
+        "sentence": "He collected stone shavings by melting them down in a furnace.",
         "correct": false
       }
     ]
@@ -1380,6 +1518,29 @@
     ]
   },
   {
+    "word": "drip",
+    "definition": "fall or let fall in drops; shed drops; N: action or sound of falling in drops; liquid that falls in drops",
+    "level": 1,
+    "sentences": [
+      {
+        "sentence": "A steady drip from the ceiling told them the roof was leaking.",
+        "correct": true
+      },
+      {
+        "sentence": "The drip of the waterfall roared so loudly they could not hear each other.",
+        "correct": false
+      },
+      {
+        "sentence": "She fixed the drip by tightening the tap until it gushed even faster.",
+        "correct": false
+      },
+      {
+        "sentence": "The drip of sunlight filled the entire room with blinding brightness.",
+        "correct": false
+      }
+    ]
+  },
+  {
     "word": "gale",
     "definition": "windstorm; gust of wind; emotional outburst (laughters, tears); Ex. gale of laughter",
     "level": 1,
@@ -1444,6 +1605,29 @@
       },
       {
         "sentence": "That wretch of a professor graded fairly and inspired students with his passionate lectures on literature.",
+        "correct": false
+      }
+    ]
+  },
+  {
+    "word": "lace",
+    "definition": "cord used to draw and tie together two opposite edges (as of a shoe); delicate fabric made of fine threads; V: draw.",
+    "level": 1,
+    "sentences": [
+      {
+        "sentence": "He laced his shoes tightly before setting off on the long hike.",
+        "correct": true
+      },
+      {
+        "sentence": "She laced the door shut by turning the handle firmly to the right.",
+        "correct": false
+      },
+      {
+        "sentence": "The chef laced the vegetables by boiling them for thirty minutes.",
+        "correct": false
+      },
+      {
+        "sentence": "He laced the window open with a firm push against the glass.",
         "correct": false
       }
     ]
@@ -1628,6 +1812,29 @@
       },
       {
         "sentence": "The organization's advocate opposed every proposal brought before the board meeting last Tuesday.",
+        "correct": false
+      }
+    ]
+  },
+  {
+    "word": "trim",
+    "definition": "make neat or tidy by clipping; reduce by removing what is unnecessary; ornament; decorate (round the edges); Ex. trim.",
+    "level": 1,
+    "sentences": [
+      {
+        "sentence": "They trimmed the budget by cutting all non-essential travel expenses.",
+        "correct": true
+      },
+      {
+        "sentence": "She trimmed the guest list by adding more names from the waiting list.",
+        "correct": false
+      },
+      {
+        "sentence": "He trimmed the hedge until it was twice as tall and wildly overgrown.",
+        "correct": false
+      },
+      {
+        "sentence": "The editor trimmed the article by expanding each paragraph with more detail.",
         "correct": false
       }
     ]
@@ -1863,6 +2070,29 @@
     ]
   },
   {
+    "word": "queue",
+    "definition": "line (of waiting people or vehicles)",
+    "level": 1,
+    "sentences": [
+      {
+        "sentence": "A long queue had formed outside the theatre well before the doors opened.",
+        "correct": true
+      },
+      {
+        "sentence": "She joined the queue by pushing to the front past everyone waiting.",
+        "correct": false
+      },
+      {
+        "sentence": "The queue moved backwards, with new arrivals served before earlier ones.",
+        "correct": false
+      },
+      {
+        "sentence": "He formed a queue of one by sitting alone in the empty waiting room — and was immediately seen.",
+        "correct": false
+      }
+    ]
+  },
+  {
     "word": "recess",
     "definition": "pause; temporary cessation; alcove; secret inner place; Ex. parliament in recess; V. CF. recessive",
     "level": 1,
@@ -1909,6 +2139,29 @@
     ]
   },
   {
+    "word": "tablet",
+    "definition": "small round piece of medicine; flat piece of stone or metal bearing an inscription; Ex. stone tablet on the wall",
+    "level": 1,
+    "sentences": [
+      {
+        "sentence": "The ancient tablet carved in stone recorded the laws of the kingdom.",
+        "correct": true
+      },
+      {
+        "sentence": "The doctor prescribed a tablet of fresh air and exercise, not medication.",
+        "correct": false
+      },
+      {
+        "sentence": "She dissolved the stone tablet in water and drank it before bed.",
+        "correct": false
+      },
+      {
+        "sentence": "The tablet inscription was painted on paper and hung on the wall.",
+        "correct": false
+      }
+    ]
+  },
+  {
     "word": "founder",
     "definition": "fail completely; sink; CF. flounder",
     "level": 1,
@@ -1927,6 +2180,75 @@
       },
       {
         "sentence": "Their business plans started to founder after securing a million-dollar investment and hiring experienced staff members.",
+        "correct": false
+      }
+    ]
+  },
+  {
+    "word": "squash",
+    "definition": "crush; quash; suppress",
+    "level": 1,
+    "sentences": [
+      {
+        "sentence": "The government moved quickly to squash the rumours before they spread further.",
+        "correct": true
+      },
+      {
+        "sentence": "The protest grew stronger after officials tried to squash it publicly.",
+        "correct": false
+      },
+      {
+        "sentence": "She squashed the idea by enthusiastically funding it for three more years.",
+        "correct": false
+      },
+      {
+        "sentence": "He squashed the rebellion by handing its leaders positions of power.",
+        "correct": false
+      }
+    ]
+  },
+  {
+    "word": "prop",
+    "definition": "support placed under or against something; V.",
+    "level": 1,
+    "sentences": [
+      {
+        "sentence": "She propped the broken fence up with a plank until it could be repaired properly.",
+        "correct": true
+      },
+      {
+        "sentence": "He propped the structure by removing all its supports overnight.",
+        "correct": false
+      },
+      {
+        "sentence": "The company propped up its losses by spending even more money each quarter.",
+        "correct": false
+      },
+      {
+        "sentence": "She propped the ladder away from the wall so it would stand on its own.",
+        "correct": false
+      }
+    ]
+  },
+  {
+    "word": "tread",
+    "definition": "walk; trample; N: grooved face of a tire; horizontal part of a step",
+    "level": 1,
+    "sentences": [
+      {
+        "sentence": "He told the children to tread carefully around the sleeping dog.",
+        "correct": true
+      },
+      {
+        "sentence": "She trod loudly on purpose, stomping to wake the household.",
+        "correct": false
+      },
+      {
+        "sentence": "He trod the path so lightly that the floorboards groaned with every step.",
+        "correct": false
+      },
+      {
+        "sentence": "She tread carefully, leaving deep muddy footprints across the clean floor.",
         "correct": false
       }
     ]
@@ -1973,328 +2295,6 @@
       },
       {
         "sentence": "He used a curb to decorate the garden fence, painting it bright blue to match the landscaping.",
-        "correct": false
-      }
-    ]
-  },
-  {
-    "word": "laconic",
-    "definition": "using very few words; brief and concise",
-    "level": 1,
-    "sentences": [
-      {
-        "sentence": "His laconic reply — just \"no\" — ended the debate immediately.",
-        "correct": true
-      },
-      {
-        "sentence": "The laconic speaker talked for three hours without pausing.",
-        "correct": false
-      },
-      {
-        "sentence": "She was known for her laconic storytelling that went on for pages.",
-        "correct": false
-      },
-      {
-        "sentence": "The laconic river flowed endlessly through the wide valley.",
-        "correct": false
-      }
-    ]
-  },
-  {
-    "word": "insipid",
-    "definition": "lacking flavour, interest, or vigour; dull",
-    "level": 1,
-    "sentences": [
-      {
-        "sentence": "The insipid soup tasted of little more than warm water.",
-        "correct": true
-      },
-      {
-        "sentence": "Her insipid performance earned a standing ovation from the crowd.",
-        "correct": false
-      },
-      {
-        "sentence": "The insipid chilli was so spicy it brought tears to his eyes.",
-        "correct": false
-      },
-      {
-        "sentence": "His insipid wit kept the entire room laughing all evening.",
-        "correct": false
-      }
-    ]
-  },
-  {
-    "word": "obfuscate",
-    "definition": "to make unclear or confusing; to bewilder",
-    "level": 1,
-    "sentences": [
-      {
-        "sentence": "The lawyer used technical jargon to obfuscate the simple facts of the case.",
-        "correct": true
-      },
-      {
-        "sentence": "She obfuscated the instructions so well that everyone understood them immediately.",
-        "correct": false
-      },
-      {
-        "sentence": "His obfuscate speech was celebrated for its remarkable clarity.",
-        "correct": false
-      },
-      {
-        "sentence": "They obfuscated the path by clearing all the trees and marking it clearly.",
-        "correct": false
-      }
-    ]
-  },
-  {
-    "word": "truculent",
-    "definition": "eager or quick to argue or fight; aggressively defiant",
-    "level": 1,
-    "sentences": [
-      {
-        "sentence": "The truculent child refused every instruction and screamed at anyone who came near.",
-        "correct": true
-      },
-      {
-        "sentence": "Her truculent manner made her beloved by all who met her gentle spirit.",
-        "correct": false
-      },
-      {
-        "sentence": "The truculent diplomat smoothed over every disagreement with quiet patience.",
-        "correct": false
-      },
-      {
-        "sentence": "He was so truculent that strangers often mistook him for a pushover.",
-        "correct": false
-      }
-    ]
-  },
-  {
-    "word": "loquacious",
-    "definition": "tending to talk a great deal; garrulous",
-    "level": 1,
-    "sentences": [
-      {
-        "sentence": "The loquacious host kept guests entertained with an endless stream of stories.",
-        "correct": true
-      },
-      {
-        "sentence": "She was so loquacious that no one had ever heard her speak.",
-        "correct": false
-      },
-      {
-        "sentence": "His loquacious silence filled the room with an eerie calm.",
-        "correct": false
-      },
-      {
-        "sentence": "The loquacious path wound quietly through the empty forest.",
-        "correct": false
-      }
-    ]
-  },
-  {
-    "word": "mendacious",
-    "definition": "not telling the truth; lying",
-    "level": 1,
-    "sentences": [
-      {
-        "sentence": "The mendacious witness contradicted himself three times under cross-examination.",
-        "correct": true
-      },
-      {
-        "sentence": "Her mendacious reputation was built on decades of honesty and transparency.",
-        "correct": false
-      },
-      {
-        "sentence": "The mendacious report was praised for its meticulous accuracy.",
-        "correct": false
-      },
-      {
-        "sentence": "He was so mendacious that judges trusted every word he said.",
-        "correct": false
-      }
-    ]
-  },
-  {
-    "word": "vapid",
-    "definition": "offering nothing stimulating; bland and uninspiring",
-    "level": 1,
-    "sentences": [
-      {
-        "sentence": "The vapid conversation drifted from one pointless topic to the next.",
-        "correct": true
-      },
-      {
-        "sentence": "Her vapid lecture was so compelling that students skipped other classes to attend.",
-        "correct": false
-      },
-      {
-        "sentence": "The film was vapid — a rich, layered story that lingered in the mind.",
-        "correct": false
-      },
-      {
-        "sentence": "His vapid personality made him the most sought-after guest at every party.",
-        "correct": false
-      }
-    ]
-  },
-  {
-    "word": "umbrage",
-    "definition": "offence or annoyance",
-    "level": 1,
-    "sentences": [
-      {
-        "sentence": "She took umbrage at the suggestion that her work was derivative.",
-        "correct": true
-      },
-      {
-        "sentence": "He expressed his umbrage by warmly thanking everyone in the room.",
-        "correct": false
-      },
-      {
-        "sentence": "The umbrage she felt at the compliment made her deeply unhappy.",
-        "correct": false
-      },
-      {
-        "sentence": "Taking umbrage, she immediately agreed to all the terms proposed.",
-        "correct": false
-      }
-    ]
-  },
-  {
-    "word": "disparate",
-    "definition": "essentially different in kind; not allowing comparison",
-    "level": 1,
-    "sentences": [
-      {
-        "sentence": "The study drew on disparate sources — philosophy, biology, and folklore.",
-        "correct": true
-      },
-      {
-        "sentence": "Their disparate views made them identical in almost every opinion.",
-        "correct": false
-      },
-      {
-        "sentence": "The two disparate twins were impossible to tell apart.",
-        "correct": false
-      },
-      {
-        "sentence": "Her disparate collection of stamps was entirely devoted to one country.",
-        "correct": false
-      }
-    ]
-  },
-  {
-    "word": "enervate",
-    "definition": "to cause someone to feel drained of energy or vitality",
-    "level": 1,
-    "sentences": [
-      {
-        "sentence": "The oppressive heat enervated the hikers long before they reached the summit.",
-        "correct": true
-      },
-      {
-        "sentence": "The morning run enervated her, leaving her refreshed and energised for the day.",
-        "correct": false
-      },
-      {
-        "sentence": "His inspiring speech enervated the crowd, who leapt to their feet cheering.",
-        "correct": false
-      },
-      {
-        "sentence": "The medicine enervated the patient, giving her remarkable strength and focus.",
-        "correct": false
-      }
-    ]
-  },
-  {
-    "word": "perfidious",
-    "definition": "deceitful and untrustworthy; guilty of betrayal",
-    "level": 1,
-    "sentences": [
-      {
-        "sentence": "The perfidious advisor secretly shared battle plans with the enemy.",
-        "correct": true
-      },
-      {
-        "sentence": "Her perfidious loyalty meant she would never betray a friend.",
-        "correct": false
-      },
-      {
-        "sentence": "The perfidious guard was celebrated for his unwavering dedication.",
-        "correct": false
-      },
-      {
-        "sentence": "He was so perfidious that everyone trusted him with their deepest secrets.",
-        "correct": false
-      }
-    ]
-  },
-  {
-    "word": "sycophant",
-    "definition": "a person who acts obsequiously to gain advantage; a flatterer",
-    "level": 1,
-    "sentences": [
-      {
-        "sentence": "The sycophant laughed loudly at every joke the manager made, no matter how weak.",
-        "correct": true
-      },
-      {
-        "sentence": "As a sycophant, she was known for her brutal honesty with those in power.",
-        "correct": false
-      },
-      {
-        "sentence": "The sycophant challenged the CEO directly, refusing to agree with anything he said.",
-        "correct": false
-      },
-      {
-        "sentence": "His sycophant behaviour won him no friends and fewer promotions.",
-        "correct": false
-      }
-    ]
-  },
-  {
-    "word": "garrulous",
-    "definition": "excessively talkative, especially on trivial matters",
-    "level": 1,
-    "sentences": [
-      {
-        "sentence": "The garrulous taxi driver narrated his entire life story before they reached the airport.",
-        "correct": true
-      },
-      {
-        "sentence": "The garrulous monk spent his days in total silence, never uttering a word.",
-        "correct": false
-      },
-      {
-        "sentence": "Her garrulous note was a single terse sentence.",
-        "correct": false
-      },
-      {
-        "sentence": "He was so garrulous that his friends often begged him to speak more.",
-        "correct": false
-      }
-    ]
-  },
-  {
-    "word": "pernicious",
-    "definition": "having a harmful effect, especially in a gradual or subtle way",
-    "level": 1,
-    "sentences": [
-      {
-        "sentence": "The pernicious rumour slowly destroyed her reputation without a single confrontation.",
-        "correct": true
-      },
-      {
-        "sentence": "The vitamin had a pernicious effect on the patients, improving all their symptoms.",
-        "correct": false
-      },
-      {
-        "sentence": "His pernicious habits of exercise and sleep made him the picture of health.",
-        "correct": false
-      },
-      {
-        "sentence": "The pernicious law was praised for protecting the rights of every citizen.",
         "correct": false
       }
     ]
