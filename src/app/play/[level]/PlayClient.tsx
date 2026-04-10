@@ -258,11 +258,9 @@ export default function PlayClient({ level, words }: Props) {
                 <div className={styles.definitionText}>{currentWord.definition}</div>
               </div>
             </SpeechBubble>
-            <Button onClick={handleNext}>
-              Next word
-            </Button>
-            <Link href="/" style={{ display: 'block' }}>
-              <Button variant="subtle">Back to home</Button>
+            <Button onClick={handleNext}>Next word</Button>
+            <Link href="/dare/new" style={{ display: 'block' }}>
+              <Button variant="subtle">Dare someone</Button>
             </Link>
           </>
         )}
