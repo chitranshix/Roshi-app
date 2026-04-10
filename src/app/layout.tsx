@@ -47,6 +47,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem>
           {children}
         </ThemeProvider>
+        <script dangerouslySetInnerHTML={{ __html: `
+          if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'))
+          }
+        `}} />
       </body>
     </html>
   )
