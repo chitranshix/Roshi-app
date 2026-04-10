@@ -68,7 +68,7 @@ export default function NewDareClient({ words }: { words: GREWord[] }) {
   return (
     <AppShell>
       <div className={styles.screen}>
-        <Link href="/" className={styles.backBtn}>← Back</Link>
+        <Link href="/" className={styles.backBtn}>&#8592;</Link>
         <div className={styles.heading}>Dare someone</div>
 
         <div className={styles.sectionLabel}>Pick a word</div>
@@ -115,8 +115,8 @@ export default function NewDareClient({ words }: { words: GREWord[] }) {
 
         <Button onClick={handleSend} disabled={!canSend}>
           {canSend
-            ? `Send "${displayWord}" to ${selectedNames.join(', ')} →`
-            : sending ? 'Sending…' : 'Send dare →'}
+            ? `Send "${displayWord}" to ${selectedNames.join(', ')}`
+            : sending ? 'Sending…' : 'Send dare'}
         </Button>
       </div>
     </AppShell>

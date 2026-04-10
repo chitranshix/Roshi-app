@@ -3,14 +3,12 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useTheme } from 'next-themes'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import Avatar from '@/components/ui/Avatar'
 import styles from './AppShell.module.css'
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const router = useRouter()
-  const { resolvedTheme } = useTheme()
   const [scrolled, setScrolled] = useState(false)
   const [playerName, setPlayerName] = useState('')
   const [ready, setReady] = useState(false)
@@ -39,11 +37,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <header className={[styles.header, scrolled ? styles.scrolled : ''].join(' ')}>
         <div className={styles.headerInner}>
           <Link href="/">
-            <img
-              src={resolvedTheme === 'dark' ? '/logo-dark.png' : '/logo-light.png'}
-              alt="Roshi's Word Game"
-              className={styles.logo}
-            />
+            <img src="/logo-light.png" alt="Roshi's Word Game" className={`${styles.logo} ${styles.logoLight}`} />
+            <img src="/logo-dark.png"  alt="Roshi's Word Game" className={`${styles.logo} ${styles.logoDark}`} />
           </Link>
           <div className={styles.headerRight}>
             <ThemeToggle />

@@ -43,6 +43,13 @@
   display: block;
 }
 
+/* Show correct logo instantly via CSS — no JS theme delay */
+.logoDark  { display: none; }
+.logoLight { display: block; }
+
+:global([data-theme='dark'])  .logoDark  { display: block; }
+:global([data-theme='dark'])  .logoLight { display: none; }
+
 .headerRight {
   display: flex;
   align-items: center;

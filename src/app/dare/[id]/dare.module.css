@@ -10,11 +10,8 @@
 }
 
 .backBtn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 22px;
+  font-weight: 400;
   color: var(--muted);
   padding: 8px 0 4px;
   -webkit-tap-highlight-color: transparent;

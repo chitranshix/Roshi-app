@@ -104,7 +104,7 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
           </div>
         )}
 
-        <button className={styles.backBtn} onClick={() => router.back()}>← Back</button>
+        <button className={styles.backBtn} onClick={() => router.back()}>&#8592;</button>
 
         {stage === 'sentence' && (
           <>
@@ -150,7 +150,7 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
             <div className={styles.defHint}>Plain English is fine.</div>
             <div className={styles.spacer} />
             <Button onClick={submitDefinition} disabled={userDef.trim().length < 4 || checking}>
-              {checking ? 'Checking…' : 'Submit →'}
+              {checking ? 'Checking…' : 'Submit'}
             </Button>
           </>
         )}
@@ -180,7 +180,7 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
 
             <Link href="/dare/new" style={{ display: 'block' }}>
               <Button>
-                {dare.from === 'Roshi' ? 'Dare a friend →' : `Dare ${dare.from} back →`}
+                {dare.from === 'Roshi' ? 'Dare a friend' : `Dare ${dare.from} back`}
               </Button>
             </Link>
 

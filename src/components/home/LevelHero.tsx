@@ -188,7 +188,7 @@ export default function LevelHero() {
             </div>
             {isWater ? <OceanSilhouette /> : <MountainSilhouette />}
           </div>
-          <div className={styles.playBtn}>{btnLabel} →</div>
+          <div className={styles.playBtn}>{btnLabel}</div>
         </div>
       </Link>
 

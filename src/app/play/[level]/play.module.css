@@ -10,8 +10,8 @@
 }
 
 .backBtn {
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 22px;
+  font-weight: 400;
   color: var(--muted);
   flex-shrink: 0;
   -webkit-tap-highlight-color: transparent;

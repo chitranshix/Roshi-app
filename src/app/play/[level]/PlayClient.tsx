@@ -166,7 +166,7 @@ export default function PlayClient({ level, words }: Props) {
 
         {/* ── Top bar: level info + progress ── */}
         <div className={styles.topBar}>
-          <button className={styles.backBtn} onClick={() => router.back()}>← Mission {level}</button>
+          <button className={styles.backBtn} onClick={() => router.push('/')}>&#8592;</button>
           <div className={styles.progressWrap}>
             <div className={styles.progressBar}>
               <div className={styles.progressFill} style={{ width: `${pct}%` }} />
@@ -237,7 +237,7 @@ export default function PlayClient({ level, words }: Props) {
             <div className={styles.defHint}>Plain English is fine.</div>
             <div className={styles.spacer} />
             <Button onClick={submitDefinition} disabled={userDef.trim().length < 4 || checking}>
-              {checking ? 'Checking…' : 'Submit →'}
+              {checking ? 'Checking…' : 'Submit'}
             </Button>
           </>
         )}
@@ -259,7 +259,7 @@ export default function PlayClient({ level, words }: Props) {
               </div>
             </SpeechBubble>
             <Button onClick={handleNext}>
-              Next word →
+              Next word
             </Button>
             <Link href="/" style={{ display: 'block' }}>
               <Button variant="subtle">Back to home</Button>
