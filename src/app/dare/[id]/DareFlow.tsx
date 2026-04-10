@@ -146,9 +146,9 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
               placeholder="Type your definition..."
               value={userDef}
               onChange={e => setUserDef(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey && userDef.trim().length >= 4) { e.preventDefault(); submitDefinition() } }}
             />
             <div className={styles.defHint}>Plain English is fine.</div>
-            <div className={styles.spacer} />
             <Button onClick={submitDefinition} disabled={userDef.trim().length < 4 || checking}>
               {checking ? 'Checking…' : 'Submit'}
             </Button>
