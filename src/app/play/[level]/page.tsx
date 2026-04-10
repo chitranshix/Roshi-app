@@ -1,3 +1,5 @@
+import fs from 'fs'
+import path from 'path'
 import { notFound } from 'next/navigation'
 import PlayClient from './PlayClient'
 
@@ -8,13 +10,11 @@ export default async function PlayPage({ params }: Props) {
   const levelNum = parseInt(level, 10)
   if (isNaN(levelNum) || levelNum < 1 || levelNum > 11) notFound()
 
-  // Load word data server-side
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'}/data/gre-level-${levelNum}.json`,
-    { cache: 'force-cache' }
-  )
-  if (!res.ok) notFound()
-  const words = await res.json()
-
-  return <PlayClient level={levelNum} words={words} />
+  try {
+    const filePath = path.join(process.cwd(), `public/data/gre-level-${levelNum}.json`)
+    const words = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+    return <PlayClient level={levelNum} words={words} />
+  } catch {
+    notFound()
+  }
 }
