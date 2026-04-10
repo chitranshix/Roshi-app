@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import ThemeToggle from '@/components/ui/ThemeToggle'
@@ -37,11 +38,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     <div className={styles.shell}>
       <header className={[styles.header, scrolled ? styles.scrolled : ''].join(' ')}>
         <div className={styles.headerInner}>
-          <img
-            src={resolvedTheme === 'dark' ? '/logo-dark.png' : '/logo-light.png'}
-            alt="Roshi's Word Game"
-            className={styles.logo}
-          />
+          <Link href="/">
+            <img
+              src={resolvedTheme === 'dark' ? '/logo-dark.png' : '/logo-light.png'}
+              alt="Roshi's Word Game"
+              className={styles.logo}
+            />
+          </Link>
           <div className={styles.headerRight}>
             <ThemeToggle />
             <Avatar name={playerName} size={36} />
