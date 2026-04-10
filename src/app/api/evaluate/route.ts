@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     messages: [
       {
         role: 'user',
-        content: `Word: "${word}". Player's definition: "${definition}". Is this at least partially correct? A single correct synonym (e.g. "clear" for pellucid) counts as yes. Only say "no" if completely wrong or nonsensical. Reply with only "yes" or "no".`,
+        content: `You are grading a vocabulary game. Word: "${word}". Player's definition: "${definition}". Say "yes" only if the definition captures the core meaning of the word — a vague association, loose synonym, or surface-level guess does not count. For example, "ice-like" for "polar" is no. "Relating to opposites" or "of or near the poles" would be yes. Reply with only "yes" or "no".`,
       },
     ],
   })

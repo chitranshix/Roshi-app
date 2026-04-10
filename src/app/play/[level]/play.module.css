@@ -133,6 +133,27 @@
 }
 
 /* ── Hero word ── */
+.heroWordRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.speakBtn {
+  color: var(--muted);
+  flex-shrink: 0;
+  padding: 6px;
+  border-radius: 50%;
+  transition: color 0.15s, background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.speakBtn:active {
+  color: var(--accent);
+  background: var(--surface2);
+}
+
 .heroWord {
   font-size: clamp(34px, 9vw, 48px);
   font-weight: 700;
