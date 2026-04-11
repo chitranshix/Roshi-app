@@ -40,12 +40,12 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
     setSentenceCorrect(isCorrect)
     setAnswerResult(isCorrect ? 'correct' : 'wrong')
     if (navigator.vibrate) navigator.vibrate(isCorrect ? [10, 50, 10] : [80])
-    if (isCorrect) playCorrect(); else playWrong()
 
     setTimeout(() => {
       if (isCorrect) {
         setStage('definition')
       } else {
+        playWrong()
         setPoints(0)
         setStage('result')
         saveDareResult(0)
@@ -72,11 +72,13 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
       })
       const { correct } = await res.json()
       const earned = correct ? 10 : 3
+      if (correct) playCorrect(); else playWrong()
       setDefCorrect(correct)
       setPoints(earned)
       setStage('result')
       await saveDareResult(earned)
     } catch {
+      playWrong()
       setDefCorrect(null)
       setPoints(3)
       setStage('result')
