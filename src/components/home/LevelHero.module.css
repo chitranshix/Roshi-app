@@ -20,6 +20,7 @@
   gap: 16px;
   overflow: hidden;
   transition: background 0.15s;
+  box-shadow: var(--shadow);
 }
 
 .heroLink:active .heroCard { background: var(--surface2); }

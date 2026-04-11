@@ -67,14 +67,14 @@
 .streakBadge {
   font-size: 13px;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--gold);
   text-align: center;
 }
 
 .streakLine {
   font-size: 13px;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--gold);
   text-align: center;
   margin-top: 8px;
 }
@@ -195,7 +195,7 @@
   font-family: var(--font-roshi);
   font-size: 64px;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--gold);
   text-align: center;
   line-height: 1;
 }
