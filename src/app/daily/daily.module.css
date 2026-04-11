@@ -1,0 +1,343 @@
+/* ── Shared dare flow layout ── */
+.screen {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - 70px);
+  padding: 8px 20px 160px;
+  max-width: 430px;
+  margin: 0 auto;
+  gap: 16px;
+}
+
+.backBtn {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--muted);
+  padding: 8px 0 4px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Progress bar ── */
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progressStep {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 0.15s;
+}
+
+.progressDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  transition: background 0.15s;
+}
+
+.progressActive { color: var(--accent); }
+.progressActive .progressDot { background: var(--accent); }
+
+.progressDim { color: var(--border); }
+.progressDim .progressDot { background: var(--border); }
+
+.progressLine {
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  border-radius: 1px;
+}
+
+.eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+}
+
+.streakBadge {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  text-align: center;
+}
+
+.streakLine {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  text-align: center;
+  margin-top: 8px;
+}
+
+.challenger {
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ── Hero word ── */
+.heroWord {
+  font-size: clamp(34px, 9vw, 48px);
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  text-align: center;
+}
+
+.wordPos {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--accent);
+  text-align: center;
+  margin-top: -4px;
+}
+
+/* ── MCQ options ── */
+.mcqPrompt {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.option {
+  padding: 14px 16px;
+  background: var(--surface2);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text);
+  border: 2px solid transparent;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: border-color 0.15s, background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.option:active { background: var(--surface); }
+
+.option.selected {
+  border-color: var(--accent);
+  background: var(--surface);
+}
+
+.optionCorrect {
+  border-color: var(--correct) !important;
+  background: color-mix(in srgb, var(--correct) 12%, var(--surface)) !important;
+  color: var(--correct) !important;
+}
+
+.optionWrong {
+  border-color: var(--wrong) !important;
+  background: color-mix(in srgb, var(--wrong) 12%, var(--surface)) !important;
+  color: var(--wrong) !important;
+}
+
+/* ── Definition input ── */
+.defPrompt {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  text-align: center;
+  line-height: 1.5;
+}
+
+.defInput {
+  width: 100%;
+  min-height: 110px;
+  background: var(--surface2);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border);
+  padding: 14px 16px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+  resize: none;
+  transition: border-color 0.15s;
+}
+
+.defInput:focus { border-color: var(--accent); }
+.defInput::placeholder { color: var(--muted); }
+
+.defHint {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ── Result ── */
+.resultRoshi {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0 0;
+}
+
+.pointsBadge {
+  font-family: var(--font-roshi);
+  font-size: 64px;
+  font-weight: 700;
+  color: var(--accent);
+  text-align: center;
+  line-height: 1;
+}
+
+.pointsLabel {
+  font-family: var(--font-roshi);
+  font-size: 18px;
+  color: var(--muted);
+  text-align: center;
+  margin-top: -4px;
+}
+
+.definitionReveal {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+
+.definitionWord {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 4px;
+  font-family: var(--font-ui);
+}
+
+.definitionPos {
+  font-size: 11px;
+  color: var(--accent);
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.definitionText {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--muted);
+  font-family: var(--font-ui);
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+}
+
+.scoreRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+
+.scoreName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.scoreBar {
+  flex: 1;
+  height: 6px;
+  background: var(--surface2);
+  border-radius: 3px;
+  margin: 0 12px;
+  overflow: hidden;
+}
+
+.scoreBarFill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+
+.scorePoints {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 40px;
+  text-align: right;
+}
+
+.spacer { flex: 1; }
+
+/* ── Slide-up feedback bar ── */
+.feedbackBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  padding: 20px 20px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  animation: slideUp 0.35s cubic-bezier(0.34, 1.2, 0.64, 1) both;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.feedbackBar_correct { background: var(--correct); }
+.feedbackBar_wrong   { background: var(--wrong); }
+
+.feedbackBarContent {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
+.feedbackBarHeadline {
+  font-family: var(--font-roshi);
+  font-size: 20px;
+  font-weight: 400;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.feedbackBarSub {
+  font-family: var(--font-roshi);
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.88);
+  line-height: 1.45;
+}
+
+.feedbackBarBtn {
+  background: rgba(255,255,255,0.22);
+  color: #fff;
+  border: 2px solid rgba(255,255,255,0.5);
+  border-radius: var(--radius-md);
+  padding: 12px 18px;
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s;
+}
+
+.feedbackBarBtn:active { background: rgba(255,255,255,0.35); }

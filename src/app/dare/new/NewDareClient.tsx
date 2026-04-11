@@ -57,7 +57,17 @@ export default function NewDareClient({ words }: { words: GREWord[] }) {
       level:     1,
       status:    'pending',
     }))
-    await supabase.from('dares').insert(rows)
+    const { data: inserted } = await supabase.from('dares').insert(rows).select('id')
+    // If there's exactly one dare and Web Share API is available, offer to share the link
+    if (inserted?.length === 1 && navigator.share) {
+      const dareUrl = `${window.location.origin}/join/${inserted[0].id}`
+      try {
+        await navigator.share({
+          text: `i dared you with "${selectedWord}" on roshi's word game. can you beat me?`,
+          url: dareUrl,
+        })
+      } catch { /* user dismissed share sheet — that's fine */ }
+    }
     router.push('/')
   }
 

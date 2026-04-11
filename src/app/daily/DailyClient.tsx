@@ -1,36 +1,38 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import AppShell from '@/components/layout/AppShell'
 import Button from '@/components/ui/Button'
 import RoshiDisplay from '@/components/mascot/RoshiDisplay'
 import SpeechBubble from '@/components/ui/SpeechBubble'
-import { createClient } from '@/lib/supabase'
 import { playCorrect, playWrong } from '@/lib/audio'
-import type { Dare } from '@/lib/mock'
-import type { Sentence } from '@/lib/gre-words'
-import styles from './dare.module.css'
+import { hasDoneToday, markDailyDone, getStreak } from '@/lib/daily'
+import type { GREWord } from '@/lib/gre-words'
+import styles from './daily.module.css'
 
 type Stage = 'sentence' | 'definition' | 'result'
 
-interface DareFlowProps {
-  dare: Dare
-  sentences: Sentence[]
-  definition: string | null
-  dareId: string
-  isChallengee: boolean
-}
-
-export default function DareFlow({ dare, sentences, definition, dareId, isChallengee }: DareFlowProps) {
-  const [stage, setStage]                     = useState<Stage>('sentence')
-  const [selected, setSelected]               = useState<number | null>(null)
-  const [answerResult, setAnswerResult]       = useState<'correct' | 'wrong' | null>(null)
+export default function DailyClient({ word }: { word: GREWord }) {
+  const [alreadyDone, setAlreadyDone] = useState(false)
+  const [stage, setStage]             = useState<Stage>('sentence')
+  const [selected, setSelected]       = useState<number | null>(null)
+  const [answerResult, setAnswerResult] = useState<'correct' | 'wrong' | null>(null)
   const [sentenceCorrect, setSentenceCorrect] = useState(false)
-  const [userDef, setUserDef]                 = useState('')
-  const [points, setPoints]                   = useState(0)
-  const [checking, setChecking]               = useState(false)
-  const [defCorrect, setDefCorrect]           = useState<boolean | null>(null)
+  const [userDef, setUserDef]         = useState('')
+  const [points, setPoints]           = useState(0)
+  const [checking, setChecking]       = useState(false)
+  const [defCorrect, setDefCorrect]   = useState<boolean | null>(null)
+  const [streak, setStreak]           = useState(0)
+
+  useEffect(() => {
+    setAlreadyDone(hasDoneToday())
+    setStreak(getStreak().count)
+  }, [])
+
+  const sentences = useMemo(() => {
+    return [...word.sentences].sort(() => Math.random() - 0.5)
+  }, [word])
 
   const pickSentence = useCallback((i: number) => {
     if (answerResult) return
@@ -40,26 +42,11 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
     setAnswerResult(isCorrect ? 'correct' : 'wrong')
     if (navigator.vibrate) navigator.vibrate(isCorrect ? [10, 50, 10] : [80])
     if (isCorrect) playCorrect(); else playWrong()
-
     setTimeout(() => {
-      if (isCorrect) {
-        setStage('definition')
-      } else {
-        setPoints(0)
-        setStage('result')
-        saveDareResult(0)
-      }
+      if (isCorrect) setStage('definition')
+      else { setPoints(0); setStage('result'); markDailyDone(); setStreak(getStreak().count) }
     }, 1200)
   }, [answerResult, sentences])
-
-  const saveDareResult = useCallback(async (earned: number) => {
-    const supabase = createClient()
-    const col = isChallengee ? 'to_points' : 'from_points'
-    await supabase
-      .from('dares')
-      .update({ [col]: earned, status: 'complete' })
-      .eq('id', dareId)
-  }, [dareId, isChallengee])
 
   const submitDefinition = useCallback(async () => {
     setChecking(true)
@@ -67,25 +54,50 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
       const res = await fetch('/api/evaluate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ word: dare.word, definition: userDef, actualDefinition: definition }),
+        body: JSON.stringify({ word: word.word, definition: userDef, actualDefinition: word.definition }),
       })
       const { correct } = await res.json()
       const earned = correct ? 10 : 3
       setDefCorrect(correct)
       setPoints(earned)
       setStage('result')
-      await saveDareResult(earned)
+      const updated = markDailyDone()
+      setStreak(updated.count)
     } catch {
       setDefCorrect(null)
       setPoints(3)
       setStage('result')
-      await saveDareResult(3)
+      const updated = markDailyDone()
+      setStreak(updated.count)
     } finally {
       setChecking(false)
     }
-  }, [dare.word, userDef, saveDareResult])
+  }, [word, userDef])
 
   const resultExpression = !sentenceCorrect ? 'disappointed' : defCorrect === true ? 'happy' : 'idle'
+
+  if (alreadyDone && stage !== 'result') {
+    return (
+      <AppShell>
+        <div className={styles.screen}>
+          <div className={styles.resultRoshi}>
+            <RoshiDisplay expression="idle" size={140} />
+          </div>
+          <SpeechBubble tail="top">
+            <div className={styles.pointsBadge}>{streak} day streak</div>
+            <div className={styles.pointsLabel}>you already did today&apos;s word. come back tomorrow.</div>
+            <div className={styles.definitionReveal}>
+              <div className={styles.definitionWord}>{word.word}</div>
+              <div className={styles.definitionText}>{word.definition}</div>
+            </div>
+          </SpeechBubble>
+          <Link href="/" style={{ display: 'block' }}>
+            <Button variant="subtle">Back to home</Button>
+          </Link>
+        </div>
+      </AppShell>
+    )
+  }
 
   return (
     <AppShell>
@@ -105,11 +117,14 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
           </div>
         )}
 
+        <div className={styles.eyebrow}>Roshi&apos;s Daily</div>
+        {streak > 0 && stage !== 'result' && (
+          <div className={styles.streakBadge}>{streak} day streak 🔥</div>
+        )}
+
         {stage === 'sentence' && (
           <>
-            <div className={styles.eyebrow}>The Dare</div>
-            <div className={styles.challenger}>{dare.from} challenged you</div>
-            <div className={styles.heroWord}>{dare.word}</div>
+            <div className={styles.heroWord}>{word.word}</div>
             <div className={styles.mcqPrompt}>Which sentence(s) use this word correctly?</div>
             <div className={styles.options}>
               {sentences.map((s, i) => {
@@ -138,7 +153,7 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
         {stage === 'definition' && (
           <>
             <div className={styles.defPrompt}>
-              Define <strong>{dare.word}</strong> in your own words.
+              Define <strong>{word.word}</strong> in your own words.
             </div>
             <textarea
               className={styles.defInput}
@@ -162,30 +177,20 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
             <div className={styles.resultRoshi}>
               <RoshiDisplay expression={resultExpression} size={140} />
             </div>
-
             <SpeechBubble tail="top">
               <div className={styles.pointsBadge}>+{points}</div>
               <div className={styles.pointsLabel}>
-                {!sentenceCorrect
-                  ? 'Better luck next time.'
-                  : defCorrect === true
-                    ? 'You nailed it.'
-                    : 'Close, but not quite.'}
+                {!sentenceCorrect ? 'Better luck next time.' : defCorrect === true ? 'You nailed it.' : 'Close, but not quite.'}
               </div>
-              {definition && (
-                <div className={styles.definitionReveal}>
-                  <div className={styles.definitionWord}>{dare.word}</div>
-                  <div className={styles.definitionText}>{definition}</div>
-                </div>
-              )}
+              {streak > 0 && <div className={styles.streakLine}>{streak} day streak 🔥</div>}
+              <div className={styles.definitionReveal}>
+                <div className={styles.definitionWord}>{word.word}</div>
+                <div className={styles.definitionText}>{word.definition}</div>
+              </div>
             </SpeechBubble>
-
             <Link href="/dare/new" style={{ display: 'block' }}>
-              <Button>
-                {dare.from === 'Roshi' ? 'Dare a friend' : `Dare ${dare.from} back`}
-              </Button>
+              <Button>Dare someone</Button>
             </Link>
-
             <Link href="/" style={{ display: 'block', marginTop: 12 }}>
               <Button variant="subtle">Back to home</Button>
             </Link>

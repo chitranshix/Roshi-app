@@ -7,6 +7,7 @@ import Button from '@/components/ui/Button'
 import RoshiDisplay from '@/components/mascot/RoshiDisplay'
 import SpeechBubble from '@/components/ui/SpeechBubble'
 import { completedInLevel, markWordComplete, nextWordInLevel } from '@/lib/progress'
+import { playCorrect, playWrong } from '@/lib/audio'
 import type { GREWord } from '@/lib/gre-words'
 import styles from './play.module.css'
 
@@ -59,6 +60,7 @@ export default function PlayClient({ level, words }: Props) {
     setSentenceCorrect(isCorrect)
     setAnswerResult(isCorrect ? 'correct' : 'wrong')
     if (navigator.vibrate) navigator.vibrate(isCorrect ? [10, 50, 10] : [80])
+    if (isCorrect) playCorrect(); else playWrong()
     setTimeout(() => {
       if (isCorrect) {
         setStage('definition')

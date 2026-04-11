@@ -52,22 +52,37 @@ function DaresSkeleton() {
 export default function Home() {
   const [dares, setDares]     = useState<DareRow[]>([])
   const [userId, setUserId]   = useState<string | null>(null)
+  const [myPoints, setMyPoints] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const supabase = createClient()
-    supabase.auth.getUser().then(({ data: { user } }) => {
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) { setLoading(false); return }
       setUserId(user.id)
-      supabase
-        .from('dares')
-        .select('*, from_profile:from_user(name), to_profile:to_user(name)')
-        .or(`from_user.eq.${user.id},to_user.eq.${user.id}`)
-        .order('created_at', { ascending: false })
-        .then(({ data }) => {
-          setDares((data as DareRow[]) ?? [])
-          setLoading(false)
-        })
+
+      const [{ data: daresData }, { data: completedDares }] = await Promise.all([
+        supabase
+          .from('dares')
+          .select('*, from_profile:from_user(name), to_profile:to_user(name)')
+          .or(`from_user.eq.${user.id},to_user.eq.${user.id}`)
+          .order('created_at', { ascending: false }),
+        supabase
+          .from('dares')
+          .select('from_user, to_user, from_points, to_points')
+          .eq('status', 'complete')
+          .or(`from_user.eq.${user.id},to_user.eq.${user.id}`),
+      ])
+
+      setDares((daresData as DareRow[]) ?? [])
+
+      let pts = 0
+      for (const d of completedDares ?? []) {
+        if (d.from_user === user.id && d.from_points != null) pts += d.from_points
+        if (d.to_user   === user.id && d.to_points   != null) pts += d.to_points
+      }
+      setMyPoints(pts)
+      setLoading(false)
     })
   }, [])
 
@@ -79,6 +94,19 @@ export default function Home() {
       <div className={styles.page}>
 
         <LevelHero />
+
+        <div className={styles.twoCol}>
+          <Link href="/daily" className={styles.tileCard}>
+            <span className={styles.tileLabel}>Roshi&apos;s Daily</span>
+            <span className={styles.tileAction}>Play →</span>
+          </Link>
+          {myPoints !== null && (
+            <Link href="/leaderboard" className={styles.tileCard}>
+              <span className={styles.tileLabel}>{myPoints} pts</span>
+              <span className={styles.tileAction}>Leaderboard →</span>
+            </Link>
+          )}
+        </div>
 
         {loading ? <DaresSkeleton /> : (
           <>

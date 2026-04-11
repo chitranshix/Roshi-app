@@ -225,6 +225,37 @@
   animation: shimmer 1.4s ease-in-out infinite;
 }
 
+/* ── Two-column tiles (Daily + Leaderboard) ── */
+.twoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.tileCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s;
+}
+.tileCard:active { background: var(--surface2); }
+
+.tileLabel {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.tileAction {
+  font-size: 11px;
+  color: var(--muted);
+}
+
 /* ── FAB ── */
 .fab {
   position: fixed;

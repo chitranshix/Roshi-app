@@ -39,7 +39,14 @@ export default function AuthCompletePage() {
         if (profile) localStorage.setItem('roshi_name', profile.name)
       }
 
-      router.replace('/')
+      // Check if they came via an invite link
+      const joinDare = sessionStorage.getItem('roshi_join_dare')
+      if (joinDare) {
+        sessionStorage.removeItem('roshi_join_dare')
+        router.replace(`/dare/${joinDare}`)
+      } else {
+        router.replace('/')
+      }
     }
     finish()
   }, [router])
