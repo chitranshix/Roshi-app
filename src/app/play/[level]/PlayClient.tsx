@@ -223,7 +223,7 @@ export default function PlayClient({ level, words }: Props) {
 
         {/* ── DEFINITION STAGE ── */}
         {stage === 'definition' && (
-          <>
+          <div className={styles.defStage}>
             <div className={styles.defPrompt}>
               Define <strong>{currentWord.word}</strong> in your own words.
             </div>
@@ -241,7 +241,7 @@ export default function PlayClient({ level, words }: Props) {
             <Button onClick={submitDefinition} disabled={userDef.trim().length < 4 || checking}>
               {checking ? 'Checking…' : 'Submit'}
             </Button>
-          </>
+          </div>
         )}
 
         {/* ── RESULT STAGE ── */}

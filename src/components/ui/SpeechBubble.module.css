@@ -12,6 +12,7 @@
   flex-direction: column;
   gap: 8px;
   box-shadow: var(--shadow);
+  width: 100%;
 }
 
 /*

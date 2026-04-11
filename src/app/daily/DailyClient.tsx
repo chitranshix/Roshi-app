@@ -155,7 +155,7 @@ export default function DailyClient({ word }: { word: GREWord }) {
         )}
 
         {stage === 'definition' && (
-          <>
+          <div className={styles.defStage}>
             <div className={styles.defPrompt}>
               Define <strong>{word.word}</strong> in your own words.
             </div>
@@ -173,7 +173,7 @@ export default function DailyClient({ word }: { word: GREWord }) {
             <Button onClick={submitDefinition} disabled={userDef.trim().length < 4 || checking}>
               {checking ? 'Checking…' : 'Submit'}
             </Button>
-          </>
+          </div>
         )}
 
         {stage === 'result' && (

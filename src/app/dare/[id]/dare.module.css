@@ -138,6 +138,14 @@
 }
 
 /* ── Definition input ── */
+.defStage {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-top: -4px;
+}
+
 .defPrompt {
   font-size: 15px;
   font-weight: 500;

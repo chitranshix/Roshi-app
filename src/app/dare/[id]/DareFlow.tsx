@@ -137,7 +137,7 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
         )}
 
         {stage === 'definition' && (
-          <>
+          <div className={styles.defStage}>
             <div className={styles.defPrompt}>
               Define <strong>{dare.word}</strong> in your own words.
             </div>
@@ -155,7 +155,7 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
             <Button onClick={submitDefinition} disabled={userDef.trim().length < 4 || checking}>
               {checking ? 'Checking…' : 'Submit'}
             </Button>
-          </>
+          </div>
         )}
 
         {stage === 'result' && (
