@@ -282,11 +282,17 @@
   margin-top: 4px;
 }
 
+.definitionWordRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
 .definitionWord {
   font-size: 17px;
   font-weight: 700;
   color: var(--accent);
-  margin-bottom: 4px;
   font-family: var(--font-ui);
 }
 

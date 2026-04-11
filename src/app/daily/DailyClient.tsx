@@ -8,6 +8,7 @@ import RoshiDisplay from '@/components/mascot/RoshiDisplay'
 import SpeechBubble from '@/components/ui/SpeechBubble'
 import { playCorrect, playWrong } from '@/lib/audio'
 import { hasDoneToday, markDailyDone, getStreak } from '@/lib/daily'
+import StarButton from '@/components/ui/StarButton'
 import type { GREWord } from '@/lib/gre-words'
 import styles from './daily.module.css'
 
@@ -87,7 +88,10 @@ export default function DailyClient({ word }: { word: GREWord }) {
             <div className={styles.pointsBadge}>{streak} day streak</div>
             <div className={styles.pointsLabel}>you already did today&apos;s word. come back tomorrow.</div>
             <div className={styles.definitionReveal}>
-              <div className={styles.definitionWord}>{word.word}</div>
+              <div className={styles.definitionWordRow}>
+                <div className={styles.definitionWord}>{word.word}</div>
+                <StarButton word={word.word} definition={word.definition} />
+              </div>
               <div className={styles.definitionText}>{word.definition}</div>
             </div>
           </SpeechBubble>

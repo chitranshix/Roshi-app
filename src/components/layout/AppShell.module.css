@@ -72,6 +72,13 @@
   gap: 10px;
 }
 
+.avatarBtn {
+  -webkit-tap-highlight-color: transparent;
+  border-radius: 50%;
+  transition: opacity 0.15s;
+}
+.avatarBtn:active { opacity: 0.7; }
+
 .avatar {
   width: 36px;
   height: 36px;

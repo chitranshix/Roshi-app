@@ -8,6 +8,7 @@ import RoshiDisplay from '@/components/mascot/RoshiDisplay'
 import SpeechBubble from '@/components/ui/SpeechBubble'
 import { completedInLevel, markWordComplete, nextWordInLevel } from '@/lib/progress'
 import { playCorrect, playWrong } from '@/lib/audio'
+import StarButton from '@/components/ui/StarButton'
 import type { GREWord } from '@/lib/gre-words'
 import styles from './play.module.css'
 
@@ -255,7 +256,10 @@ export default function PlayClient({ level, words }: Props) {
                 {!sentenceCorrect ? 'Better luck next time.' : defCorrect === true ? 'You nailed it.' : 'Close, but not quite.'}
               </div>
               <div className={styles.definitionReveal}>
-                <div className={styles.definitionWord}>{currentWord.word}</div>
+                <div className={styles.definitionWordRow}>
+                  <div className={styles.definitionWord}>{currentWord.word}</div>
+                  <StarButton word={currentWord.word} definition={currentWord.definition} />
+                </div>
                 <div className={styles.definitionText}>{currentWord.definition}</div>
               </div>
             </SpeechBubble>

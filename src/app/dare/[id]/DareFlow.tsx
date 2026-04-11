@@ -8,6 +8,7 @@ import RoshiDisplay from '@/components/mascot/RoshiDisplay'
 import SpeechBubble from '@/components/ui/SpeechBubble'
 import { createClient } from '@/lib/supabase'
 import { playCorrect, playWrong } from '@/lib/audio'
+import StarButton from '@/components/ui/StarButton'
 import type { Dare } from '@/lib/mock'
 import type { Sentence } from '@/lib/gre-words'
 import styles from './dare.module.css'
@@ -174,7 +175,10 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
               </div>
               {definition && (
                 <div className={styles.definitionReveal}>
-                  <div className={styles.definitionWord}>{dare.word}</div>
+                  <div className={styles.definitionWordRow}>
+                    <div className={styles.definitionWord}>{dare.word}</div>
+                    <StarButton word={dare.word} definition={definition} />
+                  </div>
                   <div className={styles.definitionText}>{definition}</div>
                 </div>
               )}
