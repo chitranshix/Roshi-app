@@ -16,21 +16,26 @@ function ac(): AudioContext | null {
   }
 }
 
-/** Drum kick — short pitch-sweep down. Plays on correct answer. */
+/** Ascending 3-note arpeggio — celebratory. Plays on correct answer. */
 export function playCorrect() {
   const c = ac()
   if (!c) return
   try {
-    const osc  = c.createOscillator()
-    const gain = c.createGain()
-    osc.connect(gain)
-    gain.connect(c.destination)
-    osc.frequency.setValueAtTime(180, c.currentTime)
-    osc.frequency.exponentialRampToValueAtTime(48, c.currentTime + 0.14)
-    gain.gain.setValueAtTime(0.9, c.currentTime)
-    gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.28)
-    osc.start()
-    osc.stop(c.currentTime + 0.28)
+    const notes = [520, 660, 880]  // C5 → E5 → A5 — bright, upward
+    notes.forEach((freq, i) => {
+      const t    = c.currentTime + i * 0.10
+      const osc  = c.createOscillator()
+      const gain = c.createGain()
+      osc.type = 'sine'
+      osc.connect(gain)
+      gain.connect(c.destination)
+      osc.frequency.setValueAtTime(freq, t)
+      gain.gain.setValueAtTime(0, t)
+      gain.gain.linearRampToValueAtTime(0.5, t + 0.01)
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.22)
+      osc.start(t)
+      osc.stop(t + 0.22)
+    })
   } catch { /* silent mode / restricted */ }
 }
 
