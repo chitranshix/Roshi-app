@@ -226,13 +226,16 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
               )}
             </SpeechBubble>
 
-            <Link href="/dare/new" style={{ display: 'block' }}>
-              <Button>
-                {dare.from === 'Roshi' ? 'Dare a friend' : `Dare ${dare.from} back`}
-              </Button>
-            </Link>
+            <div className={styles.actionRow}>
+              <Link href={`/dare/new?word=${encodeURIComponent(dare.word)}`} className={styles.actionPill}>
+                🎯 {dare.from === 'Roshi' ? 'Dare' : `Dare back`}
+              </Link>
+              <Link href={`/dare/new?word=${encodeURIComponent(dare.word)}&trap=1`} className={[styles.actionPill, styles.actionPillTrap].join(' ')}>
+                🪤 Trap
+              </Link>
+            </div>
 
-            <Link href="/" style={{ display: 'block', marginTop: 12 }}>
+            <Link href="/" style={{ display: 'block', marginTop: 8 }}>
               <Button variant="subtle">Back to home</Button>
             </Link>
           </>

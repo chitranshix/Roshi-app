@@ -356,3 +356,38 @@
 }
 
 .feedbackBarBtn:active { background: rgba(255,255,255,0.35); }
+
+/* ── Result action row ── */
+.actionRow {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.actionPill {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 12px;
+  border-radius: var(--radius-md);
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.actionPill:active { background: var(--surface); }
+
+.actionPillTrap {
+  border-color: var(--wrong);
+  color: var(--wrong);
+}
+
+.actionPillTrap:active { background: color-mix(in srgb, var(--wrong) 10%, var(--surface)); }

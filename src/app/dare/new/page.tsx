@@ -12,7 +12,13 @@ function loadLevel1(): GREWord[] {
   } catch { return [] }
 }
 
-export default function NewDarePage({ searchParams }: { searchParams: { word?: string } }) {
+export default function NewDarePage({ searchParams }: { searchParams: { word?: string; trap?: string } }) {
   const words = loadLevel1()
-  return <NewDareClient words={words} preselectedWord={searchParams.word ?? null} />
+  return (
+    <NewDareClient
+      words={words}
+      preselectedWord={searchParams.word ?? null}
+      presetTrap={searchParams.trap === '1'}
+    />
+  )
 }

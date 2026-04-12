@@ -14,16 +14,17 @@ interface UserRow { id: string; name: string }
 interface Props {
   words:           GREWord[]
   preselectedWord: string | null
+  presetTrap:      boolean
 }
 
-export default function NewDareClient({ words, preselectedWord }: Props) {
+export default function NewDareClient({ words, preselectedWord, presetTrap }: Props) {
   const router = useRouter()
   const [search, setSearch]               = useState('')
   const [selectedWord, setSelectedWord]   = useState<string | null>(preselectedWord)
   const [selectedFriends, setSelectedFriends] = useState<string[]>([])
   const [friends, setFriends]             = useState<UserRow[]>([])
   const [sending, setSending]             = useState(false)
-  const [hasTrap, setHasTrap]             = useState(false)
+  const [hasTrap, setHasTrap]             = useState(presetTrap)
   const [myId, setMyId]                   = useState<string | null>(null)
   const [dareLink, setDareLink]           = useState<string | null>(null)
   const [copied, setCopied]               = useState(false)
