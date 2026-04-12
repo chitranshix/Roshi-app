@@ -7,16 +7,16 @@ a { color: inherit; text-decoration: none; }
 
 /* ─── Light theme (Parchment — land) ────────────────────────── */
 :root {
-  --bg:         #e8d8b4;
-  --surface:    #f5edd8;
-  --surface2:   #decca0;
+  --bg:         #f5f0e9;
+  --surface:    #ffffff;
+  --surface2:   #ede8de;
   --text:       #1c1408;
-  --muted:      #8a7455;
+  --muted:      #7a6e60;
   --accent:     #2a9d8f;   /* teal — words, CTAs, correct */
   --gold:       #c08a20;   /* reward moments — points, streaks, scores */
   --correct:    #2a9d8f;
   --wrong:      #c0442a;
-  --border:     rgba(28, 20, 8, 0.16);
+  --border:     rgba(26, 22, 18, 0.12);
   --shadow:     0 1px 4px rgba(0, 0, 0, 0.07);
 
   --font-ui:      'Nunito', system-ui, sans-serif;
@@ -28,16 +28,16 @@ a { color: inherit; text-decoration: none; }
 
 /* ─── Dark theme (Midnight Blue — water) ────────────────────── */
 [data-theme='dark'] {
-  --bg:         #090f1e;
-  --surface:    #111c30;
-  --surface2:   #182540;
+  --bg:         #0a1628;
+  --surface:    #112036;
+  --surface2:   #1a2d47;
   --text:       #dce8f8;
-  --muted:      #6a82a8;
+  --muted:      #7090b8;
   --accent:     #4bbfb0;   /* lighter teal for dark bg contrast */
   --gold:       #e8a835;   /* brighter gold for dark contrast */
   --correct:    #4bbfb0;
   --wrong:      #e05a3a;
-  --border:     rgba(75, 191, 176, 0.20);
+  --border:     rgba(255, 255, 255, 0.09);
   --shadow:     0 1px 6px rgba(0, 0, 0, 0.28);
 }
 
