@@ -47,3 +47,11 @@ export function nextWordInLevel(allWords: string[], level: number): string | nul
   const done = completedInLevel(level)
   return allWords.find(w => !done.includes(w)) ?? null
 }
+
+const WORDS_PER_LEVEL = 100
+
+/** Levels 1 & 2 are always unlocked. Level N unlocks when level N-1 is 100% done. */
+export function isLevelUnlocked(level: number): boolean {
+  if (level <= 2) return true
+  return completedInLevel(level - 1).length >= WORDS_PER_LEVEL
+}

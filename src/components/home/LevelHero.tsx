@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useTheme } from 'next-themes'
-import { getProgress, completedInLevel } from '@/lib/progress'
+import { completedInLevel, isLevelUnlocked } from '@/lib/progress'
 import styles from './LevelHero.module.css'
 
 const WORDS_PER_LEVEL = 100
@@ -153,16 +153,18 @@ export default function LevelHero() {
   const { resolvedTheme } = useTheme()
   const isWater = resolvedTheme === 'dark'
 
-  const [progress] = useState(() => getProgress())
-  const currentLevel = progress.level
+  // Current level = first unlocked level that isn't 100% done
+  const [currentLevel] = useState(() => {
+    for (let lvl = 1; lvl <= 11; lvl++) {
+      if (isLevelUnlocked(lvl) && completedInLevel(lvl).length < WORDS_PER_LEVEL) return lvl
+    }
+    return 11
+  })
   const completed    = completedInLevel(currentLevel).length
   const remaining    = WORDS_PER_LEVEL - completed
   const pct          = Math.round((completed / WORDS_PER_LEVEL) * 100)
-  const isDone       = completed === WORDS_PER_LEVEL
-  const href         = isDone ? `/play/${Math.min(currentLevel + 1, 11)}` : `/play/${currentLevel}`
-  const btnLabel     = isDone
-    ? `Start Mission ${currentLevel + 1}`
-    : completed === 0 ? 'Begin Mission' : 'Continue'
+  const href         = `/play/${currentLevel}`
+  const btnLabel     = completed === 0 ? 'Begin Mission' : 'Continue'
 
   return (
     <div className={styles.wrap}>
@@ -197,7 +199,7 @@ export default function LevelHero() {
         {Array.from({ length: 11 }, (_, i) => i + 1).map(level => {
           const done     = completedInLevel(level).length
           const isActive = level === currentLevel
-          const isLocked = level > currentLevel
+          const isLocked = !isLevelUnlocked(level)
           const pctDone  = Math.round((done / WORDS_PER_LEVEL) * 100)
 
           return (

@@ -96,8 +96,10 @@ export default function Home() {
     })
   }, [])
 
-  const pendingDares = dares.filter(d => d.status === 'pending' && d.to_user === userId)
-  const otherDares   = dares.filter(d => !(d.status === 'pending' && d.to_user === userId))
+  const pendingForMe    = dares.filter(d => d.status === 'pending' && d.to_user === userId)
+  const waitingOnFriend = dares.filter(d => d.status === 'pending' && d.from_user === userId)
+  const completedCount  = dares.filter(d => d.status === 'complete').length
+  const noActiveDares   = pendingForMe.length === 0 && waitingOnFriend.length === 0
 
   return (
     <AppShell>
@@ -113,24 +115,23 @@ export default function Home() {
               : <span className={styles.tileAction}>{dailyDone ? 'Done ✓' : 'Play →'}</span>
             }
           </Link>
-          {myPoints !== null && (
-            <Link href="/leaderboard" className={styles.tileCard}>
-              <span className={styles.tileLabel}>{myPoints} pts</span>
-              <span className={styles.tileAction}>Leaderboard →</span>
-            </Link>
-          )}
+          <Link href="/leaderboard" className={styles.tileCard}>
+            <span className={styles.tileLabel}>Leaderboard</span>
+            <span className={styles.tileAction}>{myPoints !== null ? `${myPoints} pts →` : '→'}</span>
+          </Link>
         </div>
 
         {loading ? <DaresSkeleton /> : (
           <>
-            {pendingDares.length > 0 && (
+            {/* Dares incoming — your turn */}
+            {pendingForMe.length > 0 && (
               <div className={styles.section}>
                 <div className={styles.sectionHeader}>
                   <span className={styles.sectionTitle}>Your turn</span>
-                  <span className={styles.sectionBadge}>{pendingDares.length}</span>
+                  <span className={styles.sectionBadge}>{pendingForMe.length}</span>
                 </div>
                 <div className={styles.chipRow}>
-                  {pendingDares.map(dare => (
+                  {pendingForMe.map(dare => (
                     <Link key={dare.id} href={`/dare/${dare.id}`} className={styles.chip}>
                       <Avatar name={dare.from_profile?.name ?? '?'} size={28} />
                       <span className={styles.chipName}>{dare.from_profile?.name}</span>
@@ -141,42 +142,37 @@ export default function Home() {
               </div>
             )}
 
-            {otherDares.length > 0 ? (
+            {/* Dares sent — waiting on friends */}
+            {waitingOnFriend.length > 0 && (
               <div className={styles.section}>
                 <div className={styles.sectionHeader}>
-                  <span className={styles.sectionTitle}>Dares</span>
+                  <span className={styles.sectionTitle}>Sent</span>
                   <Link href="/dare/new" className={styles.sectionAction}>+ New dare</Link>
                 </div>
                 <div className={styles.dareList}>
-                  {otherDares.slice(0, 5).map(dare => {
-                    const isWaiting  = dare.status === 'pending' && dare.from_user === userId
-                    const isComplete = dare.status === 'complete'
-                    const fromLine   = isWaiting
-                      ? `You → ${dare.to_profile?.name}`
-                      : `${dare.from_profile?.name} → you`
-                    const pts  = dare.from_user === userId ? dare.from_points : dare.to_points
-                    const who  = dare.from_user === userId ? 'You' : dare.from_profile?.name
-                    const row = (
-                      <div className={[styles.dareRow, isComplete ? styles.dimmed : ''].join(' ')}>
-                        <Avatar name={isWaiting ? dare.to_profile?.name ?? '?' : dare.from_profile?.name ?? '?'} size={32} />
-                        <div className={styles.dareInfo}>
-                          <span className={styles.dareWord}>{dare.word}</span>
-                          <span className={styles.dareMeta}>{fromLine} · {relativeTime(dare.created_at)}</span>
-                        </div>
-                        {isWaiting  && <span className={`${styles.tag} ${styles.tagMuted}`}>Waiting</span>}
-                        {isComplete && pts != null && <span className={`${styles.tag} ${styles.tagDone}`}>{who} +{pts}</span>}
+                  {waitingOnFriend.map(dare => (
+                    <div key={dare.id} className={styles.dareRow}>
+                      <Avatar name={dare.to_profile?.name ?? '?'} size={32} />
+                      <div className={styles.dareInfo}>
+                        <span className={styles.dareWord}>{dare.word}</span>
+                        <span className={styles.dareMeta}>
+                          Waiting on {dare.to_profile?.name} · {relativeTime(dare.created_at)}
+                        </span>
                       </div>
-                    )
-                    return dare.status === 'pending' && dare.to_user === userId
-                      ? <Link key={dare.id} href={`/dare/${dare.id}`} className={styles.dareRowLink}>{row}</Link>
-                      : <div key={dare.id}>{row}</div>
-                  })}
+                      <span className={`${styles.tag} ${styles.tagMuted}`}>Waiting</span>
+                    </div>
+                  ))}
                 </div>
               </div>
-            ) : !loading && dares.length === 0 && (
+            )}
+
+            {/* Empty state */}
+            {!loading && noActiveDares && (
               <div className={styles.emptyState}>
-                <div className={styles.emptyText}>No dares yet.</div>
-                <div className={styles.emptyHint}>Dare someone to get started.</div>
+                <div className={styles.emptyText}>No active dares.</div>
+                <div className={styles.emptyHint}>
+                  {completedCount > 0 ? `${completedCount} past dare${completedCount > 1 ? 's' : ''} completed.` : 'Dare someone to get started.'}
+                </div>
                 <Link href="/dare/new" className={styles.emptyBtn}>+ Dare someone</Link>
               </div>
             )}
