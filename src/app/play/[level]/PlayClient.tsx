@@ -125,7 +125,7 @@ export default function PlayClient({ level, words }: Props) {
   // Level complete
   if (!currentWord && wordsDoneThisSession > 0) {
     return (
-      <AppShell>
+      <AppShell gameplay>
         <div className={styles.screen}>
           <div className={styles.resultRoshi}>
             <RoshiDisplay expression="happy" size={140} />
@@ -145,7 +145,7 @@ export default function PlayClient({ level, words }: Props) {
   // No words available (all done before this session)
   if (!currentWord) {
     return (
-      <AppShell>
+      <AppShell gameplay>
         <div className={styles.screen}>
           <div className={styles.resultRoshi}>
             <RoshiDisplay expression="happy" size={140} />

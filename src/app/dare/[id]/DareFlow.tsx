@@ -91,7 +91,7 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
   const resultExpression = !sentenceCorrect ? 'disappointed' : defCorrect === true ? 'happy' : 'idle'
 
   return (
-    <AppShell>
+    <AppShell gameplay>
       <div className={styles.screen}>
 
         {stage !== 'result' && (

@@ -7,7 +7,7 @@ import ThemeToggle from '@/components/ui/ThemeToggle'
 import Avatar from '@/components/ui/Avatar'
 import styles from './AppShell.module.css'
 
-export default function AppShell({ children }: { children: React.ReactNode }) {
+export default function AppShell({ children, gameplay }: { children: React.ReactNode, gameplay?: boolean }) {
   const router   = useRouter()
   const pathname = usePathname()
   const isHome   = pathname === '/'
@@ -59,7 +59,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </header>
-      <main className={styles.content}>
+      <main className={[styles.content, gameplay ? styles.contentGameplay : ''].filter(Boolean).join(' ')}>
         {children}
       </main>
     </div>

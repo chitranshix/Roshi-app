@@ -88,7 +88,7 @@ export default function DailyClient({ word }: { word: GREWord }) {
 
   if (alreadyDone && stage !== 'result') {
     return (
-      <AppShell>
+      <AppShell gameplay>
         <div className={styles.screen}>
           <div className={styles.resultRoshi}>
             <RoshiDisplay expression="idle" size={140} />
@@ -113,7 +113,7 @@ export default function DailyClient({ word }: { word: GREWord }) {
   }
 
   return (
-    <AppShell>
+    <AppShell gameplay>
       <div className={styles.screen}>
 
         {stage !== 'result' && (
