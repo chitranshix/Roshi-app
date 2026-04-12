@@ -14,17 +14,15 @@ interface UserRow { id: string; name: string }
 interface Props {
   words:           GREWord[]
   preselectedWord: string | null
-  presetTrap:      boolean
 }
 
-export default function NewDareClient({ words, preselectedWord, presetTrap }: Props) {
+export default function NewDareClient({ words, preselectedWord }: Props) {
   const router = useRouter()
   const [search, setSearch]               = useState('')
   const [selectedWord, setSelectedWord]   = useState<string | null>(preselectedWord)
   const [selectedFriends, setSelectedFriends] = useState<string[]>([])
   const [friends, setFriends]             = useState<UserRow[]>([])
   const [sending, setSending]             = useState(false)
-  const [hasTrap, setHasTrap]             = useState(presetTrap)
   const [myId, setMyId]                   = useState<string | null>(null)
   const [dareLink, setDareLink]           = useState<string | null>(null)
   const [copied, setCopied]               = useState(false)
@@ -83,7 +81,7 @@ export default function NewDareClient({ words, preselectedWord, presetTrap }: Pr
       word:      selectedWord,
       level:     1,
       status:    'pending',
-      has_trap:  hasTrap,
+      has_trap:  false,
     }))
     const { data: inserted } = await supabase.from('dares').insert(rows).select('id, to_user')
     // Notify each challenged friend
@@ -210,22 +208,6 @@ export default function NewDareClient({ words, preselectedWord, presetTrap }: Pr
             <button className={styles.dareLinkDone} onClick={() => router.push('/')}>Done</button>
           </div>
         )}
-
-        <button
-          className={[styles.trapToggle, hasTrap ? styles.trapActive : ''].filter(Boolean).join(' ')}
-          onClick={() => setHasTrap(t => !t)}
-        >
-          <span className={styles.trapIcon}>🪤</span>
-          <div className={styles.trapInfo}>
-            <div className={styles.trapLabel}>Set a trap</div>
-            <div className={styles.trapHint}>
-              {hasTrap
-                ? 'They fail → you get +10 pts. They nail it → they get +10 bonus.'
-                : 'Bet against them. Costs nothing.'}
-            </div>
-          </div>
-          <div className={[styles.trapDot, hasTrap ? styles.trapDotOn : ''].filter(Boolean).join(' ')} />
-        </button>
 
         <div className={styles.spacer} />
 

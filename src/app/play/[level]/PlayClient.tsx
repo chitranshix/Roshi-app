@@ -276,10 +276,10 @@ export default function PlayClient({ level, words, userId }: Props) {
             <Button onClick={handleNext}>Next word</Button>
             <div className={styles.actionRow}>
               <Link href={`/dare/new?word=${encodeURIComponent(currentWord.word)}`} className={styles.actionPill}>
-                🎯 Dare
+                ⚡ Send dare
               </Link>
-              <Link href={`/dare/new?word=${encodeURIComponent(currentWord.word)}&trap=1`} className={[styles.actionPill, styles.actionPillTrap].join(' ')}>
-                🪤 Trap
+              <Link href={`/dare/trap?word=${encodeURIComponent(currentWord.word)}`} className={[styles.actionPill, styles.actionPillTrap].join(' ')}>
+                🪤 Set trap
               </Link>
             </div>
           </>

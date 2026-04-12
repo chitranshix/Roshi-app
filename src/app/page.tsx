@@ -55,8 +55,9 @@ export default function Home() {
   const [userId, setUserId]   = useState<string | null>(null)
   const [myPoints, setMyPoints] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
-  const [streak, setStreak]   = useState(0)
+  const [streak, setStreak]     = useState(0)
   const [dailyDone, setDailyDone] = useState(false)
+  const [showSent, setShowSent]   = useState(false)
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- reading localStorage must happen in useEffect
@@ -122,10 +123,10 @@ export default function Home() {
     })
   }, [])
 
-  const pendingForMe    = dares.filter(d => d.status === 'pending' && d.to_user === userId)
-  const waitingOnFriend = dares.filter(d => d.status === 'pending' && d.from_user === userId)
+  const pendingForMe       = dares.filter(d => d.status === 'pending' && d.to_user === userId)
+  const waitingOnFriend    = dares.filter(d => d.status === 'pending' && d.from_user === userId)
   const completedDaresList = dares.filter(d => d.status === 'complete').slice(0, 5)
-  const noActiveDares   = pendingForMe.length === 0 && waitingOnFriend.length === 0
+  const noDares            = pendingForMe.length === 0 && waitingOnFriend.length === 0 && completedDaresList.length === 0
 
   return (
     <AppShell>
@@ -149,13 +150,14 @@ export default function Home() {
 
         {loading ? <DaresSkeleton /> : (
           <>
-            {/* Dares incoming — your turn */}
-            {pendingForMe.length > 0 && (
-              <div className={styles.section}>
-                <div className={styles.sectionHeader}>
-                  <span className={styles.sectionTitle}>Your turn</span>
-                  <span className={styles.sectionBadge}>{pendingForMe.length}</span>
-                </div>
+            <div className={styles.section}>
+              <div className={styles.sectionHeader}>
+                <span className={styles.sectionTitle}>Dares</span>
+                <Link href="/dare/new" className={styles.sectionAction}>+ New</Link>
+              </div>
+
+              {/* Received — prominent chips */}
+              {pendingForMe.length > 0 && (
                 <div className={styles.chipRow}>
                   {pendingForMe.map(dare => (
                     <Link key={dare.id} href={`/dare/${dare.id}`} className={styles.chip}>
@@ -165,44 +167,15 @@ export default function Home() {
                     </Link>
                   ))}
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Dares sent — waiting on friends */}
-            {waitingOnFriend.length > 0 && (
-              <div className={styles.section}>
-                <div className={styles.sectionHeader}>
-                  <span className={styles.sectionTitle}>Sent</span>
-                  <Link href="/dare/new" className={styles.sectionAction}>+ New dare</Link>
-                </div>
-                <div className={styles.dareList}>
-                  {waitingOnFriend.map(dare => (
-                    <div key={dare.id} className={styles.dareRow}>
-                      <Avatar name={dare.to_profile?.name ?? '?'} size={32} />
-                      <div className={styles.dareInfo}>
-                        <span className={styles.dareWord}>{dare.word}</span>
-                        <span className={styles.dareMeta}>
-                          Waiting on {dare.to_profile?.name} · {relativeTime(dare.created_at)}
-                        </span>
-                      </div>
-                      <span className={`${styles.tag} ${styles.tagMuted}`}>Waiting</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Completed dares */}
-            {completedDaresList.length > 0 && (
-              <div className={styles.section}>
-                <div className={styles.sectionHeader}>
-                  <span className={styles.sectionTitle}>Past</span>
-                </div>
+              {/* Completed — dimmed list */}
+              {completedDaresList.length > 0 && (
                 <div className={styles.dareList}>
                   {completedDaresList.map(dare => {
-                    const isSender   = dare.from_user === userId
-                    const otherName  = isSender ? dare.to_profile?.name : dare.from_profile?.name
-                    const myPts      = isSender ? dare.from_points : dare.to_points
+                    const isSender  = dare.from_user === userId
+                    const otherName = isSender ? dare.to_profile?.name : dare.from_profile?.name
+                    const myPts     = isSender ? dare.from_points : dare.to_points
                     return (
                       <Link key={dare.id} href={`/dare/${dare.id}`} className={styles.dareRow} style={{ opacity: 0.6, textDecoration: 'none' }}>
                         <Avatar name={otherName ?? '?'} size={32} />
@@ -217,17 +190,39 @@ export default function Home() {
                     )
                   })}
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Empty state */}
-            {!loading && noActiveDares && completedDaresList.length === 0 && (
-              <div className={styles.emptyState}>
-                <div className={styles.emptyText}>No dares yet.</div>
-                <div className={styles.emptyHint}>Dare someone to get started.</div>
-                <Link href="/dare/new" className={styles.emptyBtn}>+ Dare someone</Link>
-              </div>
-            )}
+              {/* Empty state */}
+              {noDares && (
+                <div className={styles.emptyState}>
+                  <div className={styles.emptyText}>No dares yet.</div>
+                  <div className={styles.emptyHint}>Dare someone to get started.</div>
+                </div>
+              )}
+
+              {/* Sent dares — tertiary toggle */}
+              {waitingOnFriend.length > 0 && (
+                <button className={styles.sentToggle} onClick={() => setShowSent(s => !s)}>
+                  {showSent ? '▲' : '▼'} Sent ({waitingOnFriend.length})
+                </button>
+              )}
+              {showSent && (
+                <div className={styles.dareList} style={{ marginTop: 4 }}>
+                  {waitingOnFriend.map(dare => (
+                    <div key={dare.id} className={styles.dareRow} style={{ opacity: 0.5 }}>
+                      <Avatar name={dare.to_profile?.name ?? '?'} size={32} />
+                      <div className={styles.dareInfo}>
+                        <span className={styles.dareWord}>{dare.word}</span>
+                        <span className={styles.dareMeta}>
+                          Waiting on {dare.to_profile?.name} · {relativeTime(dare.created_at)}
+                        </span>
+                      </div>
+                      <span className={`${styles.tag} ${styles.tagMuted}`}>Waiting</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </>
         )}
 

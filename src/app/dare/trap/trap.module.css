@@ -1,0 +1,94 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - 70px);
+  padding: 8px 20px 40px;
+  max-width: 430px;
+  margin: 0 auto;
+  gap: 16px;
+}
+
+.heading {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.hint {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-top: -4px;
+}
+
+.wordBox {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  background: color-mix(in srgb, var(--wrong) 8%, var(--surface));
+  border-radius: var(--radius-md);
+  border: 2px solid var(--wrong);
+}
+
+.wordLabel {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wrong);
+}
+
+.wordValue {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--wrong);
+  letter-spacing: -0.02em;
+}
+
+.sectionLabel {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.friendList {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.friendChip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.friendChip :global(.avatar) {
+  border: 2px solid transparent;
+  border-radius: 50%;
+  transition: border-color 0.15s;
+}
+
+.friendChip.selected :global(.avatar) {
+  border-color: var(--wrong);
+}
+
+.friendName {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.empty {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.spacer { flex: 1; }

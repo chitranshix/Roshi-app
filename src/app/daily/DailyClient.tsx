@@ -222,10 +222,10 @@ export default function DailyClient({ word, userId }: { word: GREWord; userId: s
             </SpeechBubble>
             <div className={styles.actionRow}>
               <Link href={`/dare/new?word=${encodeURIComponent(word.word)}`} className={styles.actionPill}>
-                🎯 Dare
+                ⚡ Send dare
               </Link>
-              <Link href={`/dare/new?word=${encodeURIComponent(word.word)}&trap=1`} className={[styles.actionPill, styles.actionPillTrap].join(' ')}>
-                🪤 Trap
+              <Link href={`/dare/trap?word=${encodeURIComponent(word.word)}`} className={[styles.actionPill, styles.actionPillTrap].join(' ')}>
+                🪤 Set trap
               </Link>
             </div>
             <Link href="/" style={{ display: 'block', marginTop: 12 }}>
