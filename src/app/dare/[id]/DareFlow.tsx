@@ -16,7 +16,7 @@ import styles from './dare.module.css'
 type Stage = 'sentence' | 'definition' | 'result'
 
 const SENTENCE_TIME   = 30
-const DEFINITION_TIME = 40
+const DEFINITION_TIME = 30
 
 interface DareFlowProps {
   dare:             Dare
@@ -47,15 +47,22 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
     if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null }
   }, [])
 
-  // Penalise tab-switching — cut remaining time to 5s on return
+  // Auto-fail on tab/app switch
   useEffect(() => {
     const onVisibilityChange = () => {
-      if (document.hidden || stage === 'result') return
-      setTimeLeft(prev => Math.min(prev, 5))
+      if (!document.hidden || stage === 'result') return
+      clearTimer()
+      timedOut.current = true
+      playWrong()
+      if (navigator.vibrate) navigator.vibrate([80])
+      setPoints(0)
+      if (stage === 'definition') setDefCorrect(false)
+      setStage('result')
+      saveDareResult(0)
     }
     document.addEventListener('visibilitychange', onVisibilityChange)
     return () => document.removeEventListener('visibilitychange', onVisibilityChange)
-  }, [stage])
+  }, [stage, clearTimer, saveDareResult])
 
   // Start/reset timer when stage changes
   useEffect(() => {
