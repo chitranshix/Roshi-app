@@ -9,6 +9,7 @@ import SpeechBubble from '@/components/ui/SpeechBubble'
 import { createClient } from '@/lib/supabase'
 import { playCorrect, playWrong } from '@/lib/audio'
 import StarButton from '@/components/ui/StarButton'
+import { IconDare, IconTrap } from '@/components/ui/icons'
 import type { Dare } from '@/lib/mock'
 import type { Sentence } from '@/lib/gre-words'
 import styles from './dare.module.css'
@@ -295,10 +296,10 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
 
             <div className={styles.actionRow}>
               <Link href={`/dare/new?word=${encodeURIComponent(dare.word)}`} className={styles.actionPill}>
-                ⚡ {dare.from === 'Roshi' ? 'Send dare' : 'Dare back'}
+                <IconDare size={16} /> {dare.from === 'Roshi' ? 'Send dare' : 'Dare back'}
               </Link>
               <Link href={`/dare/trap?word=${encodeURIComponent(dare.word)}`} className={[styles.actionPill, styles.actionPillTrap].join(' ')}>
-                🪤 Set trap
+                <IconTrap size={16} /> Set trap
               </Link>
             </div>
 

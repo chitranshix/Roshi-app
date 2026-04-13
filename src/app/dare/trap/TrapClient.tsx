@@ -6,6 +6,7 @@ import AppShell from '@/components/layout/AppShell'
 import Button from '@/components/ui/Button'
 import Avatar from '@/components/ui/Avatar'
 import { createClient } from '@/lib/supabase'
+import { IconTrap } from '@/components/ui/icons'
 import styles from './trap.module.css'
 
 interface UserRow { id: string; name: string }
@@ -60,7 +61,7 @@ export default function TrapClient({ word, friends, myId }: Props) {
   return (
     <AppShell>
       <div className={styles.screen}>
-        <div className={styles.heading}>🕸️ Set a trap</div>
+        <div className={styles.heading}><IconTrap size={22} /> Set a trap</div>
         <div className={styles.hint}>
           Send a dare to someone you think will fail it. If they get the sentence wrong or can&apos;t define the word, they&apos;re caught — and you get +10 pts. If they escape the trap, they pocket a +10 bonus instead.
         </div>

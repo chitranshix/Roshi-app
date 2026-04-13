@@ -10,6 +10,7 @@ import { completedInLevel, markWordComplete, nextWordInLevel } from '@/lib/progr
 import { playCorrect, playWrong } from '@/lib/audio'
 import { createClient } from '@/lib/supabase'
 import StarButton from '@/components/ui/StarButton'
+import { IconDare, IconTrap } from '@/components/ui/icons'
 import type { GREWord } from '@/lib/gre-words'
 import styles from './play.module.css'
 
@@ -276,10 +277,10 @@ export default function PlayClient({ level, words, userId }: Props) {
             <Button onClick={handleNext}>Next word</Button>
             <div className={styles.actionRow}>
               <Link href={`/dare/new?word=${encodeURIComponent(currentWord.word)}`} className={styles.actionPill}>
-                ⚡ Send dare
+                <IconDare size={16} /> Send dare
               </Link>
               <Link href={`/dare/trap?word=${encodeURIComponent(currentWord.word)}`} className={[styles.actionPill, styles.actionPillTrap].join(' ')}>
-                🪤 Set trap
+                <IconTrap size={16} /> Set trap
               </Link>
             </div>
           </>

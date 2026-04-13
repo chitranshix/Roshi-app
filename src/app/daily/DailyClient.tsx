@@ -10,6 +10,7 @@ import { playCorrect, playWrong } from '@/lib/audio'
 import { hasDoneToday, markDailyDone, getStreak } from '@/lib/daily'
 import { createClient } from '@/lib/supabase'
 import StarButton from '@/components/ui/StarButton'
+import { IconDare, IconTrap } from '@/components/ui/icons'
 import type { GREWord } from '@/lib/gre-words'
 import styles from './daily.module.css'
 
@@ -222,10 +223,10 @@ export default function DailyClient({ word, userId }: { word: GREWord; userId: s
             </SpeechBubble>
             <div className={styles.actionRow}>
               <Link href={`/dare/new?word=${encodeURIComponent(word.word)}`} className={styles.actionPill}>
-                ⚡ Send dare
+                <IconDare size={16} /> Send dare
               </Link>
               <Link href={`/dare/trap?word=${encodeURIComponent(word.word)}`} className={[styles.actionPill, styles.actionPillTrap].join(' ')}>
-                🪤 Set trap
+                <IconTrap size={16} /> Set trap
               </Link>
             </div>
             <Link href="/" style={{ display: 'block', marginTop: 12 }}>
