@@ -123,8 +123,8 @@ export default function OnboardingPage() {
               <div className={styles.nameCol}>
                 <div className={styles.nameRow}>
                   <input
-                    className={styles.input}
-                    placeholder="Your name..."
+                    className={[styles.input, name.length > 0 && name.trim().length < 2 ? styles.inputError : ''].join(' ')}
+                    placeholder="Your name (required)..."
                     value={name}
                     onChange={e => setName(e.target.value)}
                     maxLength={20}
@@ -133,8 +133,8 @@ export default function OnboardingPage() {
                 </div>
                 <div className={styles.nameRow}>
                   <input
-                    className={styles.input}
-                    placeholder="Your email..."
+                    className={[styles.input, email.length > 0 && !email.includes('@') ? styles.inputError : ''].join(' ')}
+                    placeholder="Your email (required)..."
                     type="email"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
