@@ -280,7 +280,7 @@
 .tileLabel {
   font-size: 17px;
   font-weight: 700;
-  color: var(--gold);
+  color: var(--text);
 }
 
 .tileAction {

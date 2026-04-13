@@ -98,7 +98,7 @@ export default function Home() {
       if (!user) { setLoading(false); return }
       setUserId(user.id)
 
-      const [{ data: daresData }, { data: completedDares }] = await Promise.all([
+      const [{ data: daresData }, { data: completedDares }, { data: playEvents }] = await Promise.all([
         supabase
           .from('dares')
           .select('*, from_profile:from_user(name), to_profile:to_user(name)')
@@ -106,9 +106,13 @@ export default function Home() {
           .order('created_at', { ascending: false }),
         supabase
           .from('dares')
-          .select('from_user, to_user, from_points, to_points')
+          .select('from_user, to_user, from_points, to_points, has_trap, trap_winner')
           .eq('status', 'complete')
           .or(`from_user.eq.${user.id},to_user.eq.${user.id}`),
+        supabase
+          .from('point_events')
+          .select('points')
+          .eq('user_id', user.id),
       ])
 
       setDares((daresData as DareRow[]) ?? [])
@@ -117,7 +121,10 @@ export default function Home() {
       for (const d of completedDares ?? []) {
         if (d.from_user === user.id && d.from_points != null) pts += d.from_points
         if (d.to_user   === user.id && d.to_points   != null) pts += d.to_points
+        if (d.has_trap && d.trap_winner === 'trapper' && d.from_user === user.id) pts += 10
+        if (d.has_trap && d.trap_winner === 'target'  && d.to_user   === user.id) pts += 10
       }
+      for (const e of playEvents ?? []) pts += e.points
       setMyPoints(pts)
       setLoading(false)
     })
