@@ -8,6 +8,7 @@
   max-width: 430px;
   margin: 0 auto;
   gap: 12px;
+  user-select: none;
 }
 
 .backBtn {
@@ -183,6 +184,7 @@
 }
 
 .defInput {
+  user-select: text;
   width: 100%;
   min-height: 110px;
   background: var(--surface2);
