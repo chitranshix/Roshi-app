@@ -27,6 +27,7 @@ export default function NewDareClient({ words, preselectedWord }: Props) {
   const [dareLink, setDareLink]           = useState<string | null>(null)
   const [copied, setCopied]               = useState(false)
   const [recentWords, setRecentWords]     = useState<string[]>([])
+  const [inviteMode, setInviteMode]       = useState(false)
 
   useEffect(() => {
     const supabase = createClient()
@@ -57,9 +58,18 @@ export default function NewDareClient({ words, preselectedWord }: Props) {
   }, [])
 
   const toggleFriend = (id: string) => {
+    setInviteMode(false)
+    setDareLink(null)
     setSelectedFriends(prev =>
       prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
     )
+  }
+
+  const handleInviteChip = () => {
+    if (!selectedWord) return
+    setSelectedFriends([])
+    setInviteMode(true)
+    setDareLink(null)
   }
 
   const query    = search.trim().toLowerCase()
@@ -69,7 +79,7 @@ export default function NewDareClient({ words, preselectedWord }: Props) {
       ? recentWords.map(w => words.find(wd => wd.word === w)).filter(Boolean) as GREWord[]
       : words.slice(0, 12)
 
-  const canSend = selectedWord && selectedFriends.length > 0 && !sending
+  const canSend = selectedWord && (inviteMode || selectedFriends.length > 0) && !sending
 
   const handleSend = async () => {
     if (!canSend || !myId || !selectedWord) return
@@ -107,10 +117,9 @@ export default function NewDareClient({ words, preselectedWord }: Props) {
     if (!selectedWord || !myId) return
     setSending(true)
     const supabase = createClient()
-    // Create a dare with no to_user — stranger will claim it via the link
     const { data: inserted } = await supabase
       .from('dares')
-      .insert([{ from_user: myId, word: selectedWord, level: 1, status: 'pending', has_trap: false }])
+      .insert([{ from_user: myId, word: selectedWord, level: 1, status: 'pending' }])
       .select('id')
     setSending(false)
     if (!inserted?.length) return
@@ -192,9 +201,9 @@ export default function NewDareClient({ words, preselectedWord }: Props) {
           ))}
           <div
             className={[styles.friendChip, !selectedWord ? styles.friendChipDisabled : ''].filter(Boolean).join(' ')}
-            onClick={selectedWord ? handleInvite : undefined}
+            onClick={handleInviteChip}
           >
-            <div className={styles.inviteAvatar}>📤</div>
+            <div className={[styles.inviteAvatar, inviteMode ? styles.inviteAvatarSelected : ''].filter(Boolean).join(' ')}>📤</div>
             <div className={styles.friendName}>Invite</div>
           </div>
         </div>
@@ -220,8 +229,8 @@ export default function NewDareClient({ words, preselectedWord }: Props) {
         <div className={styles.spacer} />
 
         {!dareLink && (
-          <Button onClick={handleSend} disabled={!canSend}>
-            {sending ? 'Sending…' : 'Send'}
+          <Button onClick={inviteMode ? handleInvite : handleSend} disabled={!canSend}>
+            {sending ? 'Generating…' : inviteMode ? 'Get invite link' : 'Send'}
           </Button>
         )}
       </div>

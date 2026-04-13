@@ -37,6 +37,12 @@ export default async function DarePage({ params }: Props) {
 
   if (!dbDare) notFound()
 
+  // Claim unclaimed invite dare
+  if (!dbDare.to_user && user && user.id !== dbDare.from_user) {
+    await supabase.from('dares').update({ to_user: user.id }).eq('id', dbDare.id)
+    dbDare.to_user = user.id
+  }
+
   const dare: Dare = {
     id: dbDare.id,
     word: dbDare.word,
