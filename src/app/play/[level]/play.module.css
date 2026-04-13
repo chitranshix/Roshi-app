@@ -459,3 +459,23 @@
 }
 
 .feedbackBarBtn:active { background: rgba(255,255,255,0.35); }
+
+/* ── Trap reveal ── */
+.trapEscaped, .trapTriggered {
+  font-family: var(--font-roshi);
+  font-size: 13px;
+  line-height: 1.4;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  margin-top: 6px;
+}
+
+.trapEscaped {
+  background: color-mix(in srgb, var(--correct) 12%, var(--surface));
+  color: var(--correct);
+}
+
+.trapTriggered {
+  background: color-mix(in srgb, var(--wrong) 12%, var(--surface));
+  color: var(--wrong);
+}

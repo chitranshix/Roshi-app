@@ -57,6 +57,7 @@ export default function Home() {
   const [streak, setStreak]     = useState(0)
   const [dailyDone, setDailyDone] = useState(false)
   const [showSent, setShowSent]   = useState(false)
+  const [showPast, setShowPast]   = useState(false)
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- reading localStorage must happen in useEffect
@@ -109,8 +110,8 @@ export default function Home() {
 
   const pendingForMe       = dares.filter(d => d.status === 'pending' && d.to_user === userId)
   const waitingOnFriend    = dares.filter(d => d.status === 'pending' && d.from_user === userId)
-  const completedDaresList = dares.filter(d => d.status === 'complete').slice(0, 5)
-  const noDares            = pendingForMe.length === 0 && waitingOnFriend.length === 0 && completedDaresList.length === 0
+  const completedDaresList = dares.filter(d => d.status === 'complete')
+  const noOpenDares        = pendingForMe.length === 0 && waitingOnFriend.length === 0
 
   return (
     <AppShell>
@@ -153,31 +154,8 @@ export default function Home() {
                 </div>
               )}
 
-              {/* Completed — dimmed list */}
-              {completedDaresList.length > 0 && (
-                <div className={styles.dareList}>
-                  {completedDaresList.map(dare => {
-                    const isSender  = dare.from_user === userId
-                    const otherName = isSender ? dare.to_profile?.name : dare.from_profile?.name
-                    const myPts     = isSender ? dare.from_points : dare.to_points
-                    return (
-                      <Link key={dare.id} href={`/dare/${dare.id}`} className={styles.dareRow} style={{ opacity: 0.6, textDecoration: 'none' }}>
-                        <Avatar name={otherName ?? '?'} size={32} />
-                        <div className={styles.dareInfo}>
-                          <span className={styles.dareWord}>{dare.word}</span>
-                          <span className={styles.dareMeta}>
-                            {isSender ? `Dared ${otherName}` : `From ${otherName}`} · {relativeTime(dare.created_at)}
-                          </span>
-                        </div>
-                        {myPts != null && <span className={`${styles.tag} ${styles.tagMuted}`}>+{myPts}</span>}
-                      </Link>
-                    )
-                  })}
-                </div>
-              )}
-
-              {/* Empty state */}
-              {noDares && (
+              {/* Empty state — only when nothing open */}
+              {noOpenDares && completedDaresList.length === 0 && (
                 <div className={styles.emptyState}>
                   <div className={styles.emptyText}>No dares yet.</div>
                   <div className={styles.emptyHint}>Dare someone to get started.</div>
@@ -205,6 +183,36 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
+              )}
+
+              {/* Past dares — collapsed toggle */}
+              {completedDaresList.length > 0 && (
+                <>
+                  <button className={styles.sentToggle} onClick={() => setShowPast(s => !s)}>
+                    {showPast ? '▲' : '▼'} Past dares ({completedDaresList.length})
+                  </button>
+                  {showPast && (
+                    <div className={styles.dareList} style={{ marginTop: 4 }}>
+                      {completedDaresList.map(dare => {
+                        const isSender  = dare.from_user === userId
+                        const otherName = isSender ? dare.to_profile?.name : dare.from_profile?.name
+                        const myPts     = isSender ? dare.from_points : dare.to_points
+                        return (
+                          <Link key={dare.id} href={`/dare/${dare.id}`} className={styles.dareRow} style={{ opacity: 0.6, textDecoration: 'none' }}>
+                            <Avatar name={otherName ?? '?'} size={32} />
+                            <div className={styles.dareInfo}>
+                              <span className={styles.dareWord}>{dare.word}</span>
+                              <span className={styles.dareMeta}>
+                                {isSender ? `Dared ${otherName}` : `From ${otherName}`} · {relativeTime(dare.created_at)}
+                              </span>
+                            </div>
+                            {myPts != null && <span className={`${styles.tag} ${styles.tagMuted}`}>+{myPts}</span>}
+                          </Link>
+                        )
+                      })}
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </>

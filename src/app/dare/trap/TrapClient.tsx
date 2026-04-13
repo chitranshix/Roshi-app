@@ -35,26 +35,8 @@ export default function TrapClient({ word, friends, myId }: Props) {
       from_user: myId,
       to_user:   friendId,
       word,
-      level:     1,
-      status:    'pending',
-      has_trap:  true,
     }))
-    const { data: inserted } = await supabase.from('dares').insert(rows).select('id, to_user')
-    if (inserted?.length) {
-      const { data: me } = await supabase.from('users').select('name').eq('id', myId).single()
-      for (const row of inserted) {
-        fetch('/api/push/send', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            toUserId: row.to_user,
-            title: `${me?.name ?? 'Someone'} set a trap.`,
-            body: `They're betting you'll fail. I'd say prove them wrong, but I don't have strong feelings either way.`,
-            url: `/dare/${row.id}`,
-          }),
-        })
-      }
-    }
+    await supabase.from('traps').insert(rows)
     router.push('/')
   }
 
@@ -63,7 +45,7 @@ export default function TrapClient({ word, friends, myId }: Props) {
       <div className={styles.screen}>
         <div className={styles.heading}><IconTrap size={22} /> Set a trap</div>
         <div className={styles.hint}>
-          Send a dare to someone you think will fail it. If they get the sentence wrong or can&apos;t define the word, they&apos;re caught — and you get +10 pts. If they escape the trap, they pocket a +10 bonus instead.
+          Pick a word and a target. When they reach that word in their levels, they won&apos;t know a trap is waiting. Perfect solve — they escape and pocket +10. Anything less — they lose 10 pts and you get +10.
         </div>
 
         {word && (
