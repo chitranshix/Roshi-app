@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useTheme } from 'next-themes'
 import Button from '@/components/ui/Button'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import RoshiDisplay from '@/components/mascot/RoshiDisplay'
@@ -53,7 +52,6 @@ export default function OnboardingPage() {
   const [sending, setSending] = useState(false)
   const [sent, setSent] = useState(false)
 
-  const { resolvedTheme } = useTheme()
   const slide      = SLIDES[page]
   const isLastPage = page === SLIDES.length - 1
 
@@ -79,11 +77,8 @@ export default function OnboardingPage() {
 
       {/* ── Header: full-width, logo left, toggle right ── */}
       <div className={styles.header}>
-        <img
-          src={resolvedTheme === 'dark' ? '/logo-dark.png' : '/logo-light.png'}
-          alt="Roshi's Word Game"
-          className={styles.logo}
-        />
+        <img src="/logo-light.png" alt="Roshi's Word Game" className={`${styles.logo} ${styles.logoLight}`} />
+        <img src="/logo-dark.png"  alt="Roshi's Word Game" className={`${styles.logo} ${styles.logoDark}`} />
         <ThemeToggle />
       </div>
 

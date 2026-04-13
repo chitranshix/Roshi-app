@@ -23,6 +23,12 @@
   user-select: none;
 }
 
+.logoDark  { display: none; }
+.logoLight { display: block; }
+
+:global([data-theme='dark'])  .logoDark  { display: block; }
+:global([data-theme='dark'])  .logoLight { display: none; }
+
 /* ── Body — constrained width, button pinned to bottom ── */
 .body {
   flex: 1;
