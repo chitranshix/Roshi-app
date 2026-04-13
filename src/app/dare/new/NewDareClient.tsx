@@ -107,7 +107,6 @@ export default function NewDareClient({ words, preselectedWord }: Props) {
     if (!selectedWord || !myId) return
     setSending(true)
     const supabase = createClient()
-    const { data: me } = await supabase.from('users').select('name').eq('id', myId).single()
     // Create a dare with no to_user — stranger will claim it via the link
     const { data: inserted } = await supabase
       .from('dares')
@@ -115,16 +114,19 @@ export default function NewDareClient({ words, preselectedWord }: Props) {
       .select('id')
     setSending(false)
     if (!inserted?.length) return
-    const dareUrl = `${window.location.origin}/dare/${inserted[0].id}`
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          text: `${me?.name ?? 'Someone'} dared you with "${selectedWord}" on Roshi. Can you beat them?`,
-          url: dareUrl,
-        })
-      } catch { /* dismissed */ }
-    }
-    setDareLink(dareUrl)
+    setDareLink(`${window.location.origin}/dare/${inserted[0].id}`)
+  }
+
+  const handleShare = async () => {
+    if (!dareLink || !selectedWord) return
+    const supabase = createClient()
+    const { data: me } = await supabase.from('users').select('name').eq('id', myId!).single()
+    try {
+      await navigator.share({
+        text: `${me?.name ?? 'Someone'} dared you with "${selectedWord}" on Roshi. Can you beat them?`,
+        url: dareLink,
+      })
+    } catch { /* dismissed */ }
   }
 
   const copyLink = () => {
@@ -141,6 +143,7 @@ export default function NewDareClient({ words, preselectedWord }: Props) {
     <AppShell>
       <div className={styles.screen}>
         <div className={styles.heading}>Dare someone</div>
+        <div className={styles.subheading}>Pick a word you know. Your friend gets a sentence + definition challenge — if they nail it, they earn points (and so do you).</div>
 
         {preselectedWord ? (
           <div className={styles.preselectedWord}>
@@ -180,10 +183,10 @@ export default function NewDareClient({ words, preselectedWord }: Props) {
           {friends.map(({ id, name }) => (
             <div
               key={id}
-              className={[styles.friendChip, selectedFriends.includes(id) ? styles.selected : ''].join(' ')}
+              className={styles.friendChip}
               onClick={() => toggleFriend(id)}
             >
-              <Avatar name={name} size={36} />
+              <Avatar name={name} size={44} className={selectedFriends.includes(id) ? styles.avatarSelected : undefined} />
               <div className={styles.friendName}>{name}</div>
             </div>
           ))}
@@ -198,14 +201,19 @@ export default function NewDareClient({ words, preselectedWord }: Props) {
 
         {dareLink && (
           <div className={styles.dareLinkBox}>
-            <div className={styles.dareLinkLabel}>Link copied! Send it to anyone:</div>
+            <div className={styles.dareLinkLabel}>Dare link ready — share it with anyone:</div>
             <div className={styles.dareLinkRow}>
               <span className={styles.dareLinkUrl}>{dareLink}</span>
               <button className={styles.dareLinkCopy} onClick={copyLink}>
-                {copied ? 'Copied!' : 'Copy'}
+                {copied ? '✓ Copied' : 'Copy'}
               </button>
             </div>
-            <button className={styles.dareLinkDone} onClick={() => router.push('/')}>Done</button>
+            <div className={styles.dareLinkActions}>
+              {typeof navigator !== 'undefined' && 'share' in navigator && (
+                <button className={styles.dareLinkShare} onClick={handleShare}>📤 Share</button>
+              )}
+              <button className={styles.dareLinkDone} onClick={() => router.push('/')}>Done</button>
+            </div>
           </div>
         )}
 

@@ -47,7 +47,7 @@ export default function TrapClient({ word, friends, myId }: Props) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             toUserId: row.to_user,
-            title: '🪤 You have been trapped!',
+            title: '🕸️ You have been trapped!',
             body: `${me?.name ?? 'Someone'} set a trap on "${word}". Can you escape it?`,
             url: `/dare/${row.id}`,
           }),
@@ -60,9 +60,9 @@ export default function TrapClient({ word, friends, myId }: Props) {
   return (
     <AppShell>
       <div className={styles.screen}>
-        <div className={styles.heading}>Set a trap</div>
+        <div className={styles.heading}>🕸️ Set a trap</div>
         <div className={styles.hint}>
-          If they fail the dare, you get +10 pts. If they nail it, they get +10 bonus.
+          Send a dare to someone you think will fail it. If they get the sentence wrong or can&apos;t define the word, they&apos;re caught — and you get +10 pts. If they escape the trap, they pocket a +10 bonus instead.
         </div>
 
         {word && (
@@ -80,10 +80,10 @@ export default function TrapClient({ word, friends, myId }: Props) {
           {friends.map(({ id, name }) => (
             <div
               key={id}
-              className={[styles.friendChip, selected.includes(id) ? styles.selected : ''].join(' ')}
+              className={styles.friendChip}
               onClick={() => toggle(id)}
             >
-              <Avatar name={name} size={48} />
+              <Avatar name={name} size={48} className={selected.includes(id) ? styles.avatarSelected : undefined} />
               <div className={styles.friendName}>{name}</div>
             </div>
           ))}

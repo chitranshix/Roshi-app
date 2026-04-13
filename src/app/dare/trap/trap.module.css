@@ -70,14 +70,9 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.friendChip :global(.avatar) {
-  border: 2px solid transparent;
-  border-radius: 50%;
-  transition: border-color 0.15s;
-}
-
-.friendChip.selected :global(.avatar) {
-  border-color: var(--wrong);
+.avatarSelected {
+  outline: 2.5px solid var(--wrong);
+  outline-offset: 2px;
 }
 
 .friendName {
