@@ -15,8 +15,8 @@ import styles from './dare.module.css'
 
 type Stage = 'sentence' | 'definition' | 'result'
 
-const SENTENCE_TIME  = 30
-const DEFINITION_TIME = 60
+const SENTENCE_TIME   = 30
+const DEFINITION_TIME = 40
 
 interface DareFlowProps {
   dare:             Dare
@@ -46,6 +46,16 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
   const clearTimer = useCallback(() => {
     if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null }
   }, [])
+
+  // Penalise tab-switching — cut remaining time to 5s on return
+  useEffect(() => {
+    const onVisibilityChange = () => {
+      if (document.hidden || stage === 'result') return
+      setTimeLeft(prev => Math.min(prev, 5))
+    }
+    document.addEventListener('visibilitychange', onVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', onVisibilityChange)
+  }, [stage])
 
   // Start/reset timer when stage changes
   useEffect(() => {
@@ -230,6 +240,7 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
               value={userDef}
               onChange={e => setUserDef(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey && userDef.trim().length >= 4) { e.preventDefault(); submitDefinition() } }}
+              onPaste={e => e.preventDefault()}
               autoFocus
               inputMode="text"
               enterKeyHint="done"
