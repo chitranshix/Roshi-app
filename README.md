@@ -1,71 +1,78 @@
-# Roshi
+# Roshi's Word Game
 
-A social vocabulary game. Dare your friends to identify and define words you pick — earn points for getting it right.
+A social vocabulary game. Dare your friends with words you know — they have to pick the right sentence and define the word. Points for getting it right.
 
-## How it works
+---
 
-1. Pick a word and dare a friend
-2. They see 4 sentences — pick the one that uses the word correctly
-3. If correct, they try to define the word in their own words
-4. Claude evaluates the definition — 10 pts for a good one, 3 pts for a decent attempt, 0 for wrong
+## What it is
 
-Wrong sentence = no definition attempt, just see the meaning and try again next time.
+You pick a word and dare a friend. They see 4 sentences — only one uses the word correctly. Get the sentence right and you get to define the word in your own words. Claude grades the definition.
 
-## Stack
+Miss the sentence and you see the meaning, no points. Miss the definition and you get partial credit.
 
-- **Next.js 16** (App Router, TypeScript)
-- **Anthropic API** (Claude Haiku — definition evaluation)
-- **next-themes** (parchment light / midnight blue dark)
-- **CSS Modules** throughout, no Tailwind
-- **Supabase** — planned, not yet connected (mock data in `src/lib/mock.ts`)
+There's also a daily word everyone plays, a leaderboard, and a trap mechanic — set a word for someone without them knowing, triggered when they play a level.
+
+---
+
+## Screens
+
+> Add screenshots here — home feed, daily challenge, dare flow, result screen, profile.
+
+| Home | Daily Challenge | Dare Flow |
+|------|----------------|-----------|
+| _screenshot_ | _screenshot_ | _screenshot_ |
+
+| Result | Profile |
+|--------|---------|
+| _screenshot_ | _screenshot_ |
+
+---
+
+## Tech stack
+
+| Layer | What |
+|-------|------|
+| Framework | Next.js 16, App Router, TypeScript |
+| Styling | CSS Modules, CSS custom properties — no Tailwind |
+| Database | Supabase (Postgres + Row Level Security) |
+| Auth | Supabase Auth — email + password |
+| AI | Anthropic API — Haiku grades definitions, Sonnet writes word commentary |
+| Push | Web Push API + service worker — no third-party service |
+| Hosting | Vercel — auto-deploys from `main` |
+
+---
 
 ## Running locally
 
 ```bash
 npm install
-npm run dev -- -p 3001   # or any port
+npm run dev
 ```
 
-Requires `.env.local`:
+`.env.local`:
 ```
-ANTHROPIC_API_KEY=your_key_here
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+ANTHROPIC_API_KEY=...
 ```
 
-Get an API key at [console.anthropic.com](https://console.anthropic.com).
-
-## Structure
-
-```
-src/
-  app/
-    page.tsx                  # Home feed — daily word + dare cards
-    daily/page.tsx            # Daily word challenge
-    dare/
-      [id]/
-        page.tsx              # Dare detail (fetches dare by id)
-        DareFlow.tsx          # Full game flow — sentence → definition → result
-      new/page.tsx            # Send a dare to a friend
-    api/
-      evaluate/route.ts       # POST — checks definition correctness via Claude
-    onboarding/page.tsx       # Name entry on first visit
-  components/
-    layout/AppShell.tsx       # Header, theme toggle, onboarding gate
-    ui/Button.tsx             # Primary / ghost / subtle variants
-  lib/
-    mock.ts                   # Placeholder data — replace with Supabase queries
-```
+---
 
 ## Scoring
 
 | Outcome | Points |
-|---|---|
+|---------|--------|
 | Wrong sentence | 0 |
-| Right sentence + correct definition | 10 |
-| Right sentence + wrong definition | 3 |
+| Right sentence + good definition | 5 |
+| Right sentence + partial definition | 3 |
+| Right sentence + wrong definition | 0 |
+| Trap: escape with perfect score | +10 bonus |
+| Trap: triggered | −10 |
 
-## Notes
+---
 
-- Player name stored in `localStorage` under `roshi_name` — no auth for MVP
-- Themes: parchment (land) and midnight blue (water), toggled with 🏔️ / 🌊
-- Definition evaluation uses Claude Haiku — cheap (fractions of a cent per call)
-- `DEFINITION_MAP` in `DareFlow.tsx` and `MOCK_SENTENCES` in `mock.ts` are temporary — real definitions and sentence data will come from the database
+## Design
+
+Two themes — **Play on land** (parchment, light) and **Play in water** (midnight blue, dark). Toggle always visible in the header.
+
+Mascot is Roshi — an aquatic turtle who chews a leaf and rolls his eyes at you.
