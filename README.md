@@ -1,4 +1,7 @@
-# Roshi's Word Game
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/chitranshix/Roshis-word-game/main/public/logo-dark.png">
+  <img src="https://raw.githubusercontent.com/chitranshix/Roshis-word-game/main/public/logo-light.png" alt="Roshi's Word Game" height="80">
+</picture>
 
 A social vocabulary game. Dare your friends with words you know — they have to pick the right sentence and define the word. Points for getting it right.
 
@@ -11,20 +14,6 @@ You pick a word and dare a friend. They see 4 sentences — only one uses the wo
 Miss the sentence and you see the meaning, no points. Miss the definition and you get partial credit.
 
 There's also a daily word everyone plays, a leaderboard, and a trap mechanic — set a word for someone without them knowing, triggered when they play a level.
-
----
-
-## Screens
-
-> Add screenshots here — home feed, daily challenge, dare flow, result screen, profile.
-
-| Home | Daily Challenge | Dare Flow |
-|------|----------------|-----------|
-| _screenshot_ | _screenshot_ | _screenshot_ |
-
-| Result | Profile |
-|--------|---------|
-| _screenshot_ | _screenshot_ |
 
 ---
 
