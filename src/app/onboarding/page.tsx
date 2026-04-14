@@ -49,8 +49,11 @@ const SLIDES: Slide[] = [
 export default function OnboardingPage() {
   const [page, setPage] = useState(0)
   const [name, setName] = useState('')
+  const [email, setEmail]     = useState('')
+  const [password, setPassword] = useState('')
   const [sending, setSending] = useState(false)
-  const [sent, setSent] = useState(false)
+  const [sent, setSent]       = useState(false)
+  const [error, setError]     = useState<string | null>(null)
   const router = useRouter()
 
   const slide      = SLIDES[page]
@@ -58,19 +61,30 @@ export default function OnboardingPage() {
 
   const handleContinue = async () => {
     if (!isLastPage) { setPage(p => p + 1); return }
-    if (name.trim().length < 2) return
+    if (name.trim().length < 2 || !email.includes('@') || password.length < 6) return
     setSending(true)
+    setError(null)
     localStorage.setItem('roshi_name', name.trim())
     const supabase = createClient()
-    const { data, error } = await supabase.auth.signInAnonymously()
-    if (!error && data.user) {
-      await supabase.from('users').upsert({ id: data.user.id, name: name.trim() })
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email: email.trim(),
+      password,
+      options: { emailRedirectTo: `${window.location.origin}/auth/complete` },
+    })
+    if (signUpError) {
+      setError(signUpError.message)
+      setSending(false)
+      return
+    }
+    if (data.user) {
+      await supabase.from('users').upsert({ id: data.user.id, name: name.trim(), email: email.trim() })
     }
     setSending(false)
-    if (!error) { setSent(true); router.replace('/') }
+    setSent(true)
+    router.replace('/auth/complete')
 
-    // Email OTP flow (commented out — requires verified domain on Resend)
-    // const { error } = await supabase.auth.signInWithOtp({
+    // Magic link OTP (commented out — requires verified domain on Resend)
+    // await supabase.auth.signInWithOtp({
     //   email: email.trim(),
     //   options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
     // })
@@ -120,33 +134,37 @@ export default function OnboardingPage() {
               <p className={styles.sentMsg}>You&apos;re in. Loading…</p>
             ) : (
               <div className={styles.nameCol}>
-                <div className={styles.nameRow}>
-                  <input
-                    className={[styles.input, name.length > 0 && name.trim().length < 2 ? styles.inputError : ''].join(' ')}
-                    placeholder="Your name (required)..."
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && handleContinue()}
-                    maxLength={20}
-                    autoFocus
-                  />
-                  <Button
-                    onClick={handleContinue}
-                    disabled={name.trim().length < 2 || sending}
-                  >
-                    {sending ? '…' : "Let's go!"}
-                  </Button>
-                </div>
-                {/* Email input commented out — re-enable when domain verified on Resend
-                <div className={styles.nameRow}>
-                  <input
-                    className={[styles.input, email.length > 0 && !email.includes('@') ? styles.inputError : ''].join(' ')}
-                    placeholder="Your email (required)..."
-                    type="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                  />
-                </div> */}
+                <input
+                  className={[styles.input, name.length > 0 && name.trim().length < 2 ? styles.inputError : ''].join(' ')}
+                  placeholder="Your name..."
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  maxLength={20}
+                  autoFocus
+                />
+                <input
+                  className={[styles.input, email.length > 0 && !email.includes('@') ? styles.inputError : ''].join(' ')}
+                  placeholder="Your email..."
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                />
+                <input
+                  className={[styles.input, password.length > 0 && password.length < 6 ? styles.inputError : ''].join(' ')}
+                  placeholder="Password (min 6 chars)..."
+                  type="password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && handleContinue()}
+                />
+                {error && <p className={styles.errorMsg}>{error}</p>}
+                <Button
+                  onClick={handleContinue}
+                  disabled={name.trim().length < 2 || !email.includes('@') || password.length < 6 || sending}
+                >
+                  {sending ? '…' : "Let's go!"}
+                </Button>
+                <p className={styles.loginHint}>Already have an account? <a href="/login" className={styles.loginLink}>Log in</a></p>
               </div>
             )
           ) : (

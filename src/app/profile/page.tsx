@@ -10,11 +10,14 @@ import { getStreak } from '@/lib/daily'
 import styles from './profile.module.css'
 
 export default function ProfilePage() {
-  const [name, setName]   = useState('')
-  const [saved, setSaved] = useState(false)
-  const [streak, setStreak] = useState(0)
-  const [points, setPoints] = useState<number | null>(null)
+  const [name, setName]         = useState('')
+  const [saved, setSaved]       = useState(false)
+  const [streak, setStreak]     = useState(0)
+  const [points, setPoints]     = useState<number | null>(null)
   const [wordCount, setWordCount] = useState<number | null>(null)
+  const [newPassword, setNewPassword] = useState('')
+  const [pwSaved, setPwSaved]   = useState(false)
+  const [pwError, setPwError]   = useState<string | null>(null)
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- reading localStorage must happen in useEffect
@@ -54,6 +57,17 @@ export default function ProfilePage() {
     })
   }, [])
 
+  const handlePasswordSave = async () => {
+    if (newPassword.length < 6) return
+    setPwError(null)
+    const supabase = createClient()
+    const { error } = await supabase.auth.updateUser({ password: newPassword })
+    if (error) { setPwError(error.message); return }
+    setNewPassword('')
+    setPwSaved(true)
+    setTimeout(() => setPwSaved(false), 2000)
+  }
+
   const handleSave = () => {
     const trimmed = name.trim()
     if (!trimmed) return
@@ -88,6 +102,22 @@ export default function ProfilePage() {
           />
           <Button onClick={handleSave} disabled={!name.trim()}>
             {saved ? 'Saved ✓' : 'Save name'}
+          </Button>
+        </div>
+
+        <div className={styles.section}>
+          <div className={styles.label}>Change password</div>
+          <input
+            className={styles.input}
+            type="password"
+            value={newPassword}
+            onChange={e => { setNewPassword(e.target.value); setPwSaved(false); setPwError(null) }}
+            placeholder="New password (min 6 chars)"
+            onKeyDown={e => { if (e.key === 'Enter') handlePasswordSave() }}
+          />
+          {pwError && <div style={{ fontSize: 13, color: 'var(--wrong)' }}>{pwError}</div>}
+          <Button onClick={handlePasswordSave} disabled={newPassword.length < 6}>
+            {pwSaved ? 'Saved ✓' : 'Update password'}
           </Button>
         </div>
 

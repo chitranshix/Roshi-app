@@ -22,7 +22,24 @@ export default function AppShell({ children, gameplay }: { children: React.React
   useEffect(() => {
     const name = localStorage.getItem('roshi_name')
     if (!name) {
-      router.replace('/onboarding')
+      // Check if they have a session but lost localStorage (e.g. device switch)
+      createClient().auth.getUser().then(({ data: { user } }) => {
+        if (!user) {
+          router.replace('/login')
+          return
+        }
+        // Has session — restore name from DB
+        createClient().from('users').select('name').eq('id', user.id).single()
+          .then(({ data: profile }) => {
+            const restoredName = profile?.name ?? ''
+            if (!restoredName) { router.replace('/login'); return }
+            localStorage.setItem('roshi_name', restoredName)
+            // eslint-disable-next-line react-hooks/set-state-in-effect -- async callback
+            setPlayerName(restoredName)
+            setReady(true)
+            syncAll(user.id)
+          })
+      })
       return
     }
     // eslint-disable-next-line react-hooks/set-state-in-effect -- reading localStorage must happen in useEffect

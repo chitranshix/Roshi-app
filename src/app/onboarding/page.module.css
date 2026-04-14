@@ -143,3 +143,22 @@
 .input::placeholder { color: var(--muted); }
 
 .inputError { border-color: var(--wrong) !important; }
+
+.errorMsg {
+  font-size: 13px;
+  color: var(--wrong);
+  margin: 0;
+}
+
+.loginHint {
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+  margin: 0;
+}
+
+.loginLink {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
