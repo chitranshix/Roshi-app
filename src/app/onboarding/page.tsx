@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Button from '@/components/ui/Button'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import RoshiDisplay from '@/components/mascot/RoshiDisplay'
@@ -48,28 +49,31 @@ const SLIDES: Slide[] = [
 export default function OnboardingPage() {
   const [page, setPage] = useState(0)
   const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
   const [sending, setSending] = useState(false)
   const [sent, setSent] = useState(false)
+  const router = useRouter()
 
   const slide      = SLIDES[page]
   const isLastPage = page === SLIDES.length - 1
 
   const handleContinue = async () => {
     if (!isLastPage) { setPage(p => p + 1); return }
-    if (name.trim().length < 2 || !email.includes('@')) return
+    if (name.trim().length < 2) return
     setSending(true)
-    // Save name to localStorage so auth/complete can pick it up
     localStorage.setItem('roshi_name', name.trim())
     const supabase = createClient()
-    const { error } = await supabase.auth.signInWithOtp({
-      email: email.trim(),
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
-    })
+    const { data, error } = await supabase.auth.signInAnonymously()
+    if (!error && data.user) {
+      await supabase.from('users').upsert({ id: data.user.id, name: name.trim() })
+    }
     setSending(false)
-    if (!error) setSent(true)
+    if (!error) { setSent(true); router.replace('/') }
+
+    // Email OTP flow (commented out — requires verified domain on Resend)
+    // const { error } = await supabase.auth.signInWithOtp({
+    //   email: email.trim(),
+    //   options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+    // })
   }
 
   return (
@@ -113,7 +117,7 @@ export default function OnboardingPage() {
 
           {isLastPage ? (
             sent ? (
-              <p className={styles.sentMsg}>Check your email for a magic link ✉️</p>
+              <p className={styles.sentMsg}>You&apos;re in. Loading…</p>
             ) : (
               <div className={styles.nameCol}>
                 <div className={styles.nameRow}>
@@ -122,10 +126,18 @@ export default function OnboardingPage() {
                     placeholder="Your name (required)..."
                     value={name}
                     onChange={e => setName(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && handleContinue()}
                     maxLength={20}
                     autoFocus
                   />
+                  <Button
+                    onClick={handleContinue}
+                    disabled={name.trim().length < 2 || sending}
+                  >
+                    {sending ? '…' : "Let's go!"}
+                  </Button>
                 </div>
+                {/* Email input commented out — re-enable when domain verified on Resend
                 <div className={styles.nameRow}>
                   <input
                     className={[styles.input, email.length > 0 && !email.includes('@') ? styles.inputError : ''].join(' ')}
@@ -133,15 +145,8 @@ export default function OnboardingPage() {
                     type="email"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && handleContinue()}
                   />
-                  <Button
-                    onClick={handleContinue}
-                    disabled={name.trim().length < 2 || !email.includes('@') || sending}
-                  >
-                    {sending ? '…' : "Let's go!"}
-                  </Button>
-                </div>
+                </div> */}
               </div>
             )
           ) : (
