@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
 import AppShell from '@/components/layout/AppShell'
 import Button from '@/components/ui/Button'
 import Avatar from '@/components/ui/Avatar'
@@ -14,7 +13,6 @@ export default function ProfilePage() {
   const [saved, setSaved]       = useState(false)
   const [streak, setStreak]     = useState(0)
   const [points, setPoints]     = useState<number | null>(null)
-  const [wordCount, setWordCount] = useState<number | null>(null)
   const [newPassword, setNewPassword] = useState('')
   const [pwSaved, setPwSaved]   = useState(false)
   const [pwError, setPwError]   = useState<string | null>(null)
@@ -27,7 +25,7 @@ export default function ProfilePage() {
     const supabase = createClient()
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) return
-      const [{ data: dares }, { data: events }, { data: words }] = await Promise.all([
+      const [{ data: dares }, { data: events }] = await Promise.all([
         supabase
           .from('dares')
           .select('from_user, to_user, from_points, to_points, has_trap, trap_winner')
@@ -37,11 +35,6 @@ export default function ProfilePage() {
           .from('point_events')
           .select('points')
           .eq('user_id', user.id),
-        supabase
-          .from('point_events')
-          .select('word')
-          .eq('user_id', user.id)
-          .not('word', 'is', null),
       ])
       let pts = 0
       for (const d of dares ?? []) {
@@ -51,9 +44,7 @@ export default function ProfilePage() {
         if (d.has_trap && d.trap_winner === 'target'  && d.to_user   === user.id) pts += 10
       }
       for (const e of events ?? []) pts += e.points
-      const uniqueWords = new Set((words ?? []).map(w => w.word).filter(Boolean))
       setPoints(pts)
-      setWordCount(uniqueWords.size)
     })
   }, [])
 
@@ -85,7 +76,6 @@ export default function ProfilePage() {
           <div className={styles.statRow}>
             {streak > 0 && <div className={styles.streakBadge}>{streak} day streak 🔥</div>}
             {points !== null && <div className={styles.pointsBadge}>{points} pts</div>}
-            {wordCount !== null && <div className={styles.wordsBadge}>{wordCount} words</div>}
           </div>
         </div>
 
@@ -121,22 +111,17 @@ export default function ProfilePage() {
           </Button>
         </div>
 
-        <Link href="/profile/words" className={styles.menuRow}>
-          <span className={styles.menuIcon}>📖</span>
-          <span className={styles.menuLabel}>Words learned</span>
-          {wordCount !== null && <span className={styles.menuCount}>{wordCount}</span>}
-          <svg className={styles.menuChevron} width="16" height="16" viewBox="0 0 24 24" fill="none">
-            <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </Link>
-
         <button className={styles.menuRow} style={{ width: '100%', cursor: 'pointer' }} onClick={async () => {
           const supabase = createClient()
           await supabase.auth.signOut()
           localStorage.removeItem('roshi_name')
           window.location.href = '/login'
         }}>
-          <span className={styles.menuIcon} style={{ color: 'var(--wrong)' }}>↩</span>
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="var(--wrong)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+            <path d="M7 3H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h3"/>
+            <path d="M13 14l3-4-3-4"/>
+            <line x1="16" y1="10" x2="7" y2="10"/>
+          </svg>
           <span className={styles.menuLabel} style={{ color: 'var(--wrong)' }}>Log out</span>
         </button>
 
