@@ -59,33 +59,6 @@ export default function PlayClient({ level, words, userId }: Props) {
     window.speechSynthesis.speak(utt)
   }, [currentWord])
 
-  const pickSentence = useCallback((i: number) => {
-    if (answerResult || !currentWord) return
-    const isCorrect = sentences[i]?.correct ?? false
-    setSelected(i)
-    setSentenceCorrect(isCorrect)
-    setAnswerResult(isCorrect ? 'correct' : 'wrong')
-    if (navigator.vibrate) navigator.vibrate(isCorrect ? [10, 50, 10] : [80])
-    setTimeout(() => {
-      if (isCorrect) {
-        setStage('definition')
-      } else {
-        playWrong()
-        setPoints(0)
-        markWordComplete(currentWord.word, level)
-        setWordsDoneThisSession(n => n + 1)
-        void resolveTrap(currentWord.word, 0)
-        setStage('result')
-      }
-    }, 1200)
-  }, [answerResult, currentWord, sentences, level, resolveTrap])
-
-  const recordPoints = useCallback(async (word: string, pts: number) => {
-    if (!userId || pts === 0) return
-    const supabase = createClient()
-    await supabase.from('point_events').insert({ user_id: userId, points: pts, word, source: 'level', level })
-  }, [userId, level])
-
   const resolveTrap = useCallback(async (word: string, earned: number) => {
     if (!userId || trapChecked.current) return
     trapChecked.current = true
@@ -125,6 +98,33 @@ export default function PlayClient({ level, words, userId }: Props) {
           : 'They failed. Your trap worked. +10 pts.',
       }),
     })
+  }, [userId, level])
+
+  const pickSentence = useCallback((i: number) => {
+    if (answerResult || !currentWord) return
+    const isCorrect = sentences[i]?.correct ?? false
+    setSelected(i)
+    setSentenceCorrect(isCorrect)
+    setAnswerResult(isCorrect ? 'correct' : 'wrong')
+    if (navigator.vibrate) navigator.vibrate(isCorrect ? [10, 50, 10] : [80])
+    setTimeout(() => {
+      if (isCorrect) {
+        setStage('definition')
+      } else {
+        playWrong()
+        setPoints(0)
+        markWordComplete(currentWord.word, level)
+        setWordsDoneThisSession(n => n + 1)
+        void resolveTrap(currentWord.word, 0)
+        setStage('result')
+      }
+    }, 1200)
+  }, [answerResult, currentWord, sentences, level, resolveTrap])
+
+  const recordPoints = useCallback(async (word: string, pts: number) => {
+    if (!userId || pts === 0) return
+    const supabase = createClient()
+    await supabase.from('point_events').insert({ user_id: userId, points: pts, word, source: 'level', level })
   }, [userId, level])
 
   const submitDefinition = useCallback(async () => {

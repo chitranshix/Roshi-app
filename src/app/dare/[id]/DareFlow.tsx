@@ -46,6 +46,47 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
     if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null }
   }, [])
 
+  const saveDareResult = useCallback(async (earned: number) => {
+    const supabase = createClient()
+    const update = isChallengee
+      ? { to_points: earned, from_points: earned === 0 ? 10 : 5, status: 'complete' }
+      : { from_points: earned, status: 'complete' }
+    await supabase.from('dares').update(update).eq('id', dareId)
+
+    // Track word for "Words learned" — only for the challengee completing a dare
+    if (isChallengee) {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        await supabase.from('point_events').insert({
+          user_id:    user.id,
+          points:     earned,
+          word:       dare.word,
+          definition: definition ?? null,
+          source:     'dare',
+        })
+      }
+    }
+
+    // Notify the challenger that the dare was completed (only when challengee finishes)
+    if (isChallengee && challengerUserId) {
+      const resultMsg = earned === 0
+        ? `${dare.to} failed. Embarrassing, really.`
+        : earned === 10
+          ? `${dare.to} got it right. Apparently they do know words.`
+          : `${dare.to} half-answered. Not terrible. Not good either.`
+      fetch('/api/push/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          toUserId: challengerUserId,
+          title: `${dare.to} took your dare.`,
+          body: resultMsg,
+          url: `/dare/${dareId}`,
+        }),
+      })
+    }
+  }, [dareId, isChallengee, challengerUserId, dare.to, dare.word, definition])
+
   // Auto-fail on tab/app switch
   useEffect(() => {
     const onVisibilityChange = () => {
@@ -89,7 +130,6 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
       setStage('result')
       saveDareResult(0)
     } else {
-      // Got sentence right but timed out on definition — counts as 0
       setDefCorrect(false)
       setPoints(0)
       setStage('result')
@@ -117,47 +157,6 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
       }
     }, 1200)
   }, [answerResult, sentences, clearTimer, saveDareResult])
-
-  const saveDareResult = useCallback(async (earned: number) => {
-    const supabase = createClient()
-    const update = isChallengee
-      ? { to_points: earned, from_points: earned === 0 ? 10 : 5, status: 'complete' }
-      : { from_points: earned, status: 'complete' }
-    await supabase.from('dares').update(update).eq('id', dareId)
-
-    // Track word for "Words learned" — only for the challengee completing a dare
-    if (isChallengee) {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
-        await supabase.from('point_events').insert({
-          user_id:    user.id,
-          points:     earned,
-          word:       dare.word,
-          definition: definition ?? null,
-          source:     'dare',
-        })
-      }
-    }
-
-    // Notify the challenger that the dare was completed (only when challengee finishes)
-    if (isChallengee && challengerUserId) {
-      const resultMsg = earned === 0
-        ? `${dare.to} failed. Embarrassing, really.`
-        : earned === 10
-          ? `${dare.to} got it right. Apparently they do know words.`
-          : `${dare.to} half-answered. Not terrible. Not good either.`
-      fetch('/api/push/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          toUserId: challengerUserId,
-          title: `${dare.to} took your dare.`,
-          body: resultMsg,
-          url: `/dare/${dareId}`,
-        }),
-      })
-    }
-  }, [dareId, isChallengee, challengerUserId, dare.to, dare.word, definition])
 
   const submitDefinition = useCallback(async () => {
     clearTimer()
