@@ -15,7 +15,5 @@ I've watched humans go through all of that. None of it sticks — because none o
 
 So I made a game out of it. You dare a friend with a word you know. They have to use it correctly, then define it — while I watch and judge. Then they dare you back. Suddenly you're not studying vocabulary, you're defending your intelligence in front of someone who matters. Works remarkably well, I find.
 
-That's Roshi.
-
 Yours,
 *Roshi*
