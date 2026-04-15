@@ -11,9 +11,11 @@ Want a bigger vocabulary? You should. The words you know shape how you think —
 
 So how do you build one? Dictionary? You look up a word, nod, forget it by tomorrow. Flashcards? Abandoned by week two. Word-of-the-day emails? Deleted unread.
 
-I've watched humans go through all of that. None of it sticks — because none of it puts you on the spot. You only truly own a word when you've had to *use* it under pressure. Recognition isn't retention. Production is.
+I've watched humans go through all of that. None of it sticks — because none of it puts you on the spot. You only truly own a word when you've *used* it, explained it to someone, or been called out for getting it wrong. That embarrassment, that little victory — that's what makes it stay.
 
-That's why I built this. A daily word to keep the habit. A dare loop to create stakes — send a word to a friend, they pick the right sentence, define it, get judged by me. Dare back. Keep score. Even alone, you're on the spot every time.
+So I made a game out of it. You dare a friend with a word you know. They have to use it correctly, then define it — while I watch and judge. Then they dare you back. Suddenly you're not studying vocabulary, you're defending your intelligence in front of someone who matters. Works remarkably well, I find.
+
+That's Roshi.
 
 Yours,
 *Roshi*
