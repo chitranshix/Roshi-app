@@ -9,8 +9,8 @@ Want a bigger vocabulary? You should. Research shows people with richer vocabula
 
 So how do you actually build one? Dictionary? You look up a word, nod, forget it by tomorrow. Flashcards? Abandoned by week two. Word-of-the-day emails? Deleted unread.
 
-I went through all of that and none of it stuck — because none of it put me on the spot. Real retention happens when you have to *use* a word, explain it to someone, or get called out for getting it wrong.
+I went through all of that and none of it stuck — because none of it put me on the spot. You only truly own a word when you've had to *use* it under pressure. Recognition isn't retention. Production is.
 
-That's Roshi. Dare your friends with words you know. They pick the right sentence, define the word, get judged by an opinionated AI turtle. Dare back. Keep score.
+Roshi is built around that. A daily word to keep the habit. A dare loop to create stakes — send a word to a friend, they pick the right sentence, define it, get judged by an opinionated AI turtle. Dare back. Keep score. Even solo, you're on the spot every time.
 
 **Stack:** Next.js 16 · TypeScript · CSS Modules · Supabase (Postgres + Auth) · Anthropic API (Haiku for grading, Sonnet for word commentary) · Web Push · Vercel
