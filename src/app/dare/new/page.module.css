@@ -95,6 +95,7 @@
 /* ── Friend list ── */
 .friendList {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
 }
 

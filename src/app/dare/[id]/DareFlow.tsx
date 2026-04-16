@@ -250,7 +250,7 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
               placeholder="Type your definition..."
               value={userDef}
               onChange={e => setUserDef(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey && userDef.trim().length >= 4) { e.preventDefault(); submitDefinition() } }}
+              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey && userDef.trim().length >= 3) { e.preventDefault(); submitDefinition() } }}
               onPaste={e => e.preventDefault()}
               autoFocus
               inputMode="text"
@@ -258,7 +258,7 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
               maxLength={200}
             />
             <div className={styles.defHint}>Plain English is fine.</div>
-            <Button onClick={submitDefinition} disabled={userDef.trim().length < 4 || checking}>
+            <Button onClick={submitDefinition} disabled={userDef.trim().length < 3 || checking}>
               {checking ? 'Checking…' : 'Submit'}
             </Button>
           </div>
