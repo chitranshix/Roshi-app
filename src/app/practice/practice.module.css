@@ -20,9 +20,9 @@
   gap: 14px;
   padding: 16px;
   background: var(--surface);
-  border: 1px solid var(--border);
   border-top: 3px solid var(--accent);
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
   transition: background 0.15s;
@@ -86,9 +86,8 @@
   gap: 14px;
   padding: 16px;
   background: var(--surface);
-  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 .comingSoonIcon {

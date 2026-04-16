@@ -66,7 +66,6 @@
   gap: 12px;
   padding: 16px;
   background: var(--surface);
-  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow);
   -webkit-tap-highlight-color: transparent;
@@ -114,7 +113,7 @@
   background: var(--border);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
 
 .dareRow {

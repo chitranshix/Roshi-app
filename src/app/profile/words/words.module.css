@@ -35,19 +35,16 @@
   gap: 8px;
   padding: 11px 16px;
   background: var(--surface);
-  border: 2px solid var(--border);
   border-radius: var(--radius-md);
+  box-shadow: var(--shadow);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: border-color 0.15s;
   user-select: none;
 }
 
-.filterBtn:hover { border-color: var(--accent); }
-
 .filterWrap:has(.filterDropdown) .filterBtn {
   border-radius: var(--radius-md) var(--radius-md) 0 0;
-  border-bottom-color: var(--border);
+  box-shadow: none;
 }
 
 .filterBtnLabel {
@@ -74,8 +71,7 @@
   background: var(--border);
   border-radius: 0 0 var(--radius-md) var(--radius-md);
   overflow: hidden;
-  border: 1px solid var(--border);
-  border-top: none;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
 }
 
 .filterOption {
@@ -122,7 +118,7 @@
   background: var(--border);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
 
 .row {

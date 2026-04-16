@@ -51,8 +51,8 @@ export default function AppShell({ children, gameplay }: { children: React.React
   const activeTab =
     pathname === '/' ? 'home'
     : pathname.startsWith('/practice') || pathname === '/profile/words' ? 'practice'
-    : pathname.startsWith('/dares') || pathname.startsWith('/dare') ? 'dares'
-    : pathname.startsWith('/profile') || pathname.startsWith('/leaderboard') ? 'me'
+    : pathname.startsWith('/leaderboard') ? 'leaderboard'
+    : pathname.startsWith('/profile') ? 'me'
     : ''
 
   return (
@@ -93,17 +93,18 @@ export default function AppShell({ children, gameplay }: { children: React.React
 
           <Link href="/practice" className={[styles.navItem, activeTab === 'practice' ? styles.navActive : ''].join(' ')}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <rect x="3" y="9" width="13" height="10" rx="2" stroke="currentColor" strokeWidth="1.9"/>
-              <rect x="8" y="5" width="13" height="10" rx="2" stroke="currentColor" strokeWidth="1.9"/>
+              <path d="M17 3a2.83 2.83 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             <span className={styles.navLabel}>Practice</span>
           </Link>
 
-          <Link href="/dares" className={[styles.navItem, activeTab === 'dares' ? styles.navActive : ''].join(' ')}>
+          <Link href="/leaderboard" className={[styles.navItem, activeTab === 'leaderboard' ? styles.navActive : ''].join(' ')}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M13 2L4 13h7l-1 9 10-12h-7z" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"/>
+              <rect x="2" y="13" width="4" height="8" rx="1" stroke="currentColor" strokeWidth="1.9"/>
+              <rect x="9" y="9" width="4" height="12" rx="1" stroke="currentColor" strokeWidth="1.9"/>
+              <rect x="16" y="4" width="4" height="17" rx="1" stroke="currentColor" strokeWidth="1.9"/>
             </svg>
-            <span className={styles.navLabel}>Dares</span>
+            <span className={styles.navLabel}>Ranks</span>
           </Link>
 
           <Link href="/profile" className={[styles.navItem, activeTab === 'me' ? styles.navActive : ''].join(' ')}>

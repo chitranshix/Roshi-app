@@ -35,19 +35,19 @@
   flex: 1;
   padding: 10px;
   border-radius: var(--radius-md);
-  border: 2px solid var(--border);
-  background: var(--surface);
+  background: var(--surface2);
   font-size: 13px;
   font-weight: 700;
   color: var(--muted);
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
 
 .tabActive {
-  border-color: var(--accent);
+  background: var(--surface);
   color: var(--accent);
+  box-shadow: var(--shadow);
 }
 
 /* ── List ── */
@@ -58,7 +58,7 @@
   background: var(--border);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
 
 .row {
