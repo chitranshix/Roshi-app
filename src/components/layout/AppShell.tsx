@@ -123,9 +123,13 @@ export default function AppShell({ children, gameplay }: { children: React.React
             <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="11" width="4" height="7" rx="1"/><rect x="8" y="7" width="4" height="11" rx="1"/><rect x="14" y="3" width="4" height="15" rx="1"/></svg>
             Leaderboard
           </Link>
+          <Link href="/dares" className={styles.menuItem}>
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h12a1 1 0 011 1v6a1 1 0 01-1 1H8l-4 4V5a1 1 0 011-1z"/></svg>
+            Past dares
+          </Link>
           <Link href="/profile/words" className={styles.menuItem}>
             <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="14" height="14" rx="2"/><line x1="7" y1="8" x2="13" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/></svg>
-            Words learned
+            Words Journal
           </Link>
         </nav>
       </div>

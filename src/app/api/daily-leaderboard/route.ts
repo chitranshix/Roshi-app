@@ -17,9 +17,9 @@ export async function GET() {
   }
   const todayWord = getDailyWordName(allWords)
 
-  // Today's date window
+  // Today's UTC date window — use setUTCHours to match toISOString() which is always UTC
   const todayStart = new Date()
-  todayStart.setHours(0, 0, 0, 0)
+  todayStart.setUTCHours(0, 0, 0, 0)
 
   // Fetch all daily point_events for today's word
   const { data: events } = await supabase
@@ -63,5 +63,8 @@ export async function GET() {
       completedAt: created_at,
     }))
 
-  return NextResponse.json({ word: todayWord, entries: sorted, total: sorted.length })
+  return NextResponse.json(
+    { word: todayWord, entries: sorted, total: sorted.length },
+    { headers: { 'Cache-Control': 'no-store' } }
+  )
 }

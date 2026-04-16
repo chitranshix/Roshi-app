@@ -24,7 +24,7 @@ export default function DailyLeaderboardPage() {
     createClient().auth.getUser().then(({ data: { user } }) => {
       if (user) setMyId(user.id)
     })
-    fetch('/api/daily-leaderboard')
+    fetch('/api/daily-leaderboard', { cache: 'no-store' })
       .then(r => r.json())
       .then(d => { setWord(d.word ?? ''); setEntries(d.entries ?? []) })
       .finally(() => setLoading(false))
