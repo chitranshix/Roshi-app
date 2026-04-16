@@ -91,10 +91,13 @@ export default function ProfilePage() {
     setTimeout(() => setPwSaved(false), 2000)
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const trimmed = name.trim()
     if (!trimmed) return
     localStorage.setItem('roshi_name', trimmed)
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) await supabase.from('users').update({ name: trimmed }).eq('id', user.id)
     setSaved(true)
     setTimeout(() => setSaved(false), 1500)
   }

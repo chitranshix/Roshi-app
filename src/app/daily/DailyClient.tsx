@@ -49,21 +49,8 @@ export default function DailyClient({ word, userId }: { word: GREWord; userId: s
     window.speechSynthesis.speak(utt)
   }, [word])
 
-  const pickSentence = useCallback((i: number) => {
-    if (answerResult) return
-    const isCorrect = sentences[i]?.correct ?? false
-    setSelected(i)
-    setSentenceCorrect(isCorrect)
-    setAnswerResult(isCorrect ? 'correct' : 'wrong')
-    if (navigator.vibrate) navigator.vibrate(isCorrect ? [10, 50, 10] : [80])
-    setTimeout(() => {
-      if (isCorrect) setStage('definition')
-      else { playWrong(); setPoints(0); setStage('result'); markDailyDone(); setStreak(getStreak().count) }
-    }, 1200)
-  }, [answerResult, sentences])
-
   const recordPoints = useCallback(async (pts: number) => {
-    if (!userId || pts === 0) return
+    if (!userId) return
     const supabase = createClient()
     await supabase.from('point_events').insert({
       user_id:    userId,
@@ -74,6 +61,26 @@ export default function DailyClient({ word, userId }: { word: GREWord; userId: s
       source:     'daily',
     })
   }, [userId, word.word, word.definition, word.sentences])
+
+  const pickSentence = useCallback((i: number) => {
+    if (answerResult) return
+    const isCorrect = sentences[i]?.correct ?? false
+    setSelected(i)
+    setSentenceCorrect(isCorrect)
+    setAnswerResult(isCorrect ? 'correct' : 'wrong')
+    if (navigator.vibrate) navigator.vibrate(isCorrect ? [10, 50, 10] : [80])
+    setTimeout(() => {
+      if (isCorrect) setStage('definition')
+      else {
+        playWrong()
+        setPoints(0)
+        setStage('result')
+        markDailyDone()
+        setStreak(getStreak().count)
+        void recordPoints(0)
+      }
+    }, 1200)
+  }, [answerResult, sentences, recordPoints])
 
   const submitDefinition = useCallback(async () => {
     setChecking(true)
