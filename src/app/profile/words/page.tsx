@@ -46,6 +46,7 @@ export default function WordsPage() {
   const [filter, setFilter]       = useState<Filter>('all')
   const [starredWords, setStarredWords] = useState<Set<string>>(new Set())
   const [sheet, setSheet]         = useState<WordEntry | null>(null)
+  const [filterOpen, setFilterOpen] = useState(false)
   const [, setUserId]             = useState<string | null>(null)
 
   useEffect(() => {
@@ -109,36 +110,49 @@ export default function WordsPage() {
 
   const revisitCount = entries.filter(e => e.revisit).length
 
-  const filterChips: { key: Filter; label: string }[] = [
-    { key: 'all',     label: `All · ${entries.length}` },
-    { key: 'right',   label: `✓ Got right · ${entries.filter(e => e.points >= 5).length}` },
-    { key: 'partial', label: `~ Partial · ${entries.filter(e => e.points > 0 && e.points < 5).length}` },
-    { key: 'wrong',   label: `✗ Got wrong · ${entries.filter(e => e.points === 0).length}` },
-    { key: 'starred', label: `★ Starred · ${starred.length}` },
-    { key: 'revisit', label: `↩ Revisit · ${revisitCount}` },
+  const filterOptions: { key: Filter; label: string; count: number }[] = [
+    { key: 'all',     label: 'All',       count: entries.length },
+    { key: 'right',   label: '✓ Got right', count: entries.filter(e => e.points >= 5).length },
+    { key: 'partial', label: '~ Partial',   count: entries.filter(e => e.points > 0 && e.points < 5).length },
+    { key: 'wrong',   label: '✗ Got wrong', count: entries.filter(e => e.points === 0).length },
+    { key: 'starred', label: '★ Starred',   count: starred.length },
+    { key: 'revisit', label: '↩ Revisit',   count: revisitCount },
   ]
+
+  const activeLabel = filterOptions.find(f => f.key === filter)?.label ?? 'All'
 
   return (
     <AppShell>
       <div className={styles.page}>
         <div className={styles.heading}>
           Words Journal
-          {!loading && <span className={styles.count}>{entries.length}</span>}
+          {!loading && <span className={styles.count}>{displayed.length}</span>}
         </div>
 
-        <div className={styles.filterScroll}>
-          <div className={styles.filterRow}>
-            {filterChips.map(({ key, label }) => (
+        <div className={styles.filterBtn} onClick={() => setFilterOpen(v => !v)}>
+          <span className={styles.filterBtnLabel}>{activeLabel}</span>
+          <svg
+            className={[styles.filterBtnChevron, filterOpen ? styles.filterBtnChevronOpen : ''].join(' ')}
+            width="14" height="14" viewBox="0 0 14 14" fill="none"
+          >
+            <path d="M3 5l4 4 4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+
+        {filterOpen && (
+          <div className={styles.filterDropdown}>
+            {filterOptions.map(({ key, label, count }) => (
               <button
                 key={key}
-                className={[styles.filterChip, filter === key ? styles.filterActive : ''].join(' ')}
-                onClick={() => setFilter(key)}
+                className={[styles.filterOption, filter === key ? styles.filterOptionActive : ''].join(' ')}
+                onClick={() => { setFilter(key); setFilterOpen(false) }}
               >
-                {label}
+                <span className={styles.filterOptionLabel}>{label}</span>
+                <span className={styles.filterOptionCount}>{count}</span>
               </button>
             ))}
           </div>
-        </div>
+        )}
 
         {loading ? (
           <div className={styles.empty}>Loading…</div>

@@ -21,39 +21,85 @@
   color: var(--muted);
 }
 
-/* ── Filter chips (scrollable row) ── */
-.filterScroll {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  margin: 0 -20px;
-  padding: 0 20px;
-}
-
-.filterScroll::-webkit-scrollbar { display: none; }
-
-.filterRow {
+/* ── Filter dropdown button ── */
+.filterBtn {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 8px;
-  width: max-content;
-}
-
-.filterChip {
-  padding: 7px 14px;
-  border-radius: 20px;
-  border: 2px solid var(--border);
+  padding: 11px 16px;
   background: var(--surface);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--muted);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
   cursor: pointer;
-  white-space: nowrap;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
   -webkit-tap-highlight-color: transparent;
+  transition: border-color 0.15s;
+  user-select: none;
 }
 
-.filterActive {
-  border-color: var(--accent);
+.filterBtn:hover { border-color: var(--accent); }
+
+.filterBtnLabel {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.filterBtnChevron {
+  color: var(--muted);
+  transition: transform 0.15s;
+  flex-shrink: 0;
+}
+
+.filterBtnChevronOpen {
+  transform: rotate(180deg);
+}
+
+/* ── Dropdown panel ── */
+.filterDropdown {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.filterOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 16px;
+  background: var(--surface);
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.1s;
+  width: 100%;
+  text-align: left;
+}
+
+.filterOption:active { background: var(--surface2); }
+
+.filterOptionActive { background: color-mix(in srgb, var(--accent) 6%, var(--surface)); }
+.filterOptionActive:active { background: color-mix(in srgb, var(--accent) 10%, var(--surface)); }
+
+.filterOptionLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.filterOptionActive .filterOptionLabel {
   color: var(--accent);
+  font-weight: 700;
+}
+
+.filterOptionCount {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
 }
 
 /* ── List ── */
