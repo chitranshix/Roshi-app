@@ -185,7 +185,7 @@ export default function DailyClient({ word, userId }: { word: GREWord; userId: s
               </button>
               <div className={styles.heroWord}>{word.word}</div>
             </div>
-            <div className={styles.mcqPrompt}>Which sentence(s) use this word correctly?</div>
+            <div className={styles.mcqPrompt}>Which sentence uses this word correctly?</div>
             <div className={styles.options}>
               {sentences.map((s, i) => {
                 const isSelected = selected === i

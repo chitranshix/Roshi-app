@@ -28,6 +28,8 @@ export default function NewDareClient({ words, preselectedWord }: Props) {
   const [copied, setCopied]               = useState(false)
   const [recentWords, setRecentWords]     = useState<string[]>([])
   const [inviteMode, setInviteMode]       = useState(false)
+  const [showAllFriends, setShowAllFriends] = useState(false)
+  const FRIEND_LIMIT = 8
 
   useEffect(() => {
     const supabase = createClient()
@@ -146,8 +148,6 @@ export default function NewDareClient({ words, preselectedWord }: Props) {
     })
   }
 
-  const selectedNames  = friends.filter(f => selectedFriends.includes(f.id)).map(f => f.name)
-
   return (
     <AppShell>
       <div className={styles.screen}>
@@ -189,7 +189,7 @@ export default function NewDareClient({ words, preselectedWord }: Props) {
           Dare who? <span className={styles.sectionLabelNote}>(tap all that apply)</span>
         </div>
         <div className={styles.friendList}>
-          {friends.map(({ id, name }) => (
+          {(showAllFriends ? friends : friends.slice(0, FRIEND_LIMIT)).map(({ id, name }) => (
             <div
               key={id}
               className={styles.friendChip}
@@ -207,6 +207,11 @@ export default function NewDareClient({ words, preselectedWord }: Props) {
             <div className={styles.friendName}>Invite</div>
           </div>
         </div>
+        {friends.length > FRIEND_LIMIT && (
+          <button className={styles.showMoreBtn} onClick={() => setShowAllFriends(v => !v)}>
+            {showAllFriends ? 'Show less ▲' : `+${friends.length - FRIEND_LIMIT} more ▼`}
+          </button>
+        )}
 
         {dareLink && (
           <div className={styles.dareLinkBox}>

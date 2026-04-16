@@ -19,8 +19,10 @@ interface Props {
 
 export default function TrapClient({ word, friends, myId }: Props) {
   const router = useRouter()
-  const [selected, setSelected] = useState<string[]>([])
-  const [sending, setSending]   = useState(false)
+  const [selected, setSelected]     = useState<string[]>([])
+  const [sending, setSending]       = useState(false)
+  const [showAll, setShowAll]       = useState(false)
+  const FRIEND_LIMIT = 8
 
   const toggle = (id: string) =>
     setSelected(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id])
@@ -60,7 +62,7 @@ export default function TrapClient({ word, friends, myId }: Props) {
           {friends.length === 0 && (
             <div className={styles.empty}>No other players yet.</div>
           )}
-          {friends.map(({ id, name }) => (
+          {(showAll ? friends : friends.slice(0, FRIEND_LIMIT)).map(({ id, name }) => (
             <div
               key={id}
               className={styles.friendChip}
@@ -71,6 +73,11 @@ export default function TrapClient({ word, friends, myId }: Props) {
             </div>
           ))}
         </div>
+        {friends.length > FRIEND_LIMIT && (
+          <button className={styles.showMoreBtn} onClick={() => setShowAll(v => !v)}>
+            {showAll ? 'Show less ▲' : `+${friends.length - FRIEND_LIMIT} more ▼`}
+          </button>
+        )}
 
         <div className={styles.spacer} />
 

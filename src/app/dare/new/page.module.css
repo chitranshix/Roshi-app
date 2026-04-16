@@ -154,6 +154,18 @@
   font-size: 11px;
 }
 
+.showMoreBtn {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  background: none;
+  border: none;
+  padding: 2px 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  align-self: flex-start;
+}
+
 .spacer { flex: 1; }
 
 /* ── Trap toggle ── */

@@ -254,7 +254,7 @@ export default function PlayClient({ level, words, userId }: Props) {
               </button>
               <div className={styles.heroWord}>{currentWord.word}</div>
             </div>
-            <div className={styles.mcqPrompt}>Which sentence(s) use this word correctly?</div>
+            <div className={styles.mcqPrompt}>Which sentence uses this word correctly?</div>
             <div className={styles.options}>
               {sentences.map((s, i) => {
                 const isSelected = selected === i
