@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import AppShell from '@/components/layout/AppShell'
 import StarButton from '@/components/ui/StarButton'
 import { createClient } from '@/lib/supabase'
@@ -16,10 +16,9 @@ interface WordEntry {
   source:     string
   level:      number | null
   created_at: string
-  revisit:    boolean
 }
 
-type Filter = 'all' | 'right' | 'needswork' | 'starred' | 'revisit'
+type Filter = 'all' | 'right' | 'needswork' | 'starred'
 
 function daysAgo(iso: string): string {
   const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000)
@@ -42,13 +41,12 @@ function sourceLabel(source: string): string {
 }
 
 export default function WordsPage() {
-  const [entries, setEntries]     = useState<WordEntry[]>([])
-  const [loading, setLoading]     = useState(true)
-  const [filter, setFilter]       = useState<Filter>('all')
+  const [entries, setEntries]           = useState<WordEntry[]>([])
+  const [loading, setLoading]           = useState(true)
+  const [filter, setFilter]             = useState<Filter>('all')
   const [starredWords, setStarredWords] = useState<Set<string>>(new Set())
-  const [sheet, setSheet]         = useState<WordEntry | null>(null)
-  const [filterOpen, setFilterOpen] = useState(false)
-  const [, setUserId]             = useState<string | null>(null)
+  const [sheet, setSheet]               = useState<WordEntry | null>(null)
+  const [filterOpen, setFilterOpen]     = useState(false)
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- reading localStorage must happen in useEffect
@@ -57,10 +55,9 @@ export default function WordsPage() {
     const supabase = createClient()
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) { setLoading(false); return }
-      setUserId(user.id)
       const { data } = await supabase
         .from('point_events')
-        .select('id, word, definition, sentence, points, source, level, created_at, revisit')
+        .select('id, word, definition, sentence, points, source, level, created_at')
         .eq('user_id', user.id)
         .not('word', 'is', null)
         .in('source', ['daily', 'level', 'dare'])
@@ -81,7 +78,6 @@ export default function WordsPage() {
           source:     row.source ?? '',
           level:      row.level ?? null,
           created_at: row.created_at,
-          revisit:    row.revisit ?? false,
         })
       }
 
@@ -112,14 +108,6 @@ export default function WordsPage() {
     })
   }, [])
 
-  const toggleRevisit = useCallback(async (entry: WordEntry) => {
-    const supabase = createClient()
-    const next = !entry.revisit
-    await supabase.from('point_events').update({ revisit: next }).eq('id', entry.id)
-    setEntries(prev => prev.map(e => e.id === entry.id ? { ...e, revisit: next } : e))
-    setSheet(prev => prev?.id === entry.id ? { ...prev, revisit: next } : prev)
-  }, [])
-
   const starred = getStarred().map(s => s.word)
 
   const displayed: WordEntry[] = (() => {
@@ -127,19 +115,15 @@ export default function WordsPage() {
       case 'right':     return entries.filter(e => e.points >= 5)
       case 'needswork': return entries.filter(e => e.points < 5)
       case 'starred':   return entries.filter(e => starredWords.has(e.word))
-      case 'revisit': return entries.filter(e => e.revisit)
-      default:        return entries
+      default:          return entries
     }
   })()
-
-  const revisitCount = entries.filter(e => e.revisit).length
 
   const filterOptions: { key: Filter; label: string; count: number }[] = [
     { key: 'all',       label: 'All',          count: entries.length },
     { key: 'right',     label: '✓ Got right',  count: entries.filter(e => e.points >= 5).length },
     { key: 'needswork', label: '✗ Needs work', count: entries.filter(e => e.points < 5).length },
     { key: 'starred',   label: '★ Starred',    count: starred.length },
-    { key: 'revisit',   label: '↩ Revisit',    count: revisitCount },
   ]
 
   const activeLabel = filterOptions.find(f => f.key === filter)?.label ?? 'All'
@@ -185,9 +169,9 @@ export default function WordsPage() {
           <div className={styles.empty}>
             <div className={styles.emptyText}>nothing here yet.</div>
             <div className={styles.emptyHint}>
-              {filter === 'starred' ? 'tap ★ on any word after a round.' :
-               filter === 'revisit' ? 'mark words for revisit from the detail sheet.' :
-               'play a daily or complete a dare to start building your list.'}
+              {filter === 'starred'
+                ? 'tap ★ on any word after a round.'
+                : 'play a daily or complete a dare to start building your list.'}
             </div>
           </div>
         ) : (
@@ -208,7 +192,6 @@ export default function WordsPage() {
                     )}
                     <div className={styles.rowMeta}>
                       {sourceLabel(entry.source)} · {daysAgo(entry.created_at)}
-                      {entry.revisit && <span className={styles.revisitDot}>↩</span>}
                     </div>
                   </div>
                   <div className={styles.chevron}>›</div>
@@ -233,9 +216,7 @@ export default function WordsPage() {
               <StarButton
                 word={sheet.word}
                 definition={sheet.definition}
-                onToggle={() => {
-                  setStarredWords(new Set(getStarred().map(s => s.word)))
-                }}
+                onToggle={() => setStarredWords(new Set(getStarred().map(s => s.word)))}
               />
             </div>
 
@@ -250,14 +231,6 @@ export default function WordsPage() {
               <div className={styles.sheetLabel}>Definition</div>
               <div className={styles.sheetDef}>{sheet.definition || '—'}</div>
             </div>
-
-            <button
-              className={[styles.revisitBtn, sheet.revisit ? styles.revisitBtnOn : ''].join(' ')}
-              onClick={() => toggleRevisit(sheet)}
-            >
-              <span className={styles.revisitIcon}>↩</span>
-              {sheet.revisit ? 'Remove from revisit queue' : 'Add to revisit queue'}
-            </button>
           </div>
         </div>
       )}
