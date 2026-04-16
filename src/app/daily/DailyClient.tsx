@@ -172,7 +172,7 @@ export default function DailyClient({ word, userId }: { word: GREWord; userId: s
           </div>
         )}
 
-        <div className={styles.eyebrow}>Roshi&apos;s Daily</div>
+        <div className={styles.eyebrow}>Roshi&apos;s Word of the Day</div>
         {streak > 0 && stage !== 'result' && (
           <div className={styles.streakBadge}>{streak} day streak 🔥</div>
         )}

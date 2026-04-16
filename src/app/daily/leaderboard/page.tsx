@@ -33,7 +33,7 @@ export default function DailyLeaderboardPage() {
   return (
     <AppShell>
       <div className={styles.page}>
-        <div className={styles.heading}>Today&apos;s daily</div>
+        <div className={styles.heading}>Today&apos;s word</div>
         {word && <div className={styles.wordBadge}>{word}</div>}
 
         {loading ? (
