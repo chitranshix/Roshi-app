@@ -164,6 +164,9 @@ export default function WordsPage() {
                   <div className={[styles.badge, badge.cls].join(' ')}>{badge.label}</div>
                   <div className={styles.rowInfo}>
                     <div className={styles.word}>{entry.word}</div>
+                    {entry.definition && (
+                      <div className={styles.rowDef}>{entry.definition}</div>
+                    )}
                     <div className={styles.rowMeta}>
                       {sourceLabel(entry.source)} · {daysAgo(entry.created_at)}
                       {entry.revisit && <span className={styles.revisitDot}>↩</span>}

@@ -39,7 +39,7 @@
 
 .filterChip {
   padding: 7px 14px;
-  border-radius: var(--radius-sm);
+  border-radius: 20px;
   border: 2px solid var(--border);
   background: var(--surface);
   font-size: 13px;
@@ -47,7 +47,7 @@
   color: var(--muted);
   cursor: pointer;
   white-space: nowrap;
-  transition: border-color 0.15s, color 0.15s;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -115,6 +115,15 @@
   line-height: 1.2;
 }
 
+.rowDef {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .rowMeta {
   font-size: 11px;
   color: var(--muted);
@@ -122,6 +131,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
+  opacity: 0.7;
 }
 
 .revisitDot {
