@@ -19,7 +19,7 @@ interface WordEntry {
   revisit:    boolean
 }
 
-type Filter = 'all' | 'right' | 'partial' | 'wrong' | 'starred' | 'revisit'
+type Filter = 'all' | 'right' | 'needswork' | 'starred' | 'revisit'
 
 function daysAgo(iso: string): string {
   const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000)
@@ -124,10 +124,9 @@ export default function WordsPage() {
 
   const displayed: WordEntry[] = (() => {
     switch (filter) {
-      case 'right':   return entries.filter(e => e.points >= 5)
-      case 'partial': return entries.filter(e => e.points > 0 && e.points < 5)
-      case 'wrong':   return entries.filter(e => e.points === 0)
-      case 'starred': return entries.filter(e => starredWords.has(e.word))
+      case 'right':     return entries.filter(e => e.points >= 5)
+      case 'needswork': return entries.filter(e => e.points < 5)
+      case 'starred':   return entries.filter(e => starredWords.has(e.word))
       case 'revisit': return entries.filter(e => e.revisit)
       default:        return entries
     }
@@ -136,12 +135,11 @@ export default function WordsPage() {
   const revisitCount = entries.filter(e => e.revisit).length
 
   const filterOptions: { key: Filter; label: string; count: number }[] = [
-    { key: 'all',     label: 'All',       count: entries.length },
-    { key: 'right',   label: '✓ Got right', count: entries.filter(e => e.points >= 5).length },
-    { key: 'partial', label: '~ Partial',   count: entries.filter(e => e.points > 0 && e.points < 5).length },
-    { key: 'wrong',   label: '✗ Got wrong', count: entries.filter(e => e.points === 0).length },
-    { key: 'starred', label: '★ Starred',   count: starred.length },
-    { key: 'revisit', label: '↩ Revisit',   count: revisitCount },
+    { key: 'all',       label: 'All',          count: entries.length },
+    { key: 'right',     label: '✓ Got right',  count: entries.filter(e => e.points >= 5).length },
+    { key: 'needswork', label: '✗ Needs work', count: entries.filter(e => e.points < 5).length },
+    { key: 'starred',   label: '★ Starred',    count: starred.length },
+    { key: 'revisit',   label: '↩ Revisit',    count: revisitCount },
   ]
 
   const activeLabel = filterOptions.find(f => f.key === filter)?.label ?? 'All'
