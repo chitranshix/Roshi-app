@@ -1,27 +1,56 @@
 /* ── Slot machine frame ── */
 .machine {
-  background: #000;
-  border-radius: 16px;
-  border: 3px solid #b88820;
-  padding: 3px 3px 0;
+  background: #0a0010;
+  border-radius: 14px;
+  border: 2px solid #a07818;
   overflow: hidden;
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 220, 80, 0.15),
-    0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+/* ── Header ── */
+.machineHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 12px 8px;
+  border-bottom: 1px solid rgba(160, 120, 24, 0.3);
+}
+
+.machineTitle {
+  font-family: 'Impact', 'Haettenschweiler', 'Arial Narrow Bold', sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #FFD700;
+  text-shadow:
+     1px  1px 0 #000,
+    -1px -1px 0 #000,
+     1px -1px 0 #000,
+    -1px  1px 0 #000;
+}
+
+.machineDiamond {
+  width: 6px;
+  height: 6px;
+  background: #a07818;
+  transform: rotate(45deg);
+  display: block;
+  flex-shrink: 0;
 }
 
 /* ── Grid ── */
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 3px;
-  background: #000; /* shows as reel separators */
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  background: #3a2800; /* dark amber — shows as warm gold separators */
+  padding: 2px;
 }
 
 /* ── Base cell ── */
 .cell {
   aspect-ratio: 1;
-  background: #0c0820;
+  background: #0e0820;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -31,23 +60,14 @@
 
 /* ── Symbol SVG ── */
 .symSvg {
-  width: 70%;
-  height: 70%;
+  width: 72%;
+  height: 72%;
 }
 
-/* ── Number SVG (the "7") ── */
+/* ── Number SVG ── */
 .numSvg {
   width: 100%;
   height: 100%;
-}
-
-/* ── Gloss overlay — top-left sheen on every cell ── */
-.gloss {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse 55% 30% at 28% 22%, rgba(255,255,255,0.14) 0%, transparent 100%);
 }
 
 /* ── Mission cell ── */
@@ -57,44 +77,18 @@
   transition: filter 0.1s;
 }
 
-.missionCell:active { filter: brightness(1.15); }
+.missionCell:active { filter: brightness(1.2); }
 
-/* ── Current mission — gold glow ── */
+/* ── Current — gold inset glow ── */
 .current {
   animation: goldPulse 2s ease-in-out infinite;
 }
 
 @keyframes goldPulse {
   0%, 100% {
-    box-shadow: inset 0 0 0 3px #FFD700, 0 0 16px rgba(255, 210, 0, 0.5);
+    box-shadow: inset 0 0 0 2.5px #FFD700, inset 0 0 12px rgba(255, 210, 0, 0.3);
   }
   50% {
-    box-shadow: inset 0 0 0 3px #FFD700, 0 0 30px rgba(255, 210, 0, 0.8);
+    box-shadow: inset 0 0 0 2.5px #FFD700, inset 0 0 24px rgba(255, 210, 0, 0.6);
   }
-}
-
-/* ── Locked ── */
-.locked {
-  cursor: default;
-  opacity: 0.3;
-}
-
-.locked:active { filter: none; }
-
-/* ── "SLOTS"-style bottom label ── */
-.machineLabel {
-  text-align: center;
-  padding: 10px 0 12px;
-  font-family: 'Nunito', system-ui, sans-serif;
-  font-size: 18px;
-  font-weight: 900;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: #FFD700;
-  text-shadow:
-    2px  2px 0 #000,
-   -2px -2px 0 #000,
-    2px -2px 0 #000,
-   -2px  2px 0 #000,
-    0    3px 0 rgba(180, 60, 0, 0.7);
 }
