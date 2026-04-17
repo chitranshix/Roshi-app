@@ -24,9 +24,9 @@ const DIFF: Record<number, string> = {
 type WorldKey = 'coast' | 'wild' | 'summit'
 
 const WORLDS: Record<WorldKey, { color: string; label: string }> = {
-  coast:  { color: '#2a9d8f', label: 'The Coast'  },
-  wild:   { color: '#5a8a3a', label: 'The Wild'   },
-  summit: { color: '#5272a0', label: 'The Summit' },
+  coast:  { color: '#00b5a5', label: 'The Coast'  },
+  wild:   { color: '#22c55e', label: 'The Wild'   },
+  summit: { color: '#3b82f6', label: 'The Summit' },
 }
 
 interface NodeDef { mission: number; col: 0|1|2; world: WorldKey; icon: string }
@@ -230,7 +230,15 @@ export default function LevelHero() {
             d={fullPath}
             fill="none"
             stroke="var(--surface2)"
-            strokeWidth="20"
+            strokeWidth="22"
+            strokeLinecap="round"
+          />
+          {/* Trail — inner highlight for road depth */}
+          <path
+            d={fullPath}
+            fill="none"
+            stroke="rgba(255,255,255,0.35)"
+            strokeWidth="8"
             strokeLinecap="round"
           />
 
@@ -240,12 +248,15 @@ export default function LevelHero() {
             const to   = nodeXY(i + 1)
             const h    = MAP_ROW * 0.48
             const wc   = WORLDS[NODE_DEFS[i].world].color
+            const seg  = `M${from.x},${from.y} C${from.x},${from.y + h} ${to.x},${to.y - h} ${to.x},${to.y}`
             return (
-              <path key={i}
-                d={`M${from.x},${from.y} C${from.x},${from.y + h} ${to.x},${to.y - h} ${to.x},${to.y}`}
-                fill="none" stroke={wc} strokeWidth="20"
-                strokeLinecap="round" opacity="0.65"
-              />
+              <g key={i}>
+                <path d={seg} fill="none" stroke={wc} strokeWidth="22"
+                  strokeLinecap="round" opacity="0.8"/>
+                {/* Inner highlight on completed trail */}
+                <path d={seg} fill="none" stroke="rgba(255,255,255,0.28)"
+                  strokeWidth="8" strokeLinecap="round"/>
+              </g>
             )
           })}
 
@@ -319,6 +330,20 @@ export default function LevelHero() {
                   fill={fill}
                   fillOpacity={isLocked ? 0.45 : 1}
                 />
+                {/* Thick outline — slot machine jewel edge */}
+                <circle r={MAP_R}
+                  fill="none"
+                  stroke={isLocked ? 'var(--muted)' : '#111'}
+                  strokeWidth="3.5"
+                  opacity={isLocked ? 0.25 : 0.75}
+                />
+                {/* Glossy highlight arc */}
+                <ellipse
+                  cx={-MAP_R * 0.28} cy={-MAP_R * 0.42}
+                  rx={MAP_R * 0.46} ry={MAP_R * 0.22}
+                  fill="white" opacity={isLocked ? 0.08 : 0.32}
+                  transform={`rotate(-22,${-MAP_R * 0.28},${-MAP_R * 0.42})`}
+                />
 
                 {/* Inner content */}
                 {isLocked ? (
@@ -353,9 +378,9 @@ export default function LevelHero() {
                   textAnchor="middle"
                   fontFamily="var(--font-ui), system-ui, sans-serif"
                   fontSize="13"
-                  fontWeight={isCurrent ? '800' : '600'}
+                  fontWeight={isCurrent ? '900' : isDone ? '700' : '600'}
                   fill={isCurrent ? 'var(--accent)' : isLocked ? 'var(--muted)' : 'var(--text)'}
-                  opacity={isLocked ? 0.55 : 1}
+                  opacity={isLocked ? 0.5 : 1}
                 >
                   {MISSION_NAMES[nd.mission]}
                 </text>
