@@ -81,6 +81,7 @@
 
 /* ── Current — gold inset glow ── */
 .current {
+  border-radius: 8px;
   animation: goldPulse 2s ease-in-out infinite;
 }
 
