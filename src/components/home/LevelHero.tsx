@@ -273,12 +273,12 @@ function MissionFace({
   diff: string
 }) {
   const isDouble = mission >= 10
-  const fs = isDouble ? 50 : 64
-  const ny = isDouble ? 64  : 68
+  const fs = isDouble ? 48 : 60
+  const ny = isDouble ? 68  : 72
   return (
     <>
       {/* "MISSION" label above number */}
-      <text x="50" y="18" textAnchor="middle"
+      <text x="50" y="14" textAnchor="middle"
         fontFamily="Nunito, system-ui, sans-serif"
         fontSize="9" fontWeight="800"
         letterSpacing="0.14em"
@@ -298,7 +298,7 @@ function MissionFace({
         fill={numColor}
       >{mission}</text>
       {/* Difficulty label */}
-      <text x="50" y="91" textAnchor="middle"
+      <text x="50" y="93" textAnchor="middle"
         fontFamily="Nunito, system-ui, sans-serif"
         fontSize="11" fontWeight="800"
         letterSpacing="0.08em"
