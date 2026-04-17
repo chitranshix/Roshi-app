@@ -1,8 +1,8 @@
 /* ── Slot machine frame ── */
 .machine {
-  background: #0a0010;
+  background: var(--surface);
   border-radius: 14px;
-  border: 2px solid #a07818;
+  border: 2px solid var(--gold);
   overflow: hidden;
 }
 
@@ -13,7 +13,7 @@
   justify-content: center;
   gap: 10px;
   padding: 10px 12px 8px;
-  border-bottom: 1px solid rgba(160, 120, 24, 0.3);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .machineTitle {
@@ -21,21 +21,18 @@
   font-size: 15px;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: #FFD700;
-  text-shadow:
-     1px  1px 0 #000,
-    -1px -1px 0 #000,
-     1px -1px 0 #000,
-    -1px  1px 0 #000;
+  color: var(--gold);
+  text-shadow: none;
 }
 
 .machineDiamond {
   width: 6px;
   height: 6px;
-  background: #a07818;
+  background: var(--gold);
   transform: rotate(45deg);
   display: block;
   flex-shrink: 0;
+  opacity: 0.6;
 }
 
 /* ── Grid ── */
@@ -43,14 +40,14 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 2px;
-  background: #3a2800; /* dark amber — shows as warm gold separators */
+  background: var(--border);
   padding: 2px;
 }
 
 /* ── Base cell ── */
 .cell {
   aspect-ratio: 1;
-  background: #0e0820;
+  background: var(--surface2);
   position: relative;
   overflow: hidden;
   display: flex;
@@ -77,7 +74,7 @@
   transition: filter 0.1s;
 }
 
-.missionCell:active { filter: brightness(1.2); }
+.missionCell:active { filter: brightness(0.92); }
 
 /* ── Current — gold inset glow ── */
 .current {
@@ -87,9 +84,44 @@
 
 @keyframes goldPulse {
   0%, 100% {
-    box-shadow: inset 0 0 0 2.5px #FFD700, inset 0 0 12px rgba(255, 210, 0, 0.3);
+    box-shadow: inset 0 0 0 2.5px #FFD700, inset 0 0 12px rgba(255, 210, 0, 0.25);
   }
   50% {
-    box-shadow: inset 0 0 0 2.5px #FFD700, inset 0 0 24px rgba(255, 210, 0, 0.6);
+    box-shadow: inset 0 0 0 2.5px #FFD700, inset 0 0 22px rgba(255, 210, 0, 0.5);
   }
+}
+
+/* ── Dark theme overrides ── */
+:global([data-theme='dark']) .machine {
+  background: #0a0010;
+  border-color: #a07818;
+}
+
+:global([data-theme='dark']) .machineHeader {
+  border-bottom-color: rgba(160, 120, 24, 0.3);
+}
+
+:global([data-theme='dark']) .machineTitle {
+  color: #FFD700;
+  text-shadow:
+     1px  1px 0 #000,
+    -1px -1px 0 #000,
+     1px -1px 0 #000,
+    -1px  1px 0 #000;
+}
+
+:global([data-theme='dark']) .machineDiamond {
+  background: #a07818;
+}
+
+:global([data-theme='dark']) .grid {
+  background: #3a2800;
+}
+
+:global([data-theme='dark']) .cell {
+  background: #0e0820;
+}
+
+:global([data-theme='dark']) .missionCell:active {
+  filter: brightness(1.2);
 }

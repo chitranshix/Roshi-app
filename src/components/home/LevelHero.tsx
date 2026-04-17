@@ -343,10 +343,10 @@ export default function LevelHero() {
           const diffLabel = DIFF[mission]
 
           const diffColor = isCurrent
-            ? 'rgba(255,215,0,0.75)'
+            ? '#e8a800'
             : isDone
-              ? `${wc}aa`
-              : 'rgba(255,255,255,0.25)'
+              ? wc
+              : 'var(--muted)'
 
           return (
             <div key={i}
