@@ -255,18 +255,25 @@ function MissionFace({
   diff: string
 }) {
   const isDouble = mission >= 10
-  const fs = isDouble ? 54 : 72
-  const ny = isDouble ? 60  : 65
+  const fs = isDouble ? 50 : 64
+  const ny = isDouble ? 64  : 68
   return (
     <>
-      {/* Outline pass */}
+      {/* "MISSION" label above number */}
+      <text x="50" y="18" textAnchor="middle"
+        fontFamily="Nunito, system-ui, sans-serif"
+        fontSize="9" fontWeight="800"
+        letterSpacing="0.14em"
+        fill={diffColor}
+      >MISSION</text>
+      {/* Number — outline pass */}
       <text x="50" y={ny} textAnchor="middle"
         fontFamily="Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif"
         fontSize={fs} fontWeight="900"
-        stroke="#000" strokeWidth="11" strokeLinejoin="round"
+        stroke="#000" strokeWidth="10" strokeLinejoin="round"
         fill="none"
       >{mission}</text>
-      {/* Fill pass */}
+      {/* Number — fill pass */}
       <text x="50" y={ny} textAnchor="middle"
         fontFamily="Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif"
         fontSize={fs} fontWeight="900"
@@ -327,16 +334,13 @@ export default function LevelHero() {
           const isCurrent  = mission === currentMission
           const isDone     = mission <  currentMission
           const isLocked   = mission >  currentMission
-          const done       = completedInLevel(mission).length
-          const pct        = Math.round((done / WORDS_PER_MISSION) * 100)
-
           const numColor = isCurrent
             ? '#FFD700'
             : isDone
               ? wc
               : '#666'
 
-          const diffLabel = isCurrent && pct > 0 ? `${pct}%` : DIFF[mission]
+          const diffLabel = DIFF[mission]
 
           const diffColor = isCurrent
             ? 'rgba(255,215,0,0.75)'
