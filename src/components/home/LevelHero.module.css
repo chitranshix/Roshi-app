@@ -1,144 +1,100 @@
-/* ── Slot machine container ── */
+/* ── Slot machine frame ── */
 .machine {
-  background: #160d2e;
-  border-radius: 20px;
-  padding: 14px 12px 16px;
+  background: #000;
+  border-radius: 16px;
   border: 3px solid #b88820;
+  padding: 3px 3px 0;
+  overflow: hidden;
   box-shadow:
-    inset 0 1px 0 rgba(255, 220, 100, 0.12),
-    0 8px 32px rgba(0, 0, 0, 0.5);
-}
-
-.machineHeader {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.machineTitle {
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: #c89830;
-}
-
-.machineDot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #c89830;
-  opacity: 0.5;
-  display: block;
+    inset 0 0 0 1px rgba(255, 220, 80, 0.15),
+    0 8px 32px rgba(0, 0, 0, 0.6);
 }
 
 /* ── Grid ── */
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 7px;
+  gap: 3px;
+  background: #000; /* shows as reel separators */
 }
 
-/* ── Symbol cell ── */
-.symCell {
+/* ── Base cell ── */
+.cell {
   aspect-ratio: 1;
-  border-radius: 12px;
-  background: #1e1040;
-  border: 2px solid rgba(255, 255, 255, 0.06);
+  background: #0c0820;
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+}
+
+/* ── Symbol SVG ── */
+.symSvg {
+  width: 70%;
+  height: 70%;
+}
+
+/* ── Number SVG (the "7") ── */
+.numSvg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Gloss overlay — top-left sheen on every cell ── */
+.gloss {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 30% at 28% 22%, rgba(255,255,255,0.14) 0%, transparent 100%);
 }
 
 /* ── Mission cell ── */
 .missionCell {
-  aspect-ratio: 1;
-  border-radius: 12px;
-  border: 2.5px solid rgba(0, 0, 0, 0.25);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: transform 0.1s;
+  transition: filter 0.1s;
 }
 
-.missionCell:active { transform: scale(0.96); }
+.missionCell:active { filter: brightness(1.15); }
 
-/* Current: gold glow pulse */
-.missionCurrent {
-  border-color: #f0c030 !important;
-  animation: goldGlow 2.2s ease-in-out infinite;
+/* ── Current mission — gold glow ── */
+.current {
+  animation: goldPulse 2s ease-in-out infinite;
 }
 
-@keyframes goldGlow {
-  0%, 100% { box-shadow: 0 0 0 2px #f0c030, 0 0 14px rgba(240, 192, 48, 0.4); }
-  50%       { box-shadow: 0 0 0 2px #f0c030, 0 0 26px rgba(240, 192, 48, 0.7); }
+@keyframes goldPulse {
+  0%, 100% {
+    box-shadow: inset 0 0 0 3px #FFD700, 0 0 16px rgba(255, 210, 0, 0.5);
+  }
+  50% {
+    box-shadow: inset 0 0 0 3px #FFD700, 0 0 30px rgba(255, 210, 0, 0.8);
+  }
 }
 
-/* Locked */
-.missionLocked {
-  background: #1e1040 !important;
-  border-color: rgba(255, 255, 255, 0.05) !important;
+/* ── Locked ── */
+.locked {
   cursor: default;
-  opacity: 0.55;
+  opacity: 0.3;
 }
 
-.missionLocked:active { transform: none; }
+.locked:active { filter: none; }
 
-/* ── Mission cell contents ── */
-.missionNum {
-  position: absolute;
-  top: 6px;
-  left: 8px;
-  font-size: 9px;
-  font-weight: 900;
-  letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.6);
-  line-height: 1;
-}
-
-.missionNumCurrent {
-  color: #f0c030;
-}
-
-.missionIcon {
-  width: 52%;
-  height: 52%;
-  flex-shrink: 0;
-  margin-top: 6px;
-}
-
-/* Done checkmark — top-right corner */
-.doneCheck {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  width: 18px;
-  height: 18px;
-}
-
-.missionName {
-  font-size: 8px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.88);
+/* ── "SLOTS"-style bottom label ── */
+.machineLabel {
   text-align: center;
-  line-height: 1.2;
-  padding: 0 4px;
-  margin-top: 3px;
-}
-
-.missionDiff {
-  font-size: 7px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  color: rgba(255, 255, 255, 0.45);
+  padding: 10px 0 12px;
+  font-family: 'Nunito', system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  margin-top: 1px;
+  color: #FFD700;
+  text-shadow:
+    2px  2px 0 #000,
+   -2px -2px 0 #000,
+    2px -2px 0 #000,
+   -2px  2px 0 #000,
+    0    3px 0 rgba(180, 60, 0, 0.7);
 }
