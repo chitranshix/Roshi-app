@@ -12,7 +12,7 @@
 
 .heroCard {
   background: var(--surface);
-  border-top: 3px solid var(--accent);
+  border-top: 3px solid var(--tier-color, var(--accent));
   border-radius: var(--radius-lg);
   padding: 20px;
   display: flex;
@@ -45,44 +45,27 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent);
   display: flex;
   align-items: center;
   gap: 6px;
   white-space: nowrap;
 }
 
-.heroEyebrowDot { opacity: 0.5; }
+.heroEyebrowDot { opacity: 0.4; }
 
 .heroTitle {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   color: var(--text);
   letter-spacing: -0.02em;
   line-height: 1.1;
 }
 
-.heroStats {
-  margin-top: 2px;
-  font-size: 14px;
-}
+.heroStats { font-size: 14px; margin-top: 2px; }
+.heroStatNum   { font-weight: 700; color: var(--text); }
+.heroStatLabel { font-weight: 500; color: var(--muted); }
+.heroStatSub   { color: var(--muted); font-weight: 400; }
 
-.heroStatNum {
-  font-weight: 700;
-  color: var(--text);
-}
-
-.heroStatLabel {
-  font-weight: 500;
-  color: var(--muted);
-}
-
-.heroStatSub {
-  color: var(--muted);
-  font-weight: 400;
-}
-
-/* ── World silhouette (mountain / ocean) ── */
 .worldSvg {
   flex-shrink: 1;
   min-width: 0;
@@ -91,38 +74,202 @@
   align-self: flex-end;
 }
 
-/* ── Snow + wave animations ── */
-.snowflake {
-  animation: snowFall var(--dur, 4s) ease-in var(--delay, 0s) infinite;
-}
-@keyframes snowFall {
-  0%        { transform: translateY(0px);   opacity: 0;   }
-  10%       { opacity: 0.8; }
-  85%       { opacity: 0.6; }
-  100%      { transform: translateY(110px); opacity: 0;   }
-}
-
-.waveScroll {
-  animation: waveScroll 5s linear infinite;
-}
-.waveScrollSlow {
-  animation: waveScroll 9s linear infinite;
-}
-@keyframes waveScroll {
-  from { transform: translateX(0);     }
-  to   { transform: translateX(-80px); }
+.playBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 20px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
 }
 
-.oceanBob {
-  animation: oceanBob 4s ease-in-out infinite;
-}
-@keyframes oceanBob {
-  0%, 100% { transform: translateY(0)    rotate(0deg);    }
-  28%       { transform: translateY(-6px) rotate(-3deg);  }
-  72%       { transform: translateY(4px)  rotate(2deg);   }
+/* ── Map section label ── */
+.mapLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 4px;
 }
 
-/* ── Tiny Roshi animations ── */
+/* ── Tier section ── */
+.tierSection {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.tierBanner {
+  position: relative;
+  background: color-mix(in srgb, var(--tier-color) 12%, var(--surface));
+  overflow: hidden;
+  color: var(--tier-color);
+}
+
+.bannerSvg {
+  display: block;
+  width: 100%;
+  height: 60px;
+}
+
+.tierMeta {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tierName {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--tier-color);
+  letter-spacing: -0.01em;
+}
+
+.tierSub {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tier-color);
+  opacity: 0.65;
+}
+
+/* ── Nodes ── */
+.nodesWrap {
+  position: relative;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0 16px;
+}
+
+/* Vertical connector line */
+.nodeLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: color-mix(in srgb, var(--tier-color) 20%, var(--surface2));
+  transform: translateX(-50%);
+  border-radius: 1px;
+}
+
+.nodeRow {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  padding: 6px 16px;
+  -webkit-tap-highlight-color: transparent;
+  text-decoration: none;
+}
+
+/* ── Node outer (positions node left or right) ── */
+.nodeOuter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nodeLeft  { flex-direction: row; }
+.nodeRight { flex-direction: row-reverse; margin-left: auto; }
+
+/* ── Node circle ── */
+.nodeCircle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2.5px solid var(--surface2);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  transition: transform 0.15s;
+}
+
+.nodeRow:active .nodeCircle { transform: scale(0.94); }
+
+/* Active / current level */
+.nodeCurrent {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* Completed */
+.nodeComplete {
+  border-color: transparent;
+  color: #fff;
+}
+
+/* Locked */
+.nodeLocked {
+  background: var(--surface2);
+  border-color: var(--surface2);
+  color: var(--muted);
+  opacity: 0.5;
+}
+
+/* Pulsing ring on current node */
+.nodeRing {
+  position: absolute;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  opacity: 0.4;
+  animation: nodeRingPulse 2s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes nodeRingPulse {
+  0%, 100% { transform: scale(1);    opacity: 0.4; }
+  50%       { transform: scale(1.15); opacity: 0;   }
+}
+
+.nodeNum {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--muted);
+  line-height: 1;
+}
+
+.nodeCurrent .nodeNum { color: #fff; }
+
+.nodeMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 100px;
+}
+
+.nodeRight .nodeMeta { text-align: right; }
+
+.nodeName {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.nodePct {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* ── Roshi animations (reused by TinyRoshi) ── */
 .miniHeadBob {
   animation: miniHeadBob 1.4s ease-in-out infinite;
 }
@@ -159,109 +306,29 @@
   85%, 100% { transform: translate(0px,  0px);  }
 }
 
-/* ── Play button ── */
-.playBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 15px 20px;
-  background: var(--accent);
-  color: #fff;
-  border-radius: var(--radius-md);
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.01em;
+/* ── Wave + snow animations ── */
+.waveScroll     { animation: waveScroll 5s linear infinite; }
+.waveScrollSlow { animation: waveScroll 9s linear infinite; }
+@keyframes waveScroll {
+  from { transform: translateX(0);     }
+  to   { transform: translateX(-80px); }
 }
 
-/* ── Mission strip ── */
-.strip {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  padding-bottom: 4px;
+.oceanBob {
+  animation: oceanBob 4s ease-in-out infinite;
+}
+@keyframes oceanBob {
+  0%, 100% { transform: translateY(0)    rotate(0deg);   }
+  28%       { transform: translateY(-6px) rotate(-3deg); }
+  72%       { transform: translateY(4px)  rotate(2deg);  }
 }
 
-.strip::-webkit-scrollbar { display: none; }
-
-/* ── Mini cards ── */
-.miniCard {
-  flex-shrink: 0;
-  width: 136px;
-  background: var(--surface);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
-  box-shadow: var(--shadow);
-  transition: box-shadow 0.15s;
+.snowflake {
+  animation: snowFall var(--dur, 4s) ease-in var(--delay, 0s) infinite;
 }
-
-.miniActive  { box-shadow: 0 0 0 2px var(--accent), var(--shadow); }
-.miniLocked  { opacity: 0.45; pointer-events: none; }
-
-.miniDone .miniBarFill  { background: var(--correct); }
-.miniDone .doneIcon     { color: var(--correct); }
-
-.miniTop {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 10px 10px 4px;
-  background: var(--surface2);
-}
-
-.miniNum {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--muted);
-  line-height: 1;
-}
-
-.miniRight {
-  padding-top: 4px;
-}
-
-.lockIcon {
-  color: var(--muted);
-  opacity: 0.5;
-}
-
-.doneIcon {
-  color: var(--correct);
-}
-
-.miniDiff {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--muted);
-}
-
-.miniName {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text);
-  padding: 6px 10px 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.2;
-  flex: 1;
-}
-
-/* ── Thin progress bar at card bottom ── */
-.miniBar {
-  height: 3px;
-  background: var(--surface2);
-}
-
-.miniBarFill {
-  height: 100%;
-  background: var(--accent);
-  transition: width 0.4s ease;
-  min-width: 0;
+@keyframes snowFall {
+  0%   { transform: translateY(0px);   opacity: 0;   }
+  10%  { opacity: 0.8; }
+  85%  { opacity: 0.6; }
+  100% { transform: translateY(80px);  opacity: 0;   }
 }
