@@ -76,17 +76,23 @@ function Gloss() {
   )
 }
 
-// Shell — round like a coin, hex grid on top
-function SymShell({ c }: { c: string }) {
+// Lily pad — top-down view with notch, veins, small flower
+function SymLilypad({ c }: { c: string }) {
   return (
     <g>
-      <circle r={24} fill={c} stroke="#111" strokeWidth="4"/>
-      <polygon points="0,-13 11,-6.5 11,6.5 0,13 -11,6.5 -11,-6.5"
-        fill="none" stroke="#111" strokeWidth="2.5"/>
-      <line x1="0"   y1="-13" x2="0"   y2="13"  stroke="#111" strokeWidth="2"/>
-      <line x1="-11" y1="-6.5" x2="11" y2="6.5" stroke="#111" strokeWidth="2"/>
-      <line x1="-11" y1="6.5"  x2="11" y2="-6.5" stroke="#111" strokeWidth="2"/>
-      <Gloss/>
+      {/* Pad body: circle with V-notch at bottom */}
+      <path d="M0,0 L-8,22 A24,24 0 1,1 8,22 Z"
+        fill={c} stroke="#111" strokeWidth="4" strokeLinejoin="round"/>
+      {/* Radiating veins */}
+      <line x1="0" y1="0" x2="0"   y2="-24" stroke="#111" strokeWidth="2"   opacity="0.45"/>
+      <line x1="0" y1="0" x2="-22" y2="-8"  stroke="#111" strokeWidth="1.8" opacity="0.35"/>
+      <line x1="0" y1="0" x2="22"  y2="-8"  stroke="#111" strokeWidth="1.8" opacity="0.35"/>
+      <line x1="0" y1="0" x2="-20" y2="14"  stroke="#111" strokeWidth="1.5" opacity="0.3"/>
+      <line x1="0" y1="0" x2="20"  y2="14"  stroke="#111" strokeWidth="1.5" opacity="0.3"/>
+      {/* Small flower */}
+      <circle cx={0} cy={-10} r={7}   fill="#ff80c0" stroke="#111" strokeWidth="3"/>
+      <circle cx={0} cy={-10} r={3}   fill="#FFD700" stroke="#111" strokeWidth="1.5"/>
+      <ellipse cx={-5} cy={-16} rx={4} ry={2.5} fill="white" opacity="0.4" transform="rotate(-25,-5,-16)"/>
     </g>
   )
 }
@@ -114,28 +120,35 @@ function SymHeads({ c }: { c: string }) {
   )
 }
 
-// Grapes → bubble cluster
-function SymBubbles({ c }: { c: string }) {
+// Waves — layered ocean waves
+function SymWaves({ c }: { c: string }) {
   return (
-    <g stroke="#111" strokeWidth="3.5">
-      <circle cx={-10} cy={12}  r={11} fill={c}/>
-      <circle cx={10}  cy={12}  r={11} fill={c}/>
-      <circle cx={0}   cy={-2}  r={11} fill={c}/>
-      <circle cx={-10} cy={-15} r={8}  fill={c}/>
-      <circle cx={10}  cy={-15} r={8}  fill={c}/>
-      {/* Stem */}
-      <line x1="0" y1="-23" x2="0" y2="-30" stroke="#3a8a20" strokeWidth="3.5" strokeLinecap="round"/>
-      <Gloss/>
+    <g>
+      {/* Back wave */}
+      <path d="M-28,-8 C-20,-22 -10,-22 0,-8 C10,6 20,6 28,-8 L28,10 L-28,10 Z"
+        fill={c} stroke="#111" strokeWidth="4" strokeLinejoin="round" opacity="0.6"/>
+      {/* Front wave */}
+      <path d="M-28,6 C-20,-8 -10,-8 0,6 C10,20 20,20 28,6 L28,26 L-28,26 Z"
+        fill={c} stroke="#111" strokeWidth="4.5" strokeLinejoin="round"/>
+      {/* White foam crests */}
+      <path d="M-28,-8 C-23,-16 -17,-16 -12,-8"
+        stroke="white" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.75"/>
+      <path d="M-2,-8 C3,-16 9,-16 14,-8"
+        stroke="white" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.75"/>
+      <ellipse cx={-10} cy={-10} rx={8} ry={4} fill="white" opacity="0.2" transform="rotate(-15,-10,-10)"/>
     </g>
   )
 }
 
-// Starfish — bold 5-point star
+// Starfish — rounded arms, more organic
 function SymStarfish({ c }: { c: string }) {
   return (
     <g>
-      <path d="M0,-26 L5.5,-8 L24,-8 L9,3 L15,22 L0,11 L-15,22 L-9,3 L-24,-8 L-5.5,-8 Z"
+      <path d="M0,-24 C5,-16 10,-12 7,-6 C12,-4 18,-2 22,2 C16,6 12,10 8,8 C8,14 6,20 0,24 C-6,20 -8,14 -8,8 C-12,10 -16,6 -22,2 C-18,-2 -12,-4 -7,-6 C-10,-12 -5,-16 0,-24 Z"
         fill={c} stroke="#111" strokeWidth="4" strokeLinejoin="round"/>
+      {/* Centre disk */}
+      <circle r={7} fill={c} stroke="#111" strokeWidth="3"/>
+      <circle r={3.5} fill="white" opacity="0.35"/>
       <Gloss/>
     </g>
   )
@@ -179,45 +192,50 @@ function SymAnchor({ c }: { c: string }) {
   )
 }
 
-// Seaweed — three bold fronds
-function SymSeaweed({ c }: { c: string }) {
+// Bird — seagull silhouette in flight
+function SymBird({ c }: { c: string }) {
   return (
-    <g strokeLinecap="round">
-      {/* Outlines */}
-      <path d="M-6,28 C-22,14 6,0 -6,-16 C-16,-28 -2,-32 0,-30"
-        stroke="#111" strokeWidth="9" fill="none"/>
-      <path d="M6,28 C22,14 -4,2 8,-14 C18,-26 4,-32 2,-30"
-        stroke="#111" strokeWidth="7" fill="none"/>
-      {/* Colour */}
-      <path d="M-6,28 C-22,14 6,0 -6,-16 C-16,-28 -2,-32 0,-30"
-        stroke={c} strokeWidth="5.5" fill="none"/>
-      <path d="M6,28 C22,14 -4,2 8,-14 C18,-26 4,-32 2,-30"
-        stroke={c} strokeWidth="4" fill="none" opacity="0.8"/>
+    <g>
+      {/* Left wing */}
+      <path d="M-2,-6 C-8,-20 -20,-22 -26,-13 C-22,-9 -12,-10 -2,-6 Z"
+        fill={c} stroke="#111" strokeWidth="3.5" strokeLinejoin="round"/>
+      {/* Right wing */}
+      <path d="M2,-6 C8,-20 20,-22 26,-13 C22,-9 12,-10 2,-6 Z"
+        fill={c} stroke="#111" strokeWidth="3.5" strokeLinejoin="round"/>
+      {/* Body */}
+      <ellipse cx={0} cy={-1} rx={5} ry={9} fill={c} stroke="#111" strokeWidth="3.5"/>
+      {/* Head */}
+      <circle cx={0} cy={-12} r={7} fill={c} stroke="#111" strokeWidth="3.5"/>
+      {/* Beak */}
+      <path d="M5,-11 L13,-9 L5,-7 Z" fill="#f0a800" stroke="#111" strokeWidth="2" strokeLinejoin="round"/>
+      {/* Eye */}
+      <circle cx={2} cy={-13} r={2.2} fill="#111"/>
+      <circle cx={1.5} cy={-13.5} r={0.9} fill="white"/>
+      {/* Small background bird */}
+      <path d="M-20,10 C-16,4 -10,4 -6,10" fill="none" stroke={c} strokeWidth="3.5" strokeLinecap="round"/>
+      <ellipse cx={-5} cy={-14} rx={3.5} ry={2} fill="white" opacity="0.4" transform="rotate(-25,-5,-14)"/>
     </g>
   )
 }
 
-// Coral — crown of buds
-function SymCoral({ c }: { c: string }) {
+// Leaves — broad turtle-food leaves
+function SymLeaves({ c }: { c: string }) {
   return (
-    <g strokeLinecap="round">
-      {/* Outline stems */}
-      <line x1="0" y1="28" x2="0" y2="-2"   stroke="#111" strokeWidth="9"/>
-      <path d="M0,-2 Q-14,-14 -16,-24"         stroke="#111" strokeWidth="9" fill="none"/>
-      <path d="M0,-2 Q14,-14 16,-24"            stroke="#111" strokeWidth="9" fill="none"/>
-      <path d="M0,10 Q-18,0 -22,-10"            stroke="#111" strokeWidth="8" fill="none"/>
-      <path d="M0,10 Q18,0 22,-10"              stroke="#111" strokeWidth="8" fill="none"/>
-      {/* Colour stems */}
-      <line x1="0" y1="28" x2="0" y2="-2"   stroke={c} strokeWidth="5.5"/>
-      <path d="M0,-2 Q-14,-14 -16,-24"         stroke={c} strokeWidth="5.5" fill="none"/>
-      <path d="M0,-2 Q14,-14 16,-24"            stroke={c} strokeWidth="5.5" fill="none"/>
-      <path d="M0,10 Q-18,0 -22,-10"            stroke={c} strokeWidth="4.5" fill="none"/>
-      <path d="M0,10 Q18,0 22,-10"              stroke={c} strokeWidth="4.5" fill="none"/>
-      {/* Buds */}
-      <circle cx={-16} cy={-24} r={6}  fill={c} stroke="#111" strokeWidth="3"/>
-      <circle cx={16}  cy={-24} r={6}  fill={c} stroke="#111" strokeWidth="3"/>
-      <circle cx={-22} cy={-10} r={5}  fill={c} stroke="#111" strokeWidth="3"/>
-      <circle cx={22}  cy={-10} r={5}  fill={c} stroke="#111" strokeWidth="3"/>
+    <g stroke="#111" strokeLinejoin="round">
+      {/* Left leaf */}
+      <path d="M0,20 C-22,12 -24,-8 -8,-20 C-2,-8 -2,8 0,20 Z"
+        fill={c} fillOpacity="0.7" strokeWidth="3.5"/>
+      {/* Right leaf */}
+      <path d="M0,20 C22,12 24,-8 8,-20 C2,-8 2,8 0,20 Z"
+        fill={c} fillOpacity="0.85" strokeWidth="3.5"/>
+      {/* Centre leaf */}
+      <path d="M0,22 C-10,8 -8,-16 0,-26 C8,-16 10,8 0,22 Z"
+        fill={c} strokeWidth="3.5"/>
+      {/* Veins */}
+      <line x1="0" y1="22"  x2="0"  y2="-22" stroke="#111" strokeWidth="1.8" opacity="0.4"/>
+      <line x1="-8" y1="20" x2="-5" y2="-18" stroke="#111" strokeWidth="1.5" opacity="0.3"/>
+      <line x1="8"  y1="20" x2="5"  y2="-18" stroke="#111" strokeWidth="1.5" opacity="0.3"/>
+      <ellipse cx={-4} cy={-14} rx={5} ry={3} fill="white" opacity="0.35" transform="rotate(-20,-4,-14)"/>
     </g>
   )
 }
@@ -240,8 +258,8 @@ function SymPearl({ c }: { c: string }) {
 }
 
 const SYM_FNS = [
-  SymShell, SymHeads, SymBubbles, SymStarfish, SymFish,
-  SymAnchor, SymSeaweed, SymCoral, SymPearl,
+  SymLilypad, SymHeads, SymWaves, SymStarfish, SymFish,
+  SymAnchor, SymBird, SymLeaves, SymPearl,
 ]
 
 // ── Mission cell number + labels ──────────────────────────────────
