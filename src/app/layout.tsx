@@ -1,7 +1,13 @@
 import type { Metadata, Viewport } from 'next'
-import { DM_Sans, Shizuru, Sunshiney } from 'next/font/google'
+import { DM_Sans, Shizuru, Sunshiney, Fraunces } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
 import './globals.css'
+
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  variable: '--font-fraunces',
+  display: 'swap',
+})
 
 const shizuru = Shizuru({
   subsets: ['latin'],
@@ -42,7 +48,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${dmSans.variable} ${sunshiney.variable} ${shizuru.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${dmSans.variable} ${sunshiney.variable} ${shizuru.variable} ${fraunces.variable}`}>
       <body>
         <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem>
           {children}
