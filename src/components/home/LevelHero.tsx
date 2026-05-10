@@ -107,7 +107,7 @@ export default function LevelHero() {
           // ── Mission tile ──
           const { mission } = cell
           const isCurrent = mission === currentMission
-          const isLocked  = mission >  currentMission
+          const isLocked  = !isLevelUnlocked(mission)
 
           return (
             <div key={i}
