@@ -9,7 +9,7 @@ interface Props { params: Promise<{ level: string }> }
 export default async function PlayPage({ params }: Props) {
   const { level } = await params
   const levelNum = parseInt(level, 10)
-  if (isNaN(levelNum) || levelNum < 1 || levelNum > 11) notFound()
+  if (isNaN(levelNum) || levelNum < 1 || levelNum > 9) notFound()
 
   let words: unknown
   try {

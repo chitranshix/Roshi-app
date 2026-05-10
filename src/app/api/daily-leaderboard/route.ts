@@ -11,7 +11,7 @@ export async function GET() {
 
   // Load all words to find today's word
   const allWords: { word: string }[] = []
-  for (let lvl = 1; lvl <= 11; lvl++) {
+  for (let lvl = 1; lvl <= 9; lvl++) {
     const p = path.join(process.cwd(), `public/data/gre-level-${lvl}.json`)
     if (fs.existsSync(p)) allWords.push(...JSON.parse(fs.readFileSync(p, 'utf-8')))
   }

@@ -12,13 +12,12 @@ export const MISSION_NAMES: Record<number, string> = {
   1: 'Foundations',  2: 'Essentials',   3: 'Building Blocks',
   4: 'Expanding',    5: 'Intermediate', 6: 'Advanced',
   7: 'Proficient',   8: 'Expert',       9: 'Master',
-  10: 'Scholar',     11: 'Virtuoso',
 }
 
 const DIFF: Record<number, string> = {
-  1: 'EASY', 2: 'EASY', 3: 'EASY',
-  4: 'MEDIUM', 5: 'MEDIUM', 6: 'MEDIUM',
-  7: 'HARD', 8: 'HARD', 9: 'HARD', 10: 'HARD', 11: 'HARD',
+  1: 'EASY',   2: 'EASY',
+  3: 'MEDIUM', 4: 'MEDIUM', 5: 'MEDIUM',
+  6: 'HARD',   7: 'HARD',   8: 'HARD',   9: 'HARD',
 }
 
 // ── Grid — 4 cols × 5 rows = 20 cells ────────────────────────────
@@ -32,7 +31,7 @@ const GRID: GridCell[] = (() => {
     'S','M','S','M',
     'M','S','M','S',
     'S','M','S','M',
-    'M','M','S','M',
+    'M','S','S','S',
   ]
   let m = 0
   return pattern.map(p =>
@@ -83,7 +82,7 @@ function MissionFace({ mission, isCurrent }: {
 
 export default function LevelHero() {
   const [currentMission] = useState(() => {
-    for (let m = 1; m <= 11; m++) {
+    for (let m = 1; m <= 9; m++) {
       if (isLevelUnlocked(m) && completedInLevel(m).length < WORDS_PER_MISSION) return m
     }
     return 11
