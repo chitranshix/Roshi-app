@@ -4,6 +4,7 @@
   border: 2px solid var(--text);
   border-radius: var(--radius-lg);
   overflow: hidden;
+  user-select: none;
 }
 
 /* ── Header ── */
@@ -52,10 +53,15 @@
 .missionCell {
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: opacity 0.1s;
+  touch-action: manipulation;
+  transition: transform 0.1s, opacity 0.1s;
+  will-change: transform;
 }
 
-.missionCell:active { opacity: 0.75; }
+.missionCell:active {
+  transform: scale(0.88);
+  opacity: 0.8;
+}
 
 /* ── Current mission — solid accent fill ── */
 .current {

@@ -39,12 +39,22 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
   const [checking, setChecking]               = useState(false)
   const [defCorrect, setDefCorrect]           = useState<boolean | null>(null)
   const [timeLeft, setTimeLeft]               = useState(SENTENCE_TIME)
+  const [commentary, setCommentary]           = useState<string | null>(null)
   const timerRef                              = useRef<ReturnType<typeof setInterval> | null>(null)
   const timedOut                              = useRef(false)
 
   const clearTimer = useCallback(() => {
     if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null }
   }, [])
+
+  useEffect(() => {
+    if (stage !== 'result') return
+    fetch('/api/roshi-commentary', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ word: dare.word, definition }),
+    }).then(r => r.json()).then(d => { if (d.commentary) setCommentary(d.commentary) }).catch(() => {})
+  }, [stage, dare.word, definition])
 
   const saveDareResult = useCallback(async (earned: number) => {
     const supabase = createClient()
@@ -289,6 +299,7 @@ export default function DareFlow({ dare, sentences, definition, dareId, isChalle
                   <div className={styles.definitionText}>{definition}</div>
                 </div>
               )}
+              {commentary && <div className={styles.commentary}>{commentary}</div>}
             </SpeechBubble>
 
             <div className={styles.actionRow}>

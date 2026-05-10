@@ -22,5 +22,17 @@ export default async function PlayPage({ params }: Props) {
   const supabase = await createServerSupabase()
   const { data: { user } } = await supabase.auth.getUser()
 
-  return <PlayClient level={levelNum} words={words as Parameters<typeof PlayClient>[0]['words']} userId={user?.id ?? null} />
+  let serverCompleted: string[] = []
+  if (user) {
+    const { data } = await supabase
+      .from('point_events')
+      .select('word')
+      .eq('user_id', user.id)
+      .eq('source', 'level')
+      .eq('level', levelNum)
+      .not('word', 'is', null)
+    serverCompleted = [...new Set((data ?? []).map(e => e.word as string).filter(Boolean))]
+  }
+
+  return <PlayClient level={levelNum} words={words as Parameters<typeof PlayClient>[0]['words']} userId={user?.id ?? null} serverCompleted={serverCompleted} />
 }

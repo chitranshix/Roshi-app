@@ -6,7 +6,7 @@ import AppShell from '@/components/layout/AppShell'
 import Button from '@/components/ui/Button'
 import RoshiDisplay from '@/components/mascot/RoshiDisplay'
 import SpeechBubble from '@/components/ui/SpeechBubble'
-import { completedInLevel, markWordComplete, nextWordInLevel } from '@/lib/progress'
+import { getProgress, saveProgress, completedInLevel, markWordComplete, nextWordInLevel } from '@/lib/progress'
 import { playCorrect, playWrong } from '@/lib/audio'
 import { createClient } from '@/lib/supabase'
 import StarButton from '@/components/ui/StarButton'
@@ -19,20 +19,34 @@ const WORDS_PER_LEVEL = 100
 type Stage = 'sentence' | 'definition' | 'result'
 
 interface Props {
-  level:  number
-  words:  GREWord[]
-  userId: string | null
+  level:           number
+  words:           GREWord[]
+  userId:          string | null
+  serverCompleted: string[]
 }
 
-export default function PlayClient({ level, words, userId }: Props) {
+export default function PlayClient({ level, words, userId, serverCompleted }: Props) {
   const allWordNames = words.map(w => w.word)
 
+  // Merge server (authoritative) with localStorage so cross-device progress is correct.
+  // Runs once at mount — writes merged list back to localStorage for the session.
+  const [initialCompleted] = useState<string[]>(() => {
+    const local = completedInLevel(level)
+    if (!serverCompleted.length) return local
+    const merged = [...new Set([...local, ...serverCompleted])]
+    if (merged.length > local.length) {
+      const p = getProgress()
+      saveProgress({ ...p, completed: { ...p.completed, [level]: merged } })
+    }
+    return merged
+  })
+
   const [currentWord, setCurrentWord] = useState<GREWord | null>(() => {
-    const next = nextWordInLevel(allWordNames, level)
+    const next = allWordNames.find(w => !initialCompleted.includes(w)) ?? null
     return next ? (words.find(w => w.word === next) ?? null) : null
   })
 
-  const [completed]          = useState(() => completedInLevel(level).length)
+  const [completed] = useState(initialCompleted.length)
   const [stage, setStage]    = useState<Stage>('sentence')
   const [selected, setSelected]   = useState<number | null>(null)
   const [answerResult, setAnswerResult] = useState<'correct' | 'wrong' | null>(null)

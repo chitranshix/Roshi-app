@@ -116,7 +116,7 @@ export default function LevelHero() {
                 styles.missionCell,
                 isCurrent ? styles.current : '',
               ].filter(Boolean).join(' ')}
-              style={{ opacity: isLocked ? 0.3 : 1 }}
+              style={{ opacity: isLocked ? 0.3 : 1, cursor: isLocked ? 'default' : 'pointer' }}
               onClick={isLocked ? undefined : () => { window.location.href = `/play/${mission}` }}
             >
               <svg viewBox="0 0 100 100" className={styles.numSvg}>
