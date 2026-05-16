@@ -2,7 +2,6 @@
 
 import { useState, useCallback } from 'react'
 import Link from 'next/link'
-import { AnimatePresence, motion } from 'framer-motion'
 import { getProgress, saveProgress, completedInLevel, markWordComplete } from '@/lib/progress'
 import { createClient } from '@/lib/supabase'
 import type { GREWord } from '@/lib/gre-words'
@@ -33,10 +32,10 @@ export default function PlayClient({ level, words, userId, serverCompleted }: Pr
   )
   const [retryCount, setRetryCount] = useState(0)
   const [masteredCount, setMasteredCount] = useState(0)
+  const [totalPts, setTotalPts] = useState(0)
   const [cardKey, setCardKey] = useState(0)
 
   const recordPoints = useCallback(async (word: GREWord, pts: number) => {
-    markWordComplete(word.word, level)
     if (!userId) return
     const supabase = createClient()
     await supabase.from('point_events').insert({
@@ -53,105 +52,81 @@ export default function PlayClient({ level, words, userId, serverCompleted }: Pr
   const handleMastered = useCallback(async (pts: number) => {
     const current = deck[0]
     if (!current) return
-    await recordPoints(current, pts)
+    markWordComplete(current.word, level)
+    setTotalPts(n => n + pts)
     setMasteredCount(n => n + 1)
+    void recordPoints(current, pts)
     setDeck(prev => prev.slice(1))
+    setCardKey(k => k + 1)
+  }, [deck, level, recordPoints])
+
+  const handleRetry = useCallback((pts: number) => {
+    const current = deck[0]
+    if (!current) return
+    setTotalPts(n => n + pts)
+    setRetryCount(n => n + 1)
+    if (pts > 0) void recordPoints(current, pts)
+    setDeck(prev => [...prev.slice(1), current])
     setCardKey(k => k + 1)
   }, [deck, recordPoints])
 
-  const handleRetry = useCallback(() => {
-    const current = deck[0]
-    if (!current) return
-    // push to back of deck for spaced retry
-    setRetryCount(n => n + 1)
-    setDeck(prev => [...prev.slice(1), current])
-    setCardKey(k => k + 1)
-  }, [deck])
-
-  const total = initialCompleted.length + deck.length + masteredCount
-
-  // All mastered — session done (retry words are re-queued so deck empties when all words mastered)
-  const allDone = deck.length === 0
-
-  if (allDone && masteredCount > 0) {
+  // Session complete
+  if (deck.length === 0) {
     return (
       <div className={styles.container}>
         <div className={styles.completeScreen}>
-          <div className={styles.completeEmoji}>✦</div>
-          <div className={styles.completeTitle}>Mission {level} complete</div>
-          <div className={styles.completeSub}>
-            {masteredCount} word{masteredCount !== 1 ? 's' : ''} mastered this session.
-          </div>
-          <Link href="/" className={styles.homeLink}>Back to home</Link>
-        </div>
-      </div>
-    )
-  }
-
-  if (allDone && masteredCount === 0) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.completeScreen}>
-          <div className={styles.completeEmoji}>✦</div>
-          <div className={styles.completeSub}>You&apos;ve already mastered all words in Mission {level}.</div>
-          <Link href="/" className={styles.homeLink}>Back to home</Link>
+          {masteredCount > 0 ? (
+            <>
+              <div className={styles.completeTitle}>Mission {level} complete.</div>
+              <div className={styles.completeSub}>
+                {masteredCount} mastered · {totalPts} pts
+              </div>
+            </>
+          ) : (
+            <div className={styles.completeSub}>
+              You&apos;ve already mastered all words in Mission {level}.
+            </div>
+          )}
+          <Link href="/" className={styles.homeLink}>← Home</Link>
         </div>
       </div>
     )
   }
 
   const current = deck[0]
-  const doneCount = initialCompleted.length + masteredCount
 
   return (
     <div className={styles.container}>
 
-      {/* ── Top bar ── */}
-      <div className={styles.topBar}>
-        <Link href="/" className={styles.backBtn}>←</Link>
-        <div className={styles.missionLabel}>Mission {level}</div>
-        <div className={styles.progressText}>{doneCount} / {total}</div>
+      {/* Floating points HUD — top right */}
+      <div className={styles.hud}>
+        <div className={styles.hudPoints}>{totalPts}</div>
+        <div className={styles.hudLabel}>POINTS</div>
       </div>
 
-      {/* ── Progress bar ── */}
-      <div className={styles.progressBarWrap}>
-        <div className={styles.progressBarFill} style={{ width: `${Math.round((doneCount / total) * 100)}%` }} />
-      </div>
-
-      {/* ── Card area ── */}
+      {/* Card stage */}
       <div className={styles.cardArea}>
-        <AnimatePresence mode="wait">
-          {current && (
-            <motion.div
-              key={cardKey}
-              initial={{ opacity: 0, scale: 0.92, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.2 }}
-              style={{ width: '100%' }}
-            >
-              <WordCard
-                word={current}
-                onMastered={handleMastered}
-                onRetry={handleRetry}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Ghost placeholder — suggests a deck behind the active card */}
+        <div className={styles.ghost} />
+
+        <WordCard
+          key={cardKey}
+          word={current}
+          level={level}
+          onMastered={handleMastered}
+          onRetry={handleRetry}
+        />
       </div>
 
-      {/* ── Pile counters ── */}
-      <div className={styles.piles}>
-        <div className={styles.pile}>
-          <span className={styles.pileCount}>{retryCount}</span>
-          <span className={styles.pileLabel}>Retry</span>
+      {/* Floor — pile indicators */}
+      <div className={styles.floor}>
+        <div className={styles.pileCard}>
+          <div className={styles.pileCount}>{retryCount}</div>
+          <div className={styles.pileLabel}>RETRY</div>
         </div>
-        <div className={styles.pileCenter}>
-          <span className={styles.deckCount}>{deck.length} left</span>
-        </div>
-        <div className={[styles.pile, styles.pileMastered].join(' ')}>
-          <span className={styles.pileCount}>{masteredCount}</span>
-          <span className={styles.pileLabel}>Mastered</span>
+        <div className={styles.pileCard}>
+          <div className={styles.pileCount}>{masteredCount}</div>
+          <div className={styles.pileLabel}>MASTERED</div>
         </div>
       </div>
 
