@@ -1,13 +1,14 @@
+/* ── Page — fixed viewport, no vertical scroll ── */
 .page {
-  min-height: 100dvh;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
   background: radial-gradient(circle at 50% 45%, #152219 0%, #070d09 100%);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 5rem 0 3rem;
   font-family: var(--font-ui), sans-serif;
-  gap: 20px;
-  overflow: hidden;
+  padding-top: 4.5rem;
+  gap: 12px;
 }
 
 .back {
@@ -25,88 +26,97 @@
 }
 .back:hover { color: rgba(255, 255, 255, 0.85); }
 
+/* ── Heading ── */
 .heading {
-  width: 100%;
+  flex-shrink: 0;
   padding: 0 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
 }
 
 .title {
   font-family: var(--font-fraunces), Georgia, serif;
   font-style: italic;
   font-weight: 900;
-  font-size: clamp(28px, 8vw, 40px);
+  font-size: clamp(26px, 7vw, 36px);
   color: #ffffff;
   letter-spacing: -0.02em;
   line-height: 1;
 }
 
 .subtitle {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.35);
 }
 
 .empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: rgba(255, 255, 255, 0.3);
   font-size: 14px;
   font-weight: 500;
-  padding: 40px 1.5rem 0;
+  padding: 0 1.5rem;
+  text-align: center;
 }
 
-/* ── Carousel ── */
+/* ── Carousel — peek at adjacent cards ── */
 .carousel {
-  width: 100%;
+  flex: 1;
+  min-height: 0;                       /* allow flex child to shrink */
   display: flex;
+  align-items: center;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  flex: 1;
+  /* Padding centres first/last cards and reveals adjacent card edges */
+  padding-inline: clamp(16px, 11vw, 48px);
+  gap: 12px;
+  scroll-padding-inline: clamp(16px, 11vw, 48px);
+  box-sizing: border-box;
 }
 .carousel::-webkit-scrollbar { display: none; }
 
 .slide {
-  flex: 0 0 100%;
-  scroll-snap-align: start;
+  flex: 0 0 min(300px, 78vw);
+  scroll-snap-align: center;
+  height: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 0 clamp(20px, 6vw, 40px);
 }
 
+/* ── Card ── */
 .card {
   width: 100%;
-  max-width: 340px;
-  aspect-ratio: 5 / 7;
   background: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 28px 64px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.6);
   display: flex;
   flex-direction: column;
-  padding: clamp(20px, 5vw, 28px);
+  padding: clamp(18px, 4.5vw, 24px);
+  gap: 0;
   user-select: none;
   -webkit-user-select: none;
+  /* Card height adapts to carousel height */
+  max-height: calc(100dvh - 260px);
+  overflow: hidden;
 }
 
 .cardMeta {
-  display: flex;
-  justify-content: flex-end;
-  flex-shrink: 0;
-  margin-bottom: 4px;
-}
-
-.cardNum {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.08em;
   color: rgba(0, 0, 0, 0.2);
-  text-transform: uppercase;
+  text-align: right;
+  margin-bottom: 8px;
+  flex-shrink: 0;
 }
 
 .cardBody {
@@ -115,15 +125,16 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(12px, 3vw, 20px);
+  gap: 10px;
   text-align: center;
+  min-height: 0;
 }
 
 .cardWord {
   font-family: var(--font-fraunces), Georgia, serif;
   font-style: italic;
   font-weight: 900;
-  font-size: clamp(26px, 8vw, 42px);
+  font-size: clamp(24px, 7vw, 36px);
   color: #0d2137;
   line-height: 1.05;
   letter-spacing: -0.01em;
@@ -132,7 +143,7 @@
 }
 
 .cardDivider {
-  width: 36px;
+  width: 32px;
   height: 2px;
   background: #eeeeee;
   border-radius: 1px;
@@ -140,20 +151,77 @@
 }
 
 .cardDef {
-  font-size: clamp(13px, 3.5vw, 15px);
+  font-size: clamp(12px, 3.2vw, 14px);
   font-weight: 500;
   color: rgba(0, 0, 0, 0.5);
-  line-height: 1.55;
-  max-width: 260px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-/* ── Hint ── */
-.hint {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.2);
-  padding-bottom: 4px;
+/* ── Correct sentence ── */
+.cardSentence {
   flex-shrink: 0;
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: rgba(83, 141, 78, 0.06);
+  border: 1px solid rgba(83, 141, 78, 0.18);
+  border-radius: 8px;
+}
+
+.sentenceLabel {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #538D4E;
+  margin-bottom: 5px;
+}
+
+.sentenceText {
+  font-size: clamp(11px, 2.8vw, 13px);
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.55);
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Word strip ── */
+.wordStrip {
+  flex-shrink: 0;
+  display: flex;
+  gap: 6px;
+  padding: 8px 16px 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 100%);
+}
+.wordStrip::-webkit-scrollbar { display: none; }
+
+.wordChip {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.wordChip:active { transform: scale(0.94); }
+
+.wordChipActive {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #ffffff;
 }

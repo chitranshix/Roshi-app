@@ -164,7 +164,7 @@ export default function Home() {
           )}
           <div className={styles.pileMeta}>
             <span className={styles.pileNum}>{retry.length}</span>
-            <span className={styles.pileLabel}>{retry.length > 0 ? 'RETRY →' : 'RETRY'}</span>
+            <span className={styles.pileLabel}>RETRY</span>
           </div>
         </div>
 
@@ -199,7 +199,7 @@ export default function Home() {
           )}
           <div className={styles.pileMeta}>
             <span className={styles.pileNum}>{mastered.length}</span>
-            <span className={styles.pileLabel}>{mastered.length > 0 ? '← MASTERED' : 'MASTERED'}</span>
+            <span className={styles.pileLabel}>MASTERED</span>
           </div>
         </div>
 
