@@ -261,7 +261,6 @@
   background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, transparent 100%);
   overflow-x: auto;
   scrollbar-width: none;
-  justify-content: center;
 }
 .levelStrip::-webkit-scrollbar { display: none; }
 

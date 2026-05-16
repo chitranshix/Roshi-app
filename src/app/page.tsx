@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
@@ -59,6 +59,12 @@ export default function Home() {
       if (user) syncAll(user.id)
     })
   }, [router])
+
+  const activeTileRef = useRef<HTMLButtonElement | null>(null)
+
+  useEffect(() => {
+    activeTileRef.current?.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' })
+  }, [level])
 
   function selectLevel(lv: number) {
     if (!isLevelUnlocked(lv)) return
@@ -169,6 +175,7 @@ export default function Home() {
           return (
             <button
               key={lv}
+              ref={active ? activeTileRef : null}
               className={[
                 styles.levelTile,
                 active  ? styles.levelTileActive : '',
