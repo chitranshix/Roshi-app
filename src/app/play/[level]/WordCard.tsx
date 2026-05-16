@@ -80,7 +80,8 @@ export default function WordCard({ word, level, muted, onMastered, onRetry }: Pr
     startX: number; startY: number
     dx: number; dy: number
   } | null>(null)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const textareaRef  = useRef<HTMLTextAreaElement>(null)
+  const defActionsRef = useRef<HTMLDivElement>(null)
 
   // Robust speak — handles Chrome's async voice loading and stuck-paused bug
   const doSpeak = useCallback((w: string) => {
@@ -302,7 +303,7 @@ export default function WordCard({ word, level, muted, onMastered, onRetry }: Pr
                 <div className={styles.faceTopRow}>
                   <span className={styles.metaLabel}>LEVEL {level}</span>
                   <button className={styles.speakBtn} onClick={speak} aria-label="Pronounce">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
                       <path d="M11 5L6 9H2v6h4l5 4V5Z" fill="currentColor"/>
                       <path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                     </svg>
@@ -369,6 +370,7 @@ export default function WordCard({ word, level, muted, onMastered, onRetry }: Pr
                       placeholder="Define…"
                       value={userDef}
                       onChange={e => setUserDef(e.target.value)}
+                      onFocus={() => setTimeout(() => defActionsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 350)}
                       onKeyDown={e => {
                         if (e.key === 'Enter' && !e.shiftKey && userDef.trim().length >= 3) {
                           e.preventDefault()
@@ -380,7 +382,7 @@ export default function WordCard({ word, level, muted, onMastered, onRetry }: Pr
                       enterKeyHint="done"
                     />
                   </div>
-                  <div className={styles.defActions}>
+                  <div ref={defActionsRef} className={styles.defActions}>
                     <button className={styles.submitBtn} onClick={() => void submitDefinition()} disabled={userDef.trim().length < 3 || checking}>
                       {checking ? 'Checking…' : 'Submit'}
                     </button>

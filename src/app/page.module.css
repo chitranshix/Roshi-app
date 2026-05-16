@@ -30,6 +30,8 @@
   border-radius: 10px;
   transition: color 0.15s, background 0.15s;
   -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
 }
 .navIcon:hover { color: rgba(255, 255, 255, 0.85); background: rgba(255,255,255,0.06); }
 
@@ -280,6 +282,8 @@
   cursor: pointer;
   transition: all 0.15s;
   -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
 }
 .levelTile:active:not(:disabled) { transform: scale(0.92); }
 

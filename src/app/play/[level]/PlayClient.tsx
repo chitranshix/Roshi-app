@@ -24,12 +24,19 @@ export default function PlayClient({ level, words }: Props) {
   )
   const [retryCount, setRetryCount]       = useState(0)
   const [masteredCount, setMasteredCount] = useState(0)
-  const [totalPts, setTotalPts]           = useState(0)
+  const [totalPts, setTotalPts]           = useState(() => {
+    if (typeof window === 'undefined') return 0
+    return parseInt(localStorage.getItem(`roshi_pts_${level}`) ?? '0', 10)
+  })
   const [cardKey, setCardKey]             = useState(0)
   const [muted, setMuted]                 = useState(() => {
     if (typeof window === 'undefined') return false
     return localStorage.getItem('roshi_muted') === 'true'
   })
+
+  useEffect(() => {
+    localStorage.setItem(`roshi_pts_${level}`, String(totalPts))
+  }, [totalPts, level])
 
   // Fetch auth + sync server-completed words in the background — non-blocking
   useEffect(() => {
