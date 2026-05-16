@@ -28,6 +28,8 @@ export default function Home() {
   const [retry, setRetry]       = useState<string[]>([])
   const [streak, setStreak]     = useState(0)
   const [name, setName]         = useState('')
+  const [menuOpen, setMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     function load() {
@@ -61,6 +63,22 @@ export default function Home() {
   }, [router])
 
   const activeTileRef = useRef<HTMLButtonElement | null>(null)
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  async function handleSignOut() {
+    setMenuOpen(false)
+    await createClient().auth.signOut()
+    router.push('/login')
+  }
 
   useEffect(() => {
     activeTileRef.current?.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' })
@@ -98,24 +116,47 @@ export default function Home() {
             </svg>
             {streak > 0 && <span className={styles.navBadge}>{streak}</span>}
           </Link>
-          <Link href="/leaderboard" className={styles.navIcon} aria-label="Leaderboard">
-            <svg width="26" height="38" viewBox="0 0 24 24" fill="none">
-              <path d="M8 21H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h3v8z" stroke="rgba(255,255,255,0.65)" strokeWidth="1.6" fill="none"/>
-              <path d="M15 21H9V8a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v13z" stroke="rgba(255,255,255,0.65)" strokeWidth="1.6" fill="none"/>
-              <path d="M21 21h-6v-8a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v8z" stroke="rgba(255,255,255,0.65)" strokeWidth="1.6" fill="none"/>
-              <path d="M3 21h18" stroke="rgba(255,255,255,0.65)" strokeWidth="1.6" strokeLinecap="round"/>
-            </svg>
-          </Link>
-          <Link href="/profile" className={styles.navIcon} aria-label="Profile">
-            <Avatar name={name} size={28} className={styles.navAvatar} />
-          </Link>
+
+          {/* Avatar — opens profile menu */}
+          <div className={styles.profileMenuWrap} ref={menuRef}>
+            <button
+              className={styles.navIcon}
+              onClick={() => setMenuOpen(v => !v)}
+              aria-label="Account menu"
+            >
+              <Avatar name={name} size={28} className={styles.navAvatar} />
+            </button>
+
+            {menuOpen && (
+              <div className={styles.profileMenu}>
+                <div className={styles.profileMenuHeader}>
+                  <Avatar name={name} size={32} />
+                  <span className={styles.profileMenuName}>{name || 'You'}</span>
+                </div>
+                <div className={styles.profileMenuDivider} />
+                <Link href="/profile" className={styles.profileMenuItem} onClick={() => setMenuOpen(false)}>
+                  Profile
+                </Link>
+                <Link href="/leaderboard" className={styles.profileMenuItem} onClick={() => setMenuOpen(false)}>
+                  Leaderboard
+                </Link>
+                <div className={styles.profileMenuDivider} />
+                <button className={`${styles.profileMenuItem} ${styles.profileMenuSignOut}`} onClick={handleSignOut}>
+                  Sign out
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       <div className={styles.piles}>
 
         {/* Retry pile */}
-        <div className={styles.pile}>
+        <div
+          className={`${styles.pile} ${retry.length > 0 ? styles.pileClickable : ''}`}
+          onClick={retry.length > 0 ? () => router.push(`/play/${level}?retry=1`) : undefined}
+        >
           {lastRetry ? (
             <div className={`${styles.card} ${styles.cardRetry}`}>
               <span className={styles.pileWord}>{lastRetry}</span>
@@ -127,7 +168,7 @@ export default function Home() {
           )}
           <div className={styles.pileMeta}>
             <span className={styles.pileNum}>{retry.length}</span>
-            <span className={styles.pileLabel}>RETRY</span>
+            <span className={styles.pileLabel}>{retry.length > 0 ? 'RETRY →' : 'RETRY'}</span>
           </div>
         </div>
 
@@ -147,7 +188,10 @@ export default function Home() {
         </div>
 
         {/* Mastered pile */}
-        <div className={styles.pile}>
+        <div
+          className={`${styles.pile} ${mastered.length > 0 ? styles.pileClickable : ''}`}
+          onClick={mastered.length > 0 ? () => router.push(`/mastered/${level}`) : undefined}
+        >
           {lastMastered ? (
             <div className={`${styles.card} ${styles.cardMastered}`}>
               <span className={styles.pileWord}>{lastMastered}</span>
@@ -159,7 +203,7 @@ export default function Home() {
           )}
           <div className={styles.pileMeta}>
             <span className={styles.pileNum}>{mastered.length}</span>
-            <span className={styles.pileLabel}>MASTERED</span>
+            <span className={styles.pileLabel}>{mastered.length > 0 ? '← MASTERED' : 'MASTERED'}</span>
           </div>
         </div>
 

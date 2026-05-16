@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { getProgress, saveProgress, completedInLevel, markWordComplete, addRetryWord, removeRetryWord } from '@/lib/progress'
+import { getProgress, saveProgress, completedInLevel, getRetryWords, markWordComplete, addRetryWord, removeRetryWord } from '@/lib/progress'
 import { markDailyDone, markActivityToday, recordDailyPoints } from '@/lib/daily'
 import { createClient } from '@/lib/supabase'
 import type { GREWord } from '@/lib/gre-words'
@@ -19,9 +19,19 @@ export default function PlayClient({ level, words }: Props) {
   const router = useRouter()
   const userIdRef = useRef<string | null>(null)
 
-  const [deck, setDeck] = useState<GREWord[]>(() =>
-    words.filter(w => !completedInLevel(level).includes(w.word))
-  )
+  const [retryOnly] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return new URLSearchParams(window.location.search).get('retry') === '1'
+  })
+
+  const [deck, setDeck] = useState<GREWord[]>(() => {
+    const completed = completedInLevel(level)
+    const all = words.filter(w => !completed.includes(w.word))
+    if (typeof window === 'undefined') return all
+    if (new URLSearchParams(window.location.search).get('retry') !== '1') return all
+    const retryWords = getRetryWords(level)
+    return all.filter(w => retryWords.includes(w.word))
+  })
   const [retryCount, setRetryCount]       = useState(0)
   const [masteredCount, setMasteredCount] = useState(0)
   const [totalPts, setTotalPts]           = useState(() => {
@@ -120,14 +130,18 @@ export default function PlayClient({ level, words }: Props) {
         <div className={styles.completeScreen}>
           {masteredCount > 0 ? (
             <>
-              <div className={styles.completeTitle}>Mission {level} complete.</div>
+              <div className={styles.completeTitle}>
+                {retryOnly ? 'Retry session done.' : `Mission ${level} complete.`}
+              </div>
               <div className={styles.completeSub}>
                 {masteredCount} mastered · {totalPts} pts
               </div>
             </>
           ) : (
             <div className={styles.completeSub}>
-              You&apos;ve already mastered all words in Mission {level}.
+              {retryOnly
+                ? 'No retry words left — great work!'
+                : `You've already mastered all words in Mission ${level}.`}
             </div>
           )}
           <Link href="/" className={styles.homeLink}>← Home</Link>
