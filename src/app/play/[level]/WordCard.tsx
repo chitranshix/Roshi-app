@@ -14,6 +14,7 @@ interface Props {
   muted: boolean
   onMastered: (pts: number) => void
   onRetry: (pts: number) => void
+  onMcqWrong: (word: string) => void
 }
 
 const SWIPE_THRESHOLD = 90
@@ -62,7 +63,7 @@ const DIFFICULTY: Record<number, string> = {
   7: 'HARD', 8: 'HARD', 9: 'HARD',
 }
 
-export default function WordCard({ word, level, muted, onMastered, onRetry }: Props) {
+export default function WordCard({ word, level, muted, onMastered, onRetry, onMcqWrong }: Props) {
   const [face, setFace] = useState<Face>('word')
   const [sentences] = useState(() => [...word.sentences].sort(() => Math.random() - 0.5))
   const [selected, setSelected] = useState<number | null>(null)
@@ -164,6 +165,7 @@ export default function WordCard({ word, level, muted, onMastered, onRetry }: Pr
       setFace('definition')
       setTimeout(() => textareaRef.current?.focus(), 80)
     } else {
+      onMcqWrong(word.word)  // save immediately — user may navigate away before auto-flyaway
       // Red vignette + shake, then reveal correct answer before flying away
       playSound('Disappointed - Sound Effect (HD).mp3')
       setGlow('wrong')

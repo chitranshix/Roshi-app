@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { completedInLevel } from '@/lib/progress'
 import type { GREWord } from '@/lib/gre-words'
@@ -11,11 +11,21 @@ interface Props { level: number; words: GREWord[] }
 export default function MasteredClient({ level, words }: Props) {
   const router = useRouter()
   const [mastered, setMastered] = useState<GREWord[]>([])
+  const [currentIdx, setCurrentIdx] = useState(0)
+  const carouselRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const completed = completedInLevel(level)
     setMastered(words.filter(w => completed.includes(w.word)))
   }, [level, words])
+
+  const handleScroll = useCallback(() => {
+    const el = carouselRef.current
+    if (!el) return
+    setCurrentIdx(Math.round(el.scrollLeft / el.clientWidth))
+  }, [])
+
+  const len = mastered.length
 
   return (
     <div className={styles.page}>
@@ -27,21 +37,40 @@ export default function MasteredClient({ level, words }: Props) {
       </button>
 
       <div className={styles.heading}>
-        <div className={styles.title}>Mission {level}</div>
-        <div className={styles.subtitle}>{mastered.length} mastered</div>
+        <div className={styles.title}>Level {level}</div>
+        <div className={styles.subtitle}>
+          {len === 0 ? 'No words mastered yet' : `${len} mastered`}
+        </div>
       </div>
 
-      {mastered.length === 0 ? (
-        <div className={styles.empty}>No words mastered yet — start playing!</div>
+      {len === 0 ? (
+        <div className={styles.empty}>Start playing to build your collection.</div>
       ) : (
-        <div className={styles.list}>
-          {mastered.map(w => (
-            <div key={w.word} className={styles.wordCard}>
-              <div className={styles.word}>{w.word}</div>
-              <div className={styles.definition}>{w.definition}</div>
-            </div>
-          ))}
-        </div>
+        <>
+          <div className={styles.carousel} ref={carouselRef} onScroll={handleScroll}>
+            {mastered.map((w, i) => {
+              const wlen = w.word.length
+              const fontSize = wlen <= 8 ? undefined : wlen <= 11 ? '1.9rem' : wlen <= 14 ? '1.55rem' : '1.25rem'
+              return (
+                <div key={w.word} className={styles.slide}>
+                  <div className={styles.card}>
+                    <div className={styles.cardMeta}>
+                      <span className={styles.cardNum}>{i + 1} / {len}</span>
+                    </div>
+                    <div className={styles.cardBody}>
+                      <div className={styles.cardWord} style={fontSize ? { fontSize } : undefined}>
+                        {w.word}
+                      </div>
+                      <div className={styles.cardDivider} />
+                      <div className={styles.cardDef}>{w.definition}</div>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+          <div className={styles.hint}>flick to browse</div>
+        </>
       )}
 
     </div>

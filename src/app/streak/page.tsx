@@ -57,7 +57,7 @@ export default function StreakPage() {
         <div className={styles.streakLabel}>day streak</div>
         {playedToday ? (
           <div className={styles.todayDone}>
-            {todayPts > 0 ? `+${todayPts} pts scored today ✓` : 'You played today ✓'}
+            {todayPts > 0 ? `+${todayPts} pts today` : 'You played today'}
           </div>
         ) : (
           <div className={styles.todayPending}>Play today to keep your streak</div>

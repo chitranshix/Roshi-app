@@ -4,9 +4,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 5rem 1.5rem 4rem;
+  padding: 5rem 0 3rem;
   font-family: var(--font-ui), sans-serif;
-  gap: 24px;
+  gap: 20px;
+  overflow: hidden;
 }
 
 .back {
@@ -26,7 +27,7 @@
 
 .heading {
   width: 100%;
-  max-width: 480px;
+  padding: 0 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -54,39 +55,105 @@
   color: rgba(255, 255, 255, 0.3);
   font-size: 14px;
   font-weight: 500;
-  margin-top: 40px;
+  padding: 40px 1.5rem 0;
 }
 
-.list {
+/* ── Carousel ── */
+.carousel {
   width: 100%;
-  max-width: 480px;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  flex: 1;
+}
+.carousel::-webkit-scrollbar { display: none; }
+
+.slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 clamp(20px, 6vw, 40px);
 }
 
-.wordCard {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 16px 20px;
+.card {
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 5 / 7;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 28px 64px rgba(0, 0, 0, 0.6);
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  padding: clamp(20px, 5vw, 28px);
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-.word {
+.cardMeta {
+  display: flex;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  margin-bottom: 4px;
+}
+
+.cardNum {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
+}
+
+.cardBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 3vw, 20px);
+  text-align: center;
+}
+
+.cardWord {
   font-family: var(--font-fraunces), Georgia, serif;
   font-style: italic;
   font-weight: 900;
-  font-size: 20px;
-  color: #ffffff;
+  font-size: clamp(26px, 8vw, 42px);
+  color: #0d2137;
+  line-height: 1.05;
   letter-spacing: -0.01em;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
-.definition {
-  font-size: 13px;
+.cardDivider {
+  width: 36px;
+  height: 2px;
+  background: #eeeeee;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+.cardDef {
+  font-size: clamp(13px, 3.5vw, 15px);
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.45);
-  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.5);
+  line-height: 1.55;
+  max-width: 260px;
+}
+
+/* ── Hint ── */
+.hint {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.2);
+  padding-bottom: 4px;
+  flex-shrink: 0;
 }

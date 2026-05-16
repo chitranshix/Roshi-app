@@ -112,10 +112,14 @@ export default function PlayClient({ level, words }: Props) {
     setCardKey(k => k + 1)
   }, [deck, level, recordPoints])
 
+  const handleMcqWrong = useCallback((word: string) => {
+    addRetryWord(word, level)
+  }, [level])
+
   const handleRetry = useCallback((pts: number) => {
     const current = deck[0]
     if (!current) return
-    addRetryWord(current.word, level)
+    addRetryWord(current.word, level)  // also covers "I don't know" skip path
     setTotalPts(n => n + pts)
     setRetryCount(n => n + 1)
     if (pts > 0) void recordPoints(current, pts)
@@ -195,6 +199,7 @@ export default function PlayClient({ level, words }: Props) {
           muted={muted}
           onMastered={handleMastered}
           onRetry={handleRetry}
+          onMcqWrong={handleMcqWrong}
         />
       </div>
 

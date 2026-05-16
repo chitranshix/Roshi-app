@@ -140,10 +140,6 @@ export default function Home() {
                 <Link href="/leaderboard" className={styles.profileMenuItem} onClick={() => setMenuOpen(false)}>
                   Leaderboard
                 </Link>
-                <div className={styles.profileMenuDivider} />
-                <button className={`${styles.profileMenuItem} ${styles.profileMenuSignOut}`} onClick={handleSignOut}>
-                  Sign out
-                </button>
               </div>
             )}
           </div>
