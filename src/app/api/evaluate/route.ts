@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     messages: [
       {
         role: 'user',
-        content: `You are grading a vocabulary game. Word: "${word}". ${context} Player's definition: "${definition}". Say "yes" if the player's definition demonstrates they understand the word's meaning — even if informal, incomplete, or just a synonym. Be generous: "lie, cheating" for "bluff" is yes. Only say "no" if it's clearly wrong or shows no understanding. Reply with only "yes" or "no".`,
+        content: `You are grading a GRE/GMAT vocabulary game. Word: "${word}". ${context} Player's definition: "${definition}". Say "yes" only if the player's definition captures the core meaning clearly — a correct synonym or a description that shows real understanding. Say "no" if the answer is vague, too general, only partially right, or could describe many other words. A one-word answer like "bad" or "good" for a nuanced word is "no". Reply with only "yes" or "no".`,
       },
     ],
   })

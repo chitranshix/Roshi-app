@@ -1,370 +1,193 @@
 'use client'
 
-import { useState, useCallback, useMemo, useRef } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import AppShell from '@/components/layout/AppShell'
-import Button from '@/components/ui/Button'
-import RoshiDisplay from '@/components/mascot/RoshiDisplay'
-import SpeechBubble from '@/components/ui/SpeechBubble'
-import { getProgress, saveProgress, completedInLevel, markWordComplete, nextWordInLevel } from '@/lib/progress'
-import { playCorrect, playWrong } from '@/lib/audio'
+import { useRouter } from 'next/navigation'
+import { getProgress, saveProgress, completedInLevel, markWordComplete, addRetryWord, removeRetryWord } from '@/lib/progress'
+import { markDailyDone, markActivityToday } from '@/lib/daily'
 import { createClient } from '@/lib/supabase'
-import StarButton from '@/components/ui/StarButton'
-import { IconDare, IconTrap } from '@/components/ui/icons'
 import type { GREWord } from '@/lib/gre-words'
+import WordCard from './WordCard'
 import styles from './play.module.css'
 
-const WORDS_PER_LEVEL = 100
-
-type Stage = 'sentence' | 'definition' | 'result'
-
 interface Props {
-  level:           number
-  words:           GREWord[]
-  userId:          string | null
-  serverCompleted: string[]
+  level: number
+  words: GREWord[]
 }
 
-export default function PlayClient({ level, words, userId, serverCompleted }: Props) {
-  const allWordNames = words.map(w => w.word)
+export default function PlayClient({ level, words }: Props) {
+  const router = useRouter()
+  const userIdRef = useRef<string | null>(null)
 
-  // Merge server (authoritative) with localStorage so cross-device progress is correct.
-  // Runs once at mount — writes merged list back to localStorage for the session.
-  const [initialCompleted] = useState<string[]>(() => {
-    const local = completedInLevel(level)
-    if (!serverCompleted.length) return local
-    const merged = [...new Set([...local, ...serverCompleted])]
-    if (merged.length > local.length) {
-      const p = getProgress()
-      saveProgress({ ...p, completed: { ...p.completed, [level]: merged } })
-    }
-    return merged
+  const [deck, setDeck] = useState<GREWord[]>(() =>
+    words.filter(w => !completedInLevel(level).includes(w.word))
+  )
+  const [retryCount, setRetryCount]       = useState(0)
+  const [masteredCount, setMasteredCount] = useState(0)
+  const [totalPts, setTotalPts]           = useState(0)
+  const [cardKey, setCardKey]             = useState(0)
+  const [muted, setMuted]                 = useState(() => {
+    if (typeof window === 'undefined') return false
+    return localStorage.getItem('roshi_muted') === 'true'
   })
 
-  const [currentWord, setCurrentWord] = useState<GREWord | null>(() => {
-    const next = allWordNames.find(w => !initialCompleted.includes(w)) ?? null
-    return next ? (words.find(w => w.word === next) ?? null) : null
-  })
-
-  const [completed] = useState(initialCompleted.length)
-  const [stage, setStage]    = useState<Stage>('sentence')
-  const [selected, setSelected]   = useState<number | null>(null)
-  const [answerResult, setAnswerResult] = useState<'correct' | 'wrong' | null>(null)
-  const [sentenceCorrect, setSentenceCorrect] = useState(false)
-  const [userDef, setUserDef]     = useState('')
-  const [points, setPoints]       = useState(0)
-  const [checking, setChecking]   = useState(false)
-  const [defCorrect, setDefCorrect] = useState<boolean | null>(null)
-  const [wordsDoneThisSession, setWordsDoneThisSession] = useState(0)
-  const [trapResult, setTrapResult] = useState<{ trapperName: string; escaped: boolean } | null>(null)
-  const trapChecked = useRef(false)
-
-  // Shuffle sentences once per word so correct answer isn't always first
-  const sentences = useMemo(() => {
-    if (!currentWord) return []
-    return [...currentWord.sentences].sort(() => Math.random() - 0.5)
-  }, [currentWord])
-
-  const speak = useCallback(() => {
-    if (!currentWord || typeof window === 'undefined') return
-    window.speechSynthesis.cancel()
-    const utt = new SpeechSynthesisUtterance(currentWord.word)
-    utt.rate = 0.85
-    window.speechSynthesis.speak(utt)
-  }, [currentWord])
-
-  const resolveTrap = useCallback(async (word: string, earned: number) => {
-    if (!userId || trapChecked.current) return
-    trapChecked.current = true
+  // Fetch auth + sync server-completed words in the background — non-blocking
+  useEffect(() => {
     const supabase = createClient()
-    const { data: trap } = await supabase
-      .from('traps')
-      .select('id, from_user')
-      .eq('to_user', userId)
-      .eq('word', word)
-      .eq('status', 'pending')
-      .maybeSingle()
-    if (!trap) return
-
-    const escaped = earned === 5
-    await supabase.from('traps').update({ status: escaped ? 'escaped' : 'triggered' }).eq('id', trap.id)
-
-    const { data: trapper } = await supabase.from('users').select('name').eq('id', trap.from_user).single()
-    const trapperName = trapper?.name ?? 'Someone'
-
-    if (escaped) {
-      await supabase.from('point_events').insert({ user_id: userId, points: 10, word, source: 'trap_escape', level })
-    } else {
-      await supabase.from('point_events').insert({ user_id: userId, points: -10, word, source: 'trap_triggered', level })
-      await supabase.from('point_events').insert({ user_id: trap.from_user, points: 10, word, source: 'trap_triggered' })
-    }
-
-    setTrapResult({ trapperName, escaped })
-
-    fetch('/api/push/send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        toUserId: trap.from_user,
-        title: escaped ? 'Your trap was escaped.' : 'Trap triggered.',
-        body: escaped
-          ? 'They knew the word. Your trap did nothing.'
-          : 'They failed. Your trap worked. +10 pts.',
-      }),
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) return
+      userIdRef.current = user.id
+      const { data } = await supabase
+        .from('point_events')
+        .select('word')
+        .eq('user_id', user.id)
+        .eq('source', 'level')
+        .eq('level', level)
+        .not('word', 'is', null)
+      const serverCompleted = [...new Set((data ?? []).map(e => e.word as string).filter(Boolean))]
+      if (!serverCompleted.length) return
+      const local = completedInLevel(level)
+      const merged = [...new Set([...local, ...serverCompleted])]
+      if (merged.length > local.length) {
+        const p = getProgress()
+        saveProgress({ ...p, completed: { ...p.completed, [level]: merged } })
+        setDeck(prev => prev.filter(w => !merged.includes(w.word)))
+      }
     })
-  }, [userId, level])
+  }, [level])
 
-  const recordPoints = useCallback(async (word: string, pts: number) => {
-    if (!userId) return
+  const toggleMute = useCallback(() => {
+    setMuted(prev => {
+      const next = !prev
+      localStorage.setItem('roshi_muted', String(next))
+      if (next) window.speechSynthesis.cancel()
+      return next
+    })
+  }, [])
+
+  const recordPoints = useCallback(async (word: GREWord, pts: number) => {
+    const uid = userIdRef.current
+    if (!uid) return
     const supabase = createClient()
     await supabase.from('point_events').insert({
-      user_id:    userId,
+      user_id:    uid,
       points:     pts,
-      word,
-      definition: currentWord?.definition ?? null,
-      sentence:   currentWord?.sentences.find(s => s.correct)?.sentence ?? null,
+      word:       word.word,
+      definition: word.definition ?? null,
+      sentence:   word.sentences.find(s => s.correct)?.sentence ?? null,
       source:     'level',
       level,
     })
-  }, [userId, level, currentWord])
+  }, [level])
 
-  const pickSentence = useCallback((i: number) => {
-    if (answerResult || !currentWord) return
-    const isCorrect = sentences[i]?.correct ?? false
-    setSelected(i)
-    setSentenceCorrect(isCorrect)
-    setAnswerResult(isCorrect ? 'correct' : 'wrong')
-    if (navigator.vibrate) navigator.vibrate(isCorrect ? [10, 50, 10] : [80])
-    setTimeout(() => {
-      if (isCorrect) {
-        setStage('definition')
-      } else {
-        playWrong()
-        setPoints(0)
-        markWordComplete(currentWord.word, level)
-        setWordsDoneThisSession(n => n + 1)
-        void resolveTrap(currentWord.word, 0)
-        void recordPoints(currentWord.word, 0)
-        setStage('result')
-      }
-    }, 1200)
-  }, [answerResult, currentWord, sentences, level, resolveTrap, recordPoints])
+  const handleMastered = useCallback(async (pts: number) => {
+    const current = deck[0]
+    if (!current) return
+    markWordComplete(current.word, level)
+    removeRetryWord(current.word, level)
+    markDailyDone()
+    markActivityToday()
+    setTotalPts(n => n + pts)
+    setMasteredCount(n => n + 1)
+    void recordPoints(current, pts)
+    setDeck(prev => prev.slice(1))
+    setCardKey(k => k + 1)
+  }, [deck, level, recordPoints])
 
-  const submitDefinition = useCallback(async () => {
-    if (!currentWord) return
-    setChecking(true)
-    try {
-      const res = await fetch('/api/evaluate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ word: currentWord.word, definition: userDef, actualDefinition: currentWord.definition }),
-      })
-      const { correct } = await res.json()
-      const earned = correct ? 5 : 3
-      if (correct) playCorrect(); else playWrong()
-      setDefCorrect(correct)
-      setPoints(earned)
-      markWordComplete(currentWord.word, level)
-      setWordsDoneThisSession(n => n + 1)
-      void recordPoints(currentWord.word, earned)
-      void resolveTrap(currentWord.word, earned)
-      setStage('result')
-    } catch {
-      playWrong()
-      setDefCorrect(null)
-      setPoints(3)
-      markWordComplete(currentWord.word, level)
-      setWordsDoneThisSession(n => n + 1)
-      void recordPoints(currentWord.word, 3)
-      void resolveTrap(currentWord.word, 3)
-      setStage('result')
-    } finally {
-      setChecking(false)
-    }
-  }, [currentWord, userDef, recordPoints, resolveTrap, level])
+  const handleRetry = useCallback((pts: number) => {
+    const current = deck[0]
+    if (!current) return
+    addRetryWord(current.word, level)
+    setTotalPts(n => n + pts)
+    setRetryCount(n => n + 1)
+    if (pts > 0) void recordPoints(current, pts)
+    setDeck(prev => [...prev.slice(1), current])
+    setCardKey(k => k + 1)
+  }, [deck, level, recordPoints])
 
-  const handleNext = useCallback(() => {
-    if (!currentWord) return
-    const next = nextWordInLevel(allWordNames, level)
-    const nextWord = next ? words.find(w => w.word === next) ?? null : null
-
-    setCurrentWord(nextWord)
-    setStage('sentence')
-    setSelected(null)
-    setAnswerResult(null)
-    setSentenceCorrect(false)
-    setUserDef('')
-    setPoints(0)
-    setDefCorrect(null)
-    setTrapResult(null)
-    trapChecked.current = false
-  }, [currentWord, allWordNames, words, level])
-
-  const totalCompleted = completed + wordsDoneThisSession
-  const pct = Math.round((totalCompleted / WORDS_PER_LEVEL) * 100)
-  const resultExpression = !sentenceCorrect ? 'disappointed' : defCorrect === true ? 'happy' : 'idle'
-
-  // Level complete
-  if (!currentWord && wordsDoneThisSession > 0) {
+  // Session complete
+  if (deck.length === 0) {
     return (
-      <AppShell gameplay>
-        <div className={styles.screen}>
-          <div className={styles.resultRoshi}>
-            <RoshiDisplay expression="happy" size={140} />
-          </div>
-          <SpeechBubble tail="top">
-            <div className={styles.pointsBadge}>Mission {level} complete.</div>
-            <div className={styles.pointsLabel}>You cracked all {WORDS_PER_LEVEL} words. Not bad at all.</div>
-          </SpeechBubble>
-          <Link href="/" style={{ display: 'block' }}>
-            <Button>Back to home</Button>
-          </Link>
+      <div className={styles.container}>
+        <div className={styles.completeScreen}>
+          {masteredCount > 0 ? (
+            <>
+              <div className={styles.completeTitle}>Mission {level} complete.</div>
+              <div className={styles.completeSub}>
+                {masteredCount} mastered · {totalPts} pts
+              </div>
+            </>
+          ) : (
+            <div className={styles.completeSub}>
+              You&apos;ve already mastered all words in Mission {level}.
+            </div>
+          )}
+          <Link href="/" className={styles.homeLink}>← Home</Link>
         </div>
-      </AppShell>
+      </div>
     )
   }
 
-  // No words available (all done before this session)
-  if (!currentWord) {
-    return (
-      <AppShell gameplay>
-        <div className={styles.screen}>
-          <div className={styles.resultRoshi}>
-            <RoshiDisplay expression="happy" size={140} />
-          </div>
-          <SpeechBubble tail="top">
-            <div className={styles.pointsLabel}>You&apos;ve already completed Mission {level}.</div>
-          </SpeechBubble>
-          <Link href="/" style={{ display: 'block' }}>
-            <Button>Back to home</Button>
-          </Link>
-        </div>
-      </AppShell>
-    )
-  }
+  const current = deck[0]
 
   return (
-    <AppShell>
-      <div className={styles.screen}>
+    <div className={styles.container}>
 
-        {/* ── Top bar: progress ── */}
-        <div className={styles.progressWrap}>
-          <div className={styles.progressBar}>
-            <div className={styles.progressFill} style={{ width: `${pct}%` }} />
-          </div>
-          <span className={styles.progressCount}>{totalCompleted}/{WORDS_PER_LEVEL}</span>
-        </div>
-
-        {/* ── Stage indicator ── */}
-        {stage !== 'result' && (
-          <div className={styles.stageRow}>
-            <div className={[styles.stagePip, styles.stageActive].join(' ')} />
-            <div className={styles.stageLine} />
-            <div className={[styles.stagePip, stage === 'definition' ? styles.stageActive : styles.stageDim].join(' ')} />
-          </div>
+      {/* Back + Mute — top left */}
+      <div className={styles.topLeft}>
+        <button className={styles.backBtn} onClick={() => router.push('/')} aria-label="Home">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M15.5 5L8.5 12L15.5 19" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+        <button className={styles.muteBtn} onClick={toggleMute} aria-label={muted ? 'Unmute' : 'Mute'}>
+        {muted ? (
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M11 5L6 9H2v6h4l5 4V5Z" fill="currentColor"/>
+            <line x1="22" y1="9" x2="16" y2="15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            <line x1="16" y1="9" x2="22" y2="15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+          </svg>
+        ) : (
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M11 5L6 9H2v6h4l5 4V5Z" fill="currentColor"/>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+          </svg>
         )}
-
-        {/* ── SENTENCE STAGE ── */}
-        {stage === 'sentence' && (
-          <>
-            <div className={styles.heroWordRow}>
-              <button className={styles.speakBtn} onClick={speak} aria-label="Pronounce word">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path d="M11 5L6 9H2v6h4l5 4V5Z" fill="currentColor"/>
-                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-              </button>
-              <div className={styles.heroWord}>{currentWord.word}</div>
-            </div>
-            <div className={styles.mcqPrompt}>Which sentence uses this word correctly?</div>
-            <div className={styles.options}>
-              {sentences.map((s, i) => {
-                const isSelected = selected === i
-                const isCorrect  = answerResult && isSelected && s.correct
-                const isWrong    = answerResult && isSelected && !s.correct
-                return (
-                  <button
-                    key={i}
-                    className={[
-                      styles.option,
-                      isSelected && !answerResult ? styles.selected : '',
-                      isCorrect ? styles.optionCorrect : '',
-                      isWrong   ? styles.optionWrong   : '',
-                    ].filter(Boolean).join(' ')}
-                    onClick={() => pickSentence(i)}
-                  >
-                    {s.sentence}
-                  </button>
-                )
-              })}
-            </div>
-          </>
-        )}
-
-        {/* ── DEFINITION STAGE ── */}
-        {stage === 'definition' && (
-          <div className={styles.defStage}>
-            <div className={styles.defPrompt}>
-              Define <strong>{currentWord.word}</strong> in your own words.
-            </div>
-            <textarea
-              className={styles.defInput}
-              placeholder="Type your definition..."
-              value={userDef}
-              onChange={e => setUserDef(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey && userDef.trim().length >= 3) { e.preventDefault(); submitDefinition() } }}
-              autoFocus
-              inputMode="text"
-              enterKeyHint="done"
-              maxLength={200}
-            />
-            <div className={styles.defHint}>Plain English is fine.</div>
-            <Button onClick={submitDefinition} disabled={userDef.trim().length < 3 || checking}>
-              {checking ? 'Checking…' : 'Submit'}
-            </Button>
-          </div>
-        )}
-
-        {/* ── RESULT STAGE ── */}
-        {stage === 'result' && (
-          <>
-            <div className={styles.resultRoshi}>
-              <RoshiDisplay expression={resultExpression} size={140} />
-            </div>
-            <SpeechBubble tail="top">
-              <div className={styles.pointsBadge}>+{points}</div>
-              <div className={styles.pointsLabel}>
-                {!sentenceCorrect ? 'Better luck next time.' : defCorrect === true ? 'You nailed it.' : 'Close, but not quite.'}
-              </div>
-              {trapResult && (
-                <div className={trapResult.escaped ? styles.trapEscaped : styles.trapTriggered}>
-                  {trapResult.escaped
-                    ? `${trapResult.trapperName} set a trap on this word. You escaped. +10 pts.`
-                    : `${trapResult.trapperName} set a trap on this word. You didn't make it out. -10 pts.`}
-                </div>
-              )}
-              <div className={styles.definitionReveal}>
-                <div className={styles.definitionWordRow}>
-                  <div className={styles.definitionWord}>{currentWord.word}</div>
-                  <StarButton word={currentWord.word} definition={currentWord.definition} />
-                </div>
-                <div className={styles.definitionText}>{currentWord.definition}</div>
-              </div>
-            </SpeechBubble>
-            <Button onClick={handleNext}>Next word</Button>
-            <div className={styles.actionRow}>
-              <Link href={`/dare/new?word=${encodeURIComponent(currentWord.word)}`} className={styles.actionPill}>
-                <IconDare size={18} /> Send dare
-              </Link>
-              <Link href={`/dare/trap?word=${encodeURIComponent(currentWord.word)}`} className={[styles.actionPill, styles.actionPillTrap].join(' ')}>
-                <IconTrap size={18} /> Set trap
-              </Link>
-            </div>
-          </>
-        )}
-
+        </button>
       </div>
-    </AppShell>
+
+      {/* Floating points HUD — top right */}
+      <div className={styles.hud}>
+        <div className={styles.hudPoints}>{totalPts}</div>
+        <div className={styles.hudLabel}>POINTS</div>
+      </div>
+
+      {/* Card stage */}
+      <div className={styles.cardArea}>
+        <div className={styles.ghost} />
+        <WordCard
+          key={cardKey}
+          word={current}
+          level={level}
+          muted={muted}
+          onMastered={handleMastered}
+          onRetry={handleRetry}
+        />
+      </div>
+
+      {/* Floor — pile indicators */}
+      <div className={styles.floor}>
+        <div className={styles.pileCard}>
+          <div className={styles.pileCount}>{retryCount}</div>
+          <div className={styles.pileLabel}>RETRY</div>
+        </div>
+        <div className={styles.pileCard}>
+          <div className={styles.pileCount}>{masteredCount}</div>
+          <div className={styles.pileLabel}>MASTERED</div>
+        </div>
+      </div>
+
+    </div>
   )
 }

@@ -1,483 +1,595 @@
-/* ── Shared dare flow layout ── */
-.screen {
+/* ── Play session — white card on dark gradient (POC match) ── */
+
+.container {
+  min-height: 100dvh;
+  background: radial-gradient(circle, #0f1c14 0%, #050a07 100%);
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  width: 100%;
-  height: 100%;
   overflow: hidden;
-  padding: 8px 20px 24px;
-  max-width: 430px;
-  margin: 0 auto;
-  gap: 12px;
+  font-family: var(--font-ui), sans-serif;
 }
 
-.backBtn {
-  font-size: 22px;
-  font-weight: 400;
-  color: var(--muted);
-  flex-shrink: 0;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* ── Top bar: back + progress ── */
-.topBar {
+/* ── Back + Mute — top left row ── */
+.topLeft {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 100;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 4px 0;
+  gap: 20px;
 }
 
-.progressWrap {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.progressBar {
-  flex: 1;
-  height: 6px;
-  background: var(--surface2);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.progressFill {
-  height: 100%;
-  background: var(--accent);
-  border-radius: 3px;
-  transition: width 0.5s ease;
-  min-width: 3px;
-}
-
-.progressCount {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--muted);
-  white-space: nowrap;
-}
-
-/* ── Stage indicator (2 pips) ── */
-.stageRow {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.stagePip {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.stageActive { background: var(--accent); }
-.stageDim    { background: var(--border); }
-
-.stageLine {
-  flex: 1;
-  height: 2px;
-  background: var(--border);
-  border-radius: 1px;
-}
-
-/* ── Progress bar (old — keep for compat) ── */
-.progress {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.progressStep {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+.backBtn,
+.muteBtn {
+  color: rgba(255, 255, 255, 0.35);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
   transition: color 0.15s;
+  line-height: 0;
+}
+.backBtn:hover,
+.muteBtn:hover { color: rgba(255, 255, 255, 0.75); }
+
+/* ── Floating points HUD ── */
+.hud {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 100;
+  text-align: right;
+  pointer-events: none;
 }
 
-.progressDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  transition: background 0.15s;
+.hudPoints {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: clamp(2.8rem, 9vw, 4rem);
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1;
 }
 
-.progressActive { color: var(--accent); }
-.progressActive .progressDot { background: var(--accent); }
-
-.progressDim { color: var(--border); }
-.progressDim .progressDot { background: var(--border); }
-
-.progressLine {
-  flex: 1;
-  height: 2px;
-  background: var(--border);
-  border-radius: 1px;
-}
-
-.eyebrow {
+.hudLabel {
   font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
+  font-weight: 800;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--muted);
-  text-align: center;
+  color: rgba(255, 255, 255, 0.35);
+  margin-top: 2px;
 }
 
-.challenger {
-  font-size: 13px;
-  color: var(--muted);
-  text-align: center;
-}
-
-/* ── Hero word ── */
-.heroWordRow {
+/* ── Card stage ── */
+.cardArea {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  position: relative;
+  padding: 60px 0 160px;
 }
 
-.speakBtn {
-  color: var(--muted);
-  flex-shrink: 0;
-  padding: 6px;
-  border-radius: 50%;
-  transition: color 0.15s, background 0.15s;
+/* ── Ghost placeholder — dashed deck stack behind active card ── */
+.ghost {
+  position: absolute;
+  width: min(360px, 86vw);
+  aspect-ratio: 5 / 7;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  box-shadow:
+    5px 5px 0 rgba(255, 255, 255, 0.05),
+    10px 10px 0 rgba(255, 255, 255, 0.02);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ── Card wrap ── */
+.cardWrap {
+  position: relative;
+  z-index: 10;
+}
+
+/* ── CSS entry animation — drop in from above (no JS timing issues) ── */
+.cardEntry {
+  animation: cardDropIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes cardDropIn {
+  from { transform: translateY(-70px) scale(0.9); opacity: 0; }
+  to   { transform: translateY(0) scale(1);       opacity: 1; }
+}
+
+/* ── Swipe hint labels ── */
+.swipeLabelRight {
+  position: absolute;
+  top: 28px;
+  right: 22px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #538D4E;
+  border: 1.5px solid #538D4E;
+  border-radius: 4px;
+  padding: 4px 10px;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.swipeLabelLeft {
+  position: absolute;
+  top: 28px;
+  left: 22px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #CC3333;
+  border: 1.5px solid #CC3333;
+  border-radius: 4px;
+  padding: 4px 10px;
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* ── Drag wrapper ── */
+.dragWrapper {
+  position: relative;
+}
+
+/* ── 3D perspective container ── */
+.perspective {
+  perspective: 2000px;
+  width: min(360px, 86vw);
+  aspect-ratio: 5 / 7;
+}
+
+/* ── Flip container — 3D preserve ── */
+.cardFlip {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cardFlip.flipped {
+  transform: rotateY(180deg);
+}
+
+/* ── Individual card faces ── */
+.cardFace {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: #ffffff;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.65);
+  display: flex;
+  flex-direction: column;
+  padding: clamp(20px, 5vw, 28px);
+  overflow: hidden;
+  user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
 
-.speakBtn:active {
-  color: var(--accent);
-  background: var(--surface2);
+.faceFront {
+  transform: rotateY(0deg);
 }
 
-.heroWord {
-  font-size: clamp(34px, 9vw, 48px);
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: -0.03em;
-  line-height: 1;
-  text-align: center;
+.faceBack {
+  transform: rotateY(180deg);
 }
 
-.wordPos {
-  font-size: 12px;
+/* ── Top meta row ── */
+.faceTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  margin-bottom: 6px;
+}
+
+.metaLabel {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.25);
+}
+
+.metaPtsGreen {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: #1b4332;
+}
+
+.metaPtsAmber { color: #b08d57 !important; }
+.metaPtsRed   { color: #CC3333 !important; }
+
+/* ── Word display (front face) ── */
+.wordArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 4vw, 24px);
+}
+
+.wordDisplay {
+  font-family: var(--font-fraunces), Georgia, serif;
   font-style: italic;
-  color: var(--accent);
+  font-weight: 900;
+  font-size: clamp(28px, 10vw, 52px);
+  color: #0d2137;
   text-align: center;
-  margin-top: -4px;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.wordDivider {
+  width: 40px;
+  height: 2px;
+  background: #f0f0f0;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+/* ── Front face bottom row ── */
+.faceBottomRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+/* ── Difficulty label (bottom-left of front face) ── */
+.difficultyLabel {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #b08d57;
+}
+
+/* ── +5 pts in Fraunces (bottom-right of front face) ── */
+.frontPts {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: 1.3rem;
+  color: rgba(0, 0, 0, 0.2);
+  line-height: 1;
+}
+
+/* ── Speak button ── */
+.speakBtn {
+  display: flex;
+  align-items: center;
+  color: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.12s;
+}
+.speakBtn:active { color: rgba(0, 0, 0, 0.7); }
+
+/* ── Word small (MCQ / definition / result back faces) ── */
+.wordSmall {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: clamp(22px, 6vw, 30px);
+  color: #0d2137;
+  flex-shrink: 0;
+  margin-bottom: 4px;
 }
 
 /* ── MCQ options ── */
-.mcqPrompt {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--muted);
-  text-align: center;
-  letter-spacing: 0.02em;
-}
-
 .options {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+  flex: 1;
+  justify-content: center;
 }
 
 .option {
-  padding: 14px 16px;
-  background: var(--surface2);
-  border-radius: var(--radius-md);
-  font-size: 14px;
-  line-height: 1.55;
-  color: var(--text);
-  border: 2px solid transparent;
-  cursor: pointer;
+  padding: clamp(8px, 2vw, 10px) 12px;
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  font-size: clamp(12px, 3vw, 13px);
+  font-weight: 600;
+  line-height: 1.4;
+  color: #111111;
   text-align: left;
-  width: 100%;
-  transition: border-color 0.15s, background 0.15s;
+  cursor: pointer;
+  transition: border-color 0.12s;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
-
-.option:active { background: var(--surface); }
-
-.option.selected {
-  border-color: var(--accent);
-  background: var(--surface);
-}
+.option:active:not(:disabled) { border-color: #111111; }
 
 .optionCorrect {
-  border-color: var(--correct) !important;
-  background: color-mix(in srgb, var(--correct) 12%, var(--surface)) !important;
-  color: var(--correct) !important;
+  border-color: #538D4E !important;
+  background: rgba(83, 141, 78, 0.05) !important;
+  color: #538D4E !important;
 }
 
 .optionWrong {
-  border-color: var(--wrong) !important;
-  background: color-mix(in srgb, var(--wrong) 12%, var(--surface)) !important;
-  color: var(--wrong) !important;
+  border-color: #CC3333 !important;
+  background: rgba(204, 51, 51, 0.05) !important;
+  color: #CC3333 !important;
 }
 
-/* ── Definition input ── */
-.defStage {
+/* ── Definition face ── */
+.defArea {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  width: 100%;
-  margin-top: -4px;
-}
-
-.defPrompt {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--text);
-  text-align: center;
-  line-height: 1.5;
+  justify-content: center;
+  padding: 8px 0;
 }
 
 .defInput {
   width: 100%;
-  min-height: 110px;
-  background: var(--surface2);
-  border-radius: var(--radius-md);
-  border: 2px solid var(--border);
-  padding: 14px 16px;
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--text);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #111111;
+  font-family: var(--font-typewriter), 'Courier New', Courier, monospace;
+  font-size: clamp(16px, 4.5vw, 19px);
+  color: #111111;
   resize: none;
-  transition: border-color 0.15s;
+  padding: 8px 0;
+  line-height: 1.55;
+  min-height: 70px;
 }
+.defInput:focus { outline: none; }
+.defInput::placeholder { color: rgba(0, 0, 0, 0.18); }
 
-.defInput:focus { border-color: var(--accent); }
-.defInput::placeholder { color: var(--muted); }
-
-.defHint {
-  font-size: 12px;
-  color: var(--muted);
-  text-align: center;
-}
-
-/* ── Result ── */
-.resultRoshi {
+.defActions {
   display: flex;
-  justify-content: center;
-  padding: 8px 0 0;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
-.pointsBadge {
-  font-family: var(--font-roshi);
-  font-size: 64px;
+.submitBtn {
+  width: 100%;
+  padding: clamp(12px, 3.5vw, 16px);
+  background: #111111;
+  color: #ffffff;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  touch-action: manipulation;
+}
+.submitBtn:disabled { opacity: 0.28; cursor: default; }
+.submitBtn:not(:disabled):active { opacity: 0.72; }
+
+.skipBtn {
+  background: none;
+  border: none;
+  text-align: center;
+  font-size: 10px;
   font-weight: 700;
-  color: var(--gold);
-  text-align: center;
-  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: color 0.15s;
+  padding: 4px;
 }
+.skipBtn:hover { color: rgba(204, 51, 51, 0.65); }
 
-.pointsLabel {
-  font-family: var(--font-roshi);
-  font-size: 18px;
-  color: var(--muted);
-  text-align: center;
-  margin-top: -4px;
-}
-
-.definitionReveal {
-  border-top: 1px solid var(--border);
-  padding-top: 12px;
-  margin-top: 4px;
-}
-
-.definitionWordRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 4px;
-}
-
-.definitionWord {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--accent);
-  font-family: var(--font-ui);
-}
-
-.definitionPos {
-  font-size: 11px;
-  color: var(--accent);
-  font-style: italic;
-  margin-bottom: 10px;
-}
-
-.definitionText {
-  font-size: 15px;
-  line-height: 1.5;
-  color: var(--muted);
-  font-family: var(--font-ui);
-}
-
-.divider {
-  height: 1px;
-  background: var(--border);
-}
-
-.scoreRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 4px 0;
-}
-
-.scoreName {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.scoreBar {
+/* ── Result face ── */
+.resultMain {
   flex: 1;
-  height: 6px;
-  background: var(--surface2);
-  border-radius: 3px;
-  margin: 0 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  min-height: 0;
   overflow: hidden;
 }
 
-.scoreBarFill {
-  height: 100%;
-  background: var(--accent);
-  border-radius: 3px;
-  transition: width 0.6s ease;
-}
-
-.scorePoints {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--accent);
-  min-width: 40px;
-  text-align: right;
-}
-
-.spacer { flex: 1; }
-
-/* ── Result action row ── */
-.actionRow {
-  display: flex;
-  gap: 8px;
-  width: 100%;
-}
-
-.actionPill {
-  flex: 1;
+.resultIllustration {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 14px 12px;
-  border-radius: var(--radius-md);
-  background: var(--surface2);
-  border: 2px solid var(--border);
+}
+
+.resultInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.resultBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+  justify-content: flex-end;
+  padding-bottom: 4px;
+}
+
+.correctSentence {
+  padding: 10px 12px;
+  background: rgba(83, 141, 78, 0.05);
+  border: 1px solid rgba(83, 141, 78, 0.2);
+  border-radius: 8px;
+}
+
+.correctSentenceLabel {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #538D4E;
+  margin-bottom: 4px;
+}
+
+.correctSentenceText {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #333333;
+}
+
+.defRevealText {
   font-size: 15px;
-  font-weight: 600;
-  color: var(--text);
-  cursor: pointer;
-  text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
-  transition: background 0.15s, border-color 0.15s;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.6);
 }
 
-.actionPill:active { background: var(--surface); }
-
-.actionPillTrap {
-  border-color: var(--wrong);
-  color: var(--wrong);
+.swipeCue {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.18);
+  flex-shrink: 0;
+  padding-top: 10px;
 }
 
-.actionPillTrap:active { background: color-mix(in srgb, var(--wrong) 10%, var(--surface)); }
+/* ── Correct glow on card face ── */
+@keyframes glowCorrect {
+  0%   { box-shadow: 0 30px 70px rgba(0,0,0,0.65); }
+  40%  { box-shadow: 0 30px 70px rgba(0,0,0,0.65), 0 0 0 5px rgba(83,141,78,1), 0 0 60px rgba(83,141,78,0.5); }
+  100% { box-shadow: 0 30px 70px rgba(0,0,0,0.65); }
+}
+@keyframes glowWrong {
+  0%   { box-shadow: 0 30px 70px rgba(0,0,0,0.65); }
+  30%  { box-shadow: 0 30px 70px rgba(0,0,0,0.65), 0 0 0 5px rgba(204,51,51,1), 0 0 60px rgba(204,51,51,0.5); }
+  100% { box-shadow: 0 30px 70px rgba(0,0,0,0.65); }
+}
+.cardGlowCorrect { animation: glowCorrect 0.85s ease-out forwards; }
+.cardGlowWrong   { animation: glowWrong   0.55s ease-out forwards; }
 
-/* ── Slide-up feedback bar ── */
-.feedbackBar {
+/* ── Persistent wrong-result state — subtle red tint stays while user reads ── */
+.cardFaceWrongResult {
+  background: #fff5f5 !important;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.65), 0 0 0 2px rgba(204,51,51,0.3), 0 0 24px rgba(204,51,51,0.08) !important;
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* ── Floating points origin — center of card ── */
+.floatOrigin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
+  z-index: 60;
+}
+
+/* ── Screen flash overlay (wrong answer) ── */
+.screenFlash {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  background: radial-gradient(ellipse at center, rgba(180,30,30,0.35) 0%, rgba(100,0,0,0.2) 60%, transparent 100%);
+}
+
+/* ── Floor ── */
+.floor {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 200;
-  padding: 20px 20px 36px;
+  height: 160px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 16px;
-  animation: slideUp 0.35s cubic-bezier(0.34, 1.2, 0.64, 1) both;
+  padding: 0 8% 32px;
+  z-index: 40;
+  pointer-events: none;
 }
 
-@keyframes slideUp {
-  from { transform: translateY(100%); }
-  to   { transform: translateY(0); }
-}
-
-.feedbackBar_correct { background: var(--correct); }
-.feedbackBar_wrong   { background: var(--wrong); }
-
-.feedbackBarContent {
+.pileCard {
+  width: clamp(70px, 18vw, 90px);
+  height: clamp(96px, 25vw, 124px);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.pileCount {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-weight: 900;
+  font-style: italic;
+  font-size: clamp(24px, 7vw, 34px);
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1;
+}
+
+.pileLabel {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* ── Session complete ── */
+.completeScreen {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px 24px;
+  text-align: center;
 }
 
-.feedbackBarHeadline {
-  font-family: var(--font-roshi);
-  font-size: 20px;
-  font-weight: 400;
-  color: #fff;
-  line-height: 1.2;
+.completeTitle {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: clamp(28px, 8vw, 40px);
+  color: #ffffff;
+  letter-spacing: -0.02em;
 }
 
-.feedbackBarSub {
-  font-family: var(--font-roshi);
-  font-size: 14px;
-  font-weight: 400;
-  color: rgba(255,255,255,0.88);
-  line-height: 1.45;
-}
-
-.feedbackBarBtn {
-  background: rgba(255,255,255,0.22);
-  color: #fff;
-  border: 2px solid rgba(255,255,255,0.5);
-  border-radius: var(--radius-md);
-  padding: 12px 18px;
+.completeSub {
   font-size: 15px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.homeLink {
+  margin-top: 16px;
+  font-size: 12px;
   font-weight: 700;
-  white-space: nowrap;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: background 0.15s;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  text-decoration: none;
+  transition: color 0.15s;
 }
-
-.feedbackBarBtn:active { background: rgba(255,255,255,0.35); }
-
-/* ── Trap reveal ── */
-.trapEscaped, .trapTriggered {
-  font-family: var(--font-roshi);
-  font-size: 13px;
-  line-height: 1.4;
-  padding: 8px 10px;
-  border-radius: var(--radius-md);
-  margin-top: 6px;
-}
-
-.trapEscaped {
-  background: color-mix(in srgb, var(--correct) 12%, var(--surface));
-  color: var(--correct);
-}
-
-.trapTriggered {
-  background: color-mix(in srgb, var(--wrong) 12%, var(--surface));
-  color: var(--wrong);
-}
+.homeLink:hover { color: rgba(255, 255, 255, 0.8); }

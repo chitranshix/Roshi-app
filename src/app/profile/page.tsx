@@ -1,24 +1,23 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import AppShell from '@/components/layout/AppShell'
-import Button from '@/components/ui/Button'
+import { useRouter } from 'next/navigation'
 import Avatar from '@/components/ui/Avatar'
 import { createClient } from '@/lib/supabase'
 import { getStreak } from '@/lib/daily'
 import styles from './profile.module.css'
 
 export default function ProfilePage() {
-  const [name, setName]         = useState('')
-  const [saved, setSaved]       = useState(false)
-  const [streak, setStreak]     = useState(0)
-  const [points, setPoints]     = useState<number | null>(null)
+  const router = useRouter()
+  const [name, setName]               = useState('')
+  const [saved, setSaved]             = useState(false)
+  const [streak, setStreak]           = useState(0)
+  const [points, setPoints]           = useState<number | null>(null)
   const [newPassword, setNewPassword] = useState('')
-  const [pwSaved, setPwSaved]   = useState(false)
-  const [pwError, setPwError]   = useState<string | null>(null)
+  const [pwSaved, setPwSaved]         = useState(false)
+  const [pwError, setPwError]         = useState<string | null>(null)
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- reading localStorage must happen in useEffect
     setName(localStorage.getItem('roshi_name') ?? '')
     setStreak(getStreak().count)
 
@@ -26,15 +25,8 @@ export default function ProfilePage() {
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) return
       const [{ data: dares }, { data: events }] = await Promise.all([
-        supabase
-          .from('dares')
-          .select('from_user, to_user, from_points, to_points, has_trap, trap_winner')
-          .eq('status', 'complete')
-          .or(`from_user.eq.${user.id},to_user.eq.${user.id}`),
-        supabase
-          .from('point_events')
-          .select('points')
-          .eq('user_id', user.id),
+        supabase.from('dares').select('from_user, to_user, from_points, to_points, has_trap, trap_winner').eq('status', 'complete').or(`from_user.eq.${user.id},to_user.eq.${user.id}`),
+        supabase.from('point_events').select('points').eq('user_id', user.id),
       ])
       let pts = 0
       for (const d of dares ?? []) {
@@ -48,17 +40,6 @@ export default function ProfilePage() {
     })
   }, [])
 
-  const handlePasswordSave = async () => {
-    if (newPassword.length < 6) return
-    setPwError(null)
-    const supabase = createClient()
-    const { error } = await supabase.auth.updateUser({ password: newPassword })
-    if (error) { setPwError(error.message); return }
-    setNewPassword('')
-    setPwSaved(true)
-    setTimeout(() => setPwSaved(false), 2000)
-  }
-
   const handleSave = async () => {
     const trimmed = name.trim()
     if (!trimmed) return
@@ -70,65 +51,76 @@ export default function ProfilePage() {
     setTimeout(() => setSaved(false), 1500)
   }
 
+  const handlePasswordSave = async () => {
+    if (newPassword.length < 6) return
+    setPwError(null)
+    const supabase = createClient()
+    const { error } = await supabase.auth.updateUser({ password: newPassword })
+    if (error) { setPwError(error.message); return }
+    setNewPassword('')
+    setPwSaved(true)
+    setTimeout(() => setPwSaved(false), 2000)
+  }
+
   return (
-    <AppShell>
-      <div className={styles.page}>
+    <div className={styles.page}>
 
-        <div className={styles.avatarRow}>
-          <Avatar name={name} size={72} />
-          <div className={styles.statRow}>
-            {streak > 0 && <div className={styles.streakBadge}>{streak} day streak 🔥</div>}
-            {points !== null && <div className={styles.pointsBadge}>{points} pts</div>}
-          </div>
+      <button className={styles.back} onClick={() => router.back()} aria-label="Back">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M15.5 5L8.5 12L15.5 19" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+
+      <div className={styles.avatarRow}>
+        <Avatar name={name} size={80} />
+        <div className={styles.displayName}>{name || '—'}</div>
+        <div className={styles.statRow}>
+          {streak > 0 && <span className={styles.stat}>{streak} day streak</span>}
+          {points !== null && <span className={styles.stat}>{points} pts</span>}
         </div>
-
-        <div className={styles.section}>
-          <div className={styles.label}>Your name</div>
-          <input
-            className={styles.input}
-            value={name}
-            onChange={e => { setName(e.target.value); setSaved(false) }}
-            maxLength={20}
-            placeholder="Enter your name"
-            enterKeyHint="done"
-            onKeyDown={e => { if (e.key === 'Enter') handleSave() }}
-          />
-          <Button onClick={handleSave} disabled={!name.trim()}>
-            {saved ? 'Saved ✓' : 'Save name'}
-          </Button>
-        </div>
-
-        <div className={styles.section}>
-          <div className={styles.label}>Change password</div>
-          <input
-            className={styles.input}
-            type="password"
-            value={newPassword}
-            onChange={e => { setNewPassword(e.target.value); setPwSaved(false); setPwError(null) }}
-            placeholder="New password (min 6 chars)"
-            onKeyDown={e => { if (e.key === 'Enter') handlePasswordSave() }}
-          />
-          {pwError && <div style={{ fontSize: 13, color: 'var(--wrong)' }}>{pwError}</div>}
-          <Button onClick={handlePasswordSave} disabled={newPassword.length < 6}>
-            {pwSaved ? 'Saved ✓' : 'Update password'}
-          </Button>
-        </div>
-
-        <button className={styles.menuRow} style={{ width: '100%', cursor: 'pointer' }} onClick={async () => {
-          const supabase = createClient()
-          await supabase.auth.signOut()
-          localStorage.removeItem('roshi_name')
-          window.location.href = '/login'
-        }}>
-          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="var(--wrong)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-            <path d="M7 3H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h3"/>
-            <path d="M13 14l3-4-3-4"/>
-            <line x1="16" y1="10" x2="7" y2="10"/>
-          </svg>
-          <span className={styles.menuLabel} style={{ color: 'var(--wrong)' }}>Log out</span>
-        </button>
-
       </div>
-    </AppShell>
+
+      <div className={styles.section}>
+        <div className={styles.label}>Your name</div>
+        <input
+          className={styles.input}
+          value={name}
+          onChange={e => { setName(e.target.value); setSaved(false) }}
+          maxLength={20}
+          placeholder="Enter your name"
+          enterKeyHint="done"
+          onKeyDown={e => { if (e.key === 'Enter') handleSave() }}
+        />
+        <button className={styles.btn} onClick={handleSave} disabled={!name.trim()}>
+          {saved ? 'Saved ✓' : 'Save name'}
+        </button>
+      </div>
+
+      <div className={styles.section}>
+        <div className={styles.label}>Change password</div>
+        <input
+          className={styles.input}
+          type="password"
+          value={newPassword}
+          onChange={e => { setNewPassword(e.target.value); setPwSaved(false); setPwError(null) }}
+          placeholder="New password (min 6 chars)"
+          onKeyDown={e => { if (e.key === 'Enter') handlePasswordSave() }}
+        />
+        {pwError && <div className={styles.error}>{pwError}</div>}
+        <button className={styles.btn} onClick={handlePasswordSave} disabled={newPassword.length < 6}>
+          {pwSaved ? 'Saved ✓' : 'Update password'}
+        </button>
+      </div>
+
+      <button className={styles.logoutBtn} onClick={async () => {
+        const supabase = createClient()
+        await supabase.auth.signOut()
+        localStorage.removeItem('roshi_name')
+        window.location.href = '/login'
+      }}>
+        Log out
+      </button>
+
+    </div>
   )
 }
