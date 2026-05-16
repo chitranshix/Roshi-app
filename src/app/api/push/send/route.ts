@@ -2,14 +2,17 @@ import { NextRequest, NextResponse } from 'next/server'
 import webpush from 'web-push'
 import { createServerSupabase } from '@/lib/supabase-server'
 
-webpush.setVapidDetails(
-  process.env.VAPID_MAILTO!,
-  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
-  process.env.VAPID_PRIVATE_KEY!,
-)
-
 export async function POST(req: NextRequest) {
   const { toUserId, title, body, url } = await req.json()
+
+  if (!process.env.VAPID_MAILTO || !process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
+    return NextResponse.json({ ok: false, reason: 'vapid_not_configured' })
+  }
+  webpush.setVapidDetails(
+    process.env.VAPID_MAILTO,
+    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+    process.env.VAPID_PRIVATE_KEY,
+  )
   if (!toUserId) return NextResponse.json({ error: 'Missing toUserId' }, { status: 400 })
 
   const supabase = await createServerSupabase()
