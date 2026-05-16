@@ -114,15 +114,22 @@
   margin-bottom: 4px;
 }
 
-.cardBody {
+/* Groups word+def+sentence and centres the whole block vertically */
+.cardContent {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
   gap: 8px;
-  text-align: center;
   min-height: 0;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
 }
 
 .cardWord {
@@ -159,7 +166,6 @@
 /* ── Correct sentence ── */
 .cardSentence {
   flex-shrink: 0;
-  margin-top: 8px;
   padding: 9px 11px;
   background: rgba(83, 141, 78, 0.06);
   border: 1px solid rgba(83, 141, 78, 0.18);

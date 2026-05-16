@@ -71,17 +71,19 @@ export default function MasteredClient({ level, words }: Props) {
                   <div className={styles.card}>
                     <div className={styles.cardMeta}>{i + 1} / {len}</div>
 
-                    <div className={styles.cardBody}>
-                      <div className={styles.cardWord} style={wordSize ? { fontSize: wordSize } : undefined}>
-                        {w.word}
+                    <div className={styles.cardContent}>
+                      <div className={styles.cardBody}>
+                        <div className={styles.cardWord} style={wordSize ? { fontSize: wordSize } : undefined}>
+                          {w.word}
+                        </div>
+                        <div className={styles.cardDivider} />
+                        <div className={styles.cardDef}>{w.definition}</div>
                       </div>
-                      <div className={styles.cardDivider} />
-                      <div className={styles.cardDef}>{w.definition}</div>
-                    </div>
 
                     <div className={styles.cardSentence}>
                       <div className={styles.sentenceLabel}>USED IN A SENTENCE</div>
                       <p className={styles.sentenceText}>&ldquo;{correctSentence}&rdquo;</p>
+                    </div>
                     </div>
                   </div>
                 </div>
