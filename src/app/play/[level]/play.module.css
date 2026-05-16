@@ -9,6 +9,30 @@
   font-family: var(--font-ui), sans-serif;
 }
 
+/* ── Back + Mute — top left row ── */
+.topLeft {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.backBtn,
+.muteBtn {
+  color: rgba(255, 255, 255, 0.35);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.15s;
+  line-height: 0;
+}
+.backBtn:hover,
+.muteBtn:hover { color: rgba(255, 255, 255, 0.75); }
+
 /* ── Floating points HUD ── */
 .hud {
   position: fixed;
@@ -23,7 +47,6 @@
   font-family: var(--font-fraunces), Georgia, serif;
   font-size: clamp(2.8rem, 9vw, 4rem);
   font-weight: 900;
-  font-style: italic;
   color: #ffffff;
   line-height: 1;
 }
@@ -50,8 +73,8 @@
 /* ── Ghost placeholder — dashed deck stack behind active card ── */
 .ghost {
   position: absolute;
-  width: min(390px, 88vw);
-  height: calc(100dvh - 240px);
+  width: min(360px, 86vw);
+  aspect-ratio: 5 / 7;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.015);
   border: 1px dashed rgba(255, 255, 255, 0.12);
@@ -117,8 +140,8 @@
 /* ── 3D perspective container ── */
 .perspective {
   perspective: 2000px;
-  width: min(390px, 88vw);
-  height: calc(100dvh - 240px);
+  width: min(360px, 86vw);
+  aspect-ratio: 5 / 7;
 }
 
 /* ── Flip container — 3D preserve ── */
@@ -202,11 +225,14 @@
   font-family: var(--font-fraunces), Georgia, serif;
   font-style: italic;
   font-weight: 900;
-  font-size: clamp(36px, 10vw, 54px);
+  font-size: clamp(28px, 10vw, 52px);
   color: #0d2137;
   text-align: center;
   line-height: 1.05;
   letter-spacing: -0.01em;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
 }
 
 .wordDivider {
@@ -217,15 +243,32 @@
   flex-shrink: 0;
 }
 
-/* ── Level label (front face bottom) ── */
-.levelLabel {
+/* ── Front face bottom row ── */
+.faceBottomRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+/* ── Difficulty label (bottom-left of front face) ── */
+.difficultyLabel {
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: #b08d57;
-  flex-shrink: 0;
-  margin-top: 4px;
+}
+
+/* ── +5 pts in Fraunces (bottom-right of front face) ── */
+.frontPts {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: 1.3rem;
+  color: rgba(0, 0, 0, 0.2);
+  line-height: 1;
 }
 
 /* ── Speak button ── */
@@ -303,14 +346,12 @@
   background: transparent;
   border: none;
   border-bottom: 2px solid #111111;
-  font-family: var(--font-fraunces), Georgia, serif;
-  font-style: italic;
-  font-weight: 700;
-  font-size: clamp(18px, 5vw, 22px);
+  font-family: var(--font-typewriter), 'Courier New', Courier, monospace;
+  font-size: clamp(16px, 4.5vw, 19px);
   color: #111111;
   resize: none;
   padding: 8px 0;
-  line-height: 1.4;
+  line-height: 1.55;
   min-height: 70px;
 }
 .defInput:focus { outline: none; }
@@ -356,6 +397,29 @@
 .skipBtn:hover { color: rgba(204, 51, 51, 0.65); }
 
 /* ── Result face ── */
+.resultMain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.resultIllustration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.resultInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
 .resultBody {
   flex: 1;
   display: flex;
@@ -389,9 +453,9 @@
 }
 
 .defRevealText {
-  font-size: clamp(13px, 3.5vw, 15px);
-  line-height: 1.6;
-  color: rgba(0, 0, 0, 0.5);
+  font-size: 15px;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .swipeCue {
@@ -404,6 +468,45 @@
   color: rgba(0, 0, 0, 0.18);
   flex-shrink: 0;
   padding-top: 10px;
+}
+
+/* ── Correct glow on card face ── */
+@keyframes glowCorrect {
+  0%   { box-shadow: 0 30px 70px rgba(0,0,0,0.65); }
+  40%  { box-shadow: 0 30px 70px rgba(0,0,0,0.65), 0 0 0 5px rgba(83,141,78,1), 0 0 60px rgba(83,141,78,0.5); }
+  100% { box-shadow: 0 30px 70px rgba(0,0,0,0.65); }
+}
+@keyframes glowWrong {
+  0%   { box-shadow: 0 30px 70px rgba(0,0,0,0.65); }
+  30%  { box-shadow: 0 30px 70px rgba(0,0,0,0.65), 0 0 0 5px rgba(204,51,51,1), 0 0 60px rgba(204,51,51,0.5); }
+  100% { box-shadow: 0 30px 70px rgba(0,0,0,0.65); }
+}
+.cardGlowCorrect { animation: glowCorrect 0.85s ease-out forwards; }
+.cardGlowWrong   { animation: glowWrong   0.55s ease-out forwards; }
+
+/* ── Persistent wrong-result state — subtle red tint stays while user reads ── */
+.cardFaceWrongResult {
+  background: #fff5f5 !important;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.65), 0 0 0 2px rgba(204,51,51,0.3), 0 0 24px rgba(204,51,51,0.08) !important;
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* ── Floating points origin — center of card ── */
+.floatOrigin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
+  z-index: 60;
+}
+
+/* ── Screen flash overlay (wrong answer) ── */
+.screenFlash {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  background: radial-gradient(ellipse at center, rgba(180,30,30,0.35) 0%, rgba(100,0,0,0.2) 60%, transparent 100%);
 }
 
 /* ── Floor ── */

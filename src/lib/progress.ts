@@ -8,6 +8,7 @@ const KEY = 'roshi_progress'
 export interface Progress {
   level: number                          // current active level (1–11)
   completed: Record<number, string[]>   // level → completed word list
+  retry?: Record<number, string[]>      // level → words still in retry pile
 }
 
 const DEFAULT: Progress = { level: 1, completed: {} }
@@ -50,8 +51,23 @@ export function nextWordInLevel(allWords: string[], level: number): string | nul
 
 const WORDS_PER_LEVEL = 100
 
-/** Levels 1 & 2 are always unlocked. Level N unlocks when level N-1 is 100% done. */
-export function isLevelUnlocked(level: number): boolean {
-  if (level <= 2) return true
-  return completedInLevel(level - 1).length >= WORDS_PER_LEVEL
+export function getRetryWords(level: number): string[] {
+  return getProgress().retry?.[level] ?? []
+}
+
+export function addRetryWord(word: string, level: number): void {
+  const p = getProgress()
+  const existing = p.retry?.[level] ?? []
+  if (existing.includes(word)) return
+  saveProgress({ ...p, retry: { ...(p.retry ?? {}), [level]: [...existing, word] } })
+}
+
+export function removeRetryWord(word: string, level: number): void {
+  const p = getProgress()
+  const existing = p.retry?.[level] ?? []
+  saveProgress({ ...p, retry: { ...(p.retry ?? {}), [level]: existing.filter(w => w !== word) } })
+}
+
+export function isLevelUnlocked(_level: number): boolean {
+  return true
 }

@@ -1,329 +1,333 @@
-.page {
+/* ── Poker table — home screen ── */
+
+.table {
+  min-height: 100dvh;
+  background: radial-gradient(circle at 50% 45%, #0f1c14 0%, #050a07 100%);
   display: flex;
   flex-direction: column;
-  gap: 28px;
-  padding-bottom: 100px;
+  overflow: hidden;
+  font-family: var(--font-ui), sans-serif;
 }
 
-/* ── Section ── */
-.section {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.sectionHeader {
+/* ── Header ── */
+/* ── Top-right nav icons ── */
+.topNav {
   display: flex;
   align-items: center;
-  gap: 8px;
-}
-
-.sectionTitle {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.sectionAction {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--accent);
+  gap: 4px;
   margin-left: auto;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.sectionBadge {
-  font-size: 10px;
-  font-weight: 700;
-  background: var(--accent);
-  color: #fff;
-  border-radius: var(--radius-sm);
-  padding: 2px 7px;
-}
-
-/* ── Your turn — horizontal avatar chips ── */
-.chipRow {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.chipRow::-webkit-scrollbar { display: none; }
-
-.chip {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 12px 16px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
   flex-shrink: 0;
-  position: relative;
-  -webkit-tap-highlight-color: transparent;
-  transition: background 0.15s;
 }
 
-.chip:active { background: var(--surface2); }
-
-.avatar {
+.navIcon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 40px;
   height: 40px;
+  color: rgba(255, 255, 255, 0.4);
+  border-radius: 10px;
+  transition: color 0.15s, background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.navIcon:hover { color: rgba(255, 255, 255, 0.85); background: rgba(255,255,255,0.06); }
+
+.navAvatar {
   border-radius: 50%;
-  background: var(--surface2);
+  flex-shrink: 0;
 }
 
-.chipName {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text);
-}
-
-/* pulsing dot — indicates action needed */
-.chipDot {
+.navBadge {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent);
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.5; transform: scale(0.8); }
-}
-
-/* ── Dare list ── */
-.dareList {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  background: var(--border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  border: 1px solid var(--border);
-}
-
-.dareRow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  background: var(--surface);
-}
-
-.dimmed { opacity: 0.55; }
-
-.avatarSm {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--surface2);
-  flex-shrink: 0;
-}
-
-.dareInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  flex: 1;
-  min-width: 0;
-}
-
-.dareWord {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: -0.01em;
-}
-
-.dareMeta {
-  font-size: 11px;
-  color: var(--muted);
-}
-
-/* ── Tags ── */
-.tag {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding: 3px 9px;
-  border-radius: 20px;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.tagMuted { background: var(--surface2); color: var(--muted); }
-.tagDone  {
-  background: color-mix(in srgb, var(--correct) 15%, var(--surface));
-  color: var(--correct);
-}
-
-/* ── Tappable dare row ── */
-.dareRowLink {
-  display: block;
-  -webkit-tap-highlight-color: transparent;
-}
-.dareRowLink:active .dareRow { background: var(--surface2); }
-
-/* ── Waiting pill ── */
-.waitingPill {
-  align-self: flex-start;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--muted);
-  padding: 2px 0;
-  letter-spacing: 0.01em;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* ── Empty state ── */
-.emptyState {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 40px 20px;
-  text-align: center;
-}
-.emptyText {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text);
-}
-.emptyHint {
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.emptyBtn {
-  margin-top: 4px;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--accent);
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* ── Skeleton ── */
-@keyframes shimmer {
-  0%   { opacity: 0.4; }
-  50%  { opacity: 0.9; }
-  100% { opacity: 0.4; }
-}
-.skeletonLabel {
-  height: 11px;
-  width: 80px;
-  border-radius: 6px;
-  background: var(--surface2);
-  animation: shimmer 1.4s ease-in-out infinite;
-}
-.skeletonRow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  background: var(--surface);
-}
-.skeletonAvatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--surface2);
-  flex-shrink: 0;
-  animation: shimmer 1.4s ease-in-out infinite;
-}
-.skeletonLines {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.skeletonLine {
-  height: 10px;
-  border-radius: 5px;
-  background: var(--surface2);
-  animation: shimmer 1.4s ease-in-out infinite;
-}
-
-/* ── Daily hero card ── */
-.dailyHero {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 16px 18px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
-  transition: background 0.15s;
-}
-.dailyHero:active { background: var(--surface2); }
-
-.dailyHeroDone {
-  opacity: 0.55;
-}
-
-.dailyHeroTop {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.dailyHeroLabel {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: -0.01em;
-}
-
-.dailyHeroPlay {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--accent);
-}
-
-.dailyHeroDoneTag {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--correct);
-}
-
-.dailyHeroStreak {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--gold);
-}
-
-.dailyHeroHint {
-  font-size: 13px;
-  color: var(--muted);
-}
-
-/* ── FAB ── */
-.fab {
-  position: fixed;
-  bottom: 28px;
-  right: 24px;
-  height: 48px;
-  padding: 0 20px;
-  border-radius: var(--radius-md);
-  background: var(--accent);
+  top: 4px;
+  right: 4px;
+  min-width: 14px;
+  height: 14px;
+  border-radius: 7px;
+  background: #b08d57;
   color: #fff;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 8px;
+  font-weight: 800;
   display: flex;
   align-items: center;
-  -webkit-tap-highlight-color: transparent;
-  transition: transform 0.15s, opacity 0.15s;
-  z-index: 100;
+  justify-content: center;
+  padding: 0 3px;
+  line-height: 1;
 }
 
-.fab:active { transform: scale(0.94); opacity: 0.9; }
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem 1.5rem 0;
+}
+
+.levelTag {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: clamp(28px, 8vw, 44px);
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+/* ── Three piles ── */
+.piles {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 4vw, 28px);
+  padding: 0 clamp(16px, 5vw, 40px) 136px;
+}
+
+/* Side pile */
+.pile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Center deck */
+.deckPile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.deckPile:active .cardDeck {
+  transform: scale(0.96);
+}
+
+/* ── Cards ── */
+.card {
+  border-radius: 12px;
+  position: relative;
+}
+
+/* Ghost — empty pile slot */
+.cardGhost {
+  width: clamp(100px, 18vw, 150px);
+  aspect-ratio: 5 / 7;
+  border: 1.5px dashed rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.02);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+}
+
+.ghostHint {
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Retry — face-up, red tint, tilted left */
+.cardRetry {
+  width: clamp(100px, 18vw, 150px);
+  aspect-ratio: 5 / 7;
+  background: #fff5f5;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
+  transform: rotate(-5deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow: hidden;
+}
+
+/* Mastered — face-up, white, tilted right */
+.cardMastered {
+  width: clamp(100px, 18vw, 150px);
+  aspect-ratio: 5 / 7;
+  background: #ffffff;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
+  transform: rotate(5deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow: hidden;
+}
+
+/* Center deck — face-down, dark card back with stack illusion */
+.cardDeck {
+  width: clamp(130px, 23vw, 200px);
+  aspect-ratio: 5 / 7;
+  background: linear-gradient(160deg, #1e3525 0%, #0f1f14 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    6px 6px 0 rgba(0, 0, 0, 0.5),
+    12px 12px 0 rgba(0, 0, 0, 0.3),
+    0 32px 72px rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s;
+}
+
+/* Word on face-up side card */
+.pileWord {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: clamp(14px, 3vw, 20px);
+  color: #0d2137;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* Deck interior */
+.deckInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.deckNum {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-weight: 900;
+  font-style: italic;
+  font-size: clamp(48px, 9vw, 72px);
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1;
+}
+
+.deckRemLabel {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* Pile meta */
+.pileMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.pileNum {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-weight: 900;
+  font-style: italic;
+  font-size: clamp(22px, 6vw, 30px);
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1;
+}
+
+.pileLabel {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.playHint {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ── Level strip ── */
+.levelStrip {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  gap: 8px;
+  padding: 12px 20px 32px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, transparent 100%);
+  overflow-x: auto;
+  scrollbar-width: none;
+  justify-content: center;
+}
+.levelStrip::-webkit-scrollbar { display: none; }
+
+.levelTile {
+  flex-shrink: 0;
+  width: 56px;
+  height: 72px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.levelTile:active:not(:disabled) { transform: scale(0.92); }
+
+.levelTileNum {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: 20px;
+  line-height: 1;
+  color: inherit;
+}
+
+.levelTileBar {
+  width: 36px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.levelTileBarFill {
+  height: 100%;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.45);
+  transition: width 0.3s ease;
+}
+
+.levelTileDone .levelTileBarFill {
+  background: #538D4E;
+}
+
+.levelTileActive .levelTileBarFill {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.levelTileActive {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+.levelTileDone {
+  color: #538D4E;
+  border-color: rgba(83, 141, 78, 0.35);
+  background: rgba(83, 141, 78, 0.06);
+}
+
+.levelTileLocked {
+  opacity: 0.45;
+  cursor: default;
+}

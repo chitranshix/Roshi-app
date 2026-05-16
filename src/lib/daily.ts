@@ -75,3 +75,35 @@ export function markDailyDone(): StreakData {
 export function hasDoneToday(): boolean {
   return getStreak().lastDate === todayStr()
 }
+
+// ── Activity history ─────────────────────────────────────────────────────────
+const ACTIVITY_KEY = 'roshi_activity'
+
+export function markActivityToday(): void {
+  if (typeof window === 'undefined') return
+  const today = todayStr()
+  try {
+    const raw   = localStorage.getItem(ACTIVITY_KEY)
+    const dates: string[] = raw ? JSON.parse(raw) : []
+    if (dates.includes(today)) return
+    dates.push(today)
+    // Trim to last 90 days
+    const cutoff = new Date(Date.now() - 90 * 86400000).toISOString().slice(0, 10)
+    localStorage.setItem(ACTIVITY_KEY, JSON.stringify(dates.filter(d => d >= cutoff)))
+  } catch { /* storage full */ }
+}
+
+/** Returns a boolean array of length `days`, oldest first. true = played that day. */
+export function getRecentActivity(days = 14): boolean[] {
+  if (typeof window === 'undefined') return Array(days).fill(false)
+  try {
+    const raw = localStorage.getItem(ACTIVITY_KEY)
+    const set = new Set<string>(raw ? JSON.parse(raw) : [])
+    return Array.from({ length: days }, (_, i) => {
+      const d = new Date(Date.now() - (days - 1 - i) * 86400000).toISOString().slice(0, 10)
+      return set.has(d)
+    })
+  } catch {
+    return Array(days).fill(false)
+  }
+}
