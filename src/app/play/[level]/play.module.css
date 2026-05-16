@@ -1,7 +1,7 @@
 /* ── Play session — white card on dark gradient (POC match) ── */
 
 .container {
-  min-height: 100dvh;
+  height: 100dvh;
   background: radial-gradient(circle, #152219 0%, #070d09 100%);
   display: flex;
   flex-direction: column;
