@@ -1,6 +1,6 @@
 .page {
   min-height: 100dvh;
-  background: radial-gradient(circle at 50% 45%, #0f1c14 0%, #050a07 100%);
+  background: radial-gradient(circle at 50% 45%, #1a2b1e 0%, #090f0a 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -46,7 +46,7 @@
   max-width: 480px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 8px;
 }
 
 .row {

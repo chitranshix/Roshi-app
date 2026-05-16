@@ -2,23 +2,39 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { getStreak, getRecentActivity } from '@/lib/daily'
+import Link from 'next/link'
+import { getStreak, getRecentActivity, getTodayPoints } from '@/lib/daily'
+import { completedInLevel, isLevelUnlocked } from '@/lib/progress'
 import styles from './streak.module.css'
 
 const DAYS = 70 // 10 weeks
+const LEVELS = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+const WORDS_PER_LEVEL = 100
+
+function getCurrentLevel(): number {
+  for (const lv of LEVELS) {
+    if (isLevelUnlocked(lv) && completedInLevel(lv).length < WORDS_PER_LEVEL) return lv
+  }
+  return 9
+}
 
 export default function StreakPage() {
   const router = useRouter()
-  const [streak, setStreak]     = useState(0)
-  const [activity, setActivity] = useState<boolean[]>([])
+  const [streak, setStreak]         = useState(0)
+  const [activity, setActivity]     = useState<boolean[]>([])
   const [playedToday, setPlayedToday] = useState(false)
+  const [todayPts, setTodayPts]     = useState(0)
+  const [currentLevel, setCurrentLevel] = useState(1)
 
   useEffect(() => {
     const s = getStreak()
     const a = getRecentActivity(DAYS)
-    setStreak(s.count)
+    const played = a[a.length - 1]
+    setStreak(played ? Math.max(s.count, 1) : s.count)
     setActivity(a)
-    setPlayedToday(a[a.length - 1])
+    setPlayedToday(played)
+    setTodayPts(getTodayPoints())
+    setCurrentLevel(getCurrentLevel())
   }, [])
 
   // Group into weeks (columns of 7)
@@ -39,11 +55,18 @@ export default function StreakPage() {
       <div className={styles.hero}>
         <div className={styles.streakNum}>{streak}</div>
         <div className={styles.streakLabel}>day streak</div>
-        {playedToday
-          ? <div className={styles.todayDone}>You played today ✓</div>
-          : <div className={styles.todayPending}>Play today to keep your streak</div>
-        }
+        {playedToday ? (
+          <div className={styles.todayDone}>
+            {todayPts > 0 ? `+${todayPts} pts scored today ✓` : 'You played today ✓'}
+          </div>
+        ) : (
+          <div className={styles.todayPending}>Play today to keep your streak</div>
+        )}
       </div>
+
+      <Link href={`/play/${currentLevel}`} className={styles.resumeBtn}>
+        {playedToday ? 'Keep going →' : 'Play today →'}
+      </Link>
 
       <div className={styles.grid}>
         {weeks.map((week, wi) => (

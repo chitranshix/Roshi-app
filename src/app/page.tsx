@@ -99,7 +99,7 @@ export default function Home() {
             {streak > 0 && <span className={styles.navBadge}>{streak}</span>}
           </Link>
           <Link href="/leaderboard" className={styles.navIcon} aria-label="Leaderboard">
-            <svg width="26" height="32" viewBox="0 0 24 24" fill="none">
+            <svg width="26" height="38" viewBox="0 0 24 24" fill="none">
               <path d="M8 21H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h3v8z" stroke="rgba(255,255,255,0.65)" strokeWidth="1.6" fill="none"/>
               <path d="M15 21H9V8a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v13z" stroke="rgba(255,255,255,0.65)" strokeWidth="1.6" fill="none"/>
               <path d="M21 21h-6v-8a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v8z" stroke="rgba(255,255,255,0.65)" strokeWidth="1.6" fill="none"/>

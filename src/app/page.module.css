@@ -2,7 +2,7 @@
 
 .table {
   min-height: 100dvh;
-  background: radial-gradient(circle at 50% 45%, #0f1c14 0%, #050a07 100%);
+  background: radial-gradient(circle at 50% 45%, #1a2b1e 0%, #090f0a 100%);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -262,6 +262,7 @@
   padding: 12px 20px 32px;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, transparent 100%);
   overflow-x: auto;
+  justify-content: safe center;
   scrollbar-width: none;
 }
 .levelStrip::-webkit-scrollbar { display: none; }

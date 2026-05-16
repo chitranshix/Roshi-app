@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { getProgress, saveProgress, completedInLevel, markWordComplete, addRetryWord, removeRetryWord } from '@/lib/progress'
-import { markDailyDone, markActivityToday } from '@/lib/daily'
+import { markDailyDone, markActivityToday, recordDailyPoints } from '@/lib/daily'
 import { createClient } from '@/lib/supabase'
 import type { GREWord } from '@/lib/gre-words'
 import WordCard from './WordCard'
@@ -94,6 +94,7 @@ export default function PlayClient({ level, words }: Props) {
     removeRetryWord(current.word, level)
     markDailyDone()
     markActivityToday()
+    recordDailyPoints(pts)
     setTotalPts(n => n + pts)
     setMasteredCount(n => n + 1)
     void recordPoints(current, pts)

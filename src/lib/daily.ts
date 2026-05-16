@@ -76,6 +76,32 @@ export function hasDoneToday(): boolean {
   return getStreak().lastDate === todayStr()
 }
 
+// ── Daily points ─────────────────────────────────────────────────────────────
+const DAILY_PTS_KEY = 'roshi_daily_pts'
+
+export function recordDailyPoints(pts: number): void {
+  if (typeof window === 'undefined') return
+  const today = todayStr()
+  try {
+    const raw = localStorage.getItem(DAILY_PTS_KEY)
+    const data: { date: string; pts: number } = raw ? JSON.parse(raw) : { date: '', pts: 0 }
+    localStorage.setItem(DAILY_PTS_KEY, JSON.stringify({
+      date: today,
+      pts: data.date === today ? data.pts + pts : pts,
+    }))
+  } catch { /* storage full */ }
+}
+
+export function getTodayPoints(): number {
+  if (typeof window === 'undefined') return 0
+  try {
+    const raw = localStorage.getItem(DAILY_PTS_KEY)
+    if (!raw) return 0
+    const data: { date: string; pts: number } = JSON.parse(raw)
+    return data.date === todayStr() ? data.pts : 0
+  } catch { return 0 }
+}
+
 // ── Activity history ─────────────────────────────────────────────────────────
 const ACTIVITY_KEY = 'roshi_activity'
 
