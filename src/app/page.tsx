@@ -33,7 +33,9 @@ export default function Home() {
 
   useEffect(() => {
     function load() {
-      const lv = getCurrentLevel()
+      const defaultLv = getCurrentLevel()
+      const stored = parseInt(localStorage.getItem('roshi_last_level') ?? '', 10)
+      const lv = LEVELS.includes(stored) && isLevelUnlocked(stored) ? stored : defaultLv
       setLevel(lv)
       setMastered(completedInLevel(lv))
       setRetry(getRetryWords(lv))

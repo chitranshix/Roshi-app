@@ -84,6 +84,11 @@ export default function PlayClient({ level, words }: Props) {
     localStorage.setItem(`roshi_pts_${level}`, String(totalPts))
   }, [totalPts, level])
 
+  // Remember which level the user was on so home screen restores to it
+  useEffect(() => {
+    localStorage.setItem('roshi_last_level', String(level))
+  }, [level])
+
   // Fetch auth + sync server-completed words in the background — non-blocking
   useEffect(() => {
     const supabase = createClient()
