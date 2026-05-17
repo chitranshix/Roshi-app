@@ -4,7 +4,7 @@
   background: radial-gradient(circle at 50% 45%, #152219 0%, #070d09 100%);
   display: flex;
   flex-direction: column;
-  padding: 5rem 0 0;
+  padding-top: 3.5rem;
   font-family: var(--font-ui), sans-serif;
 }
 
@@ -23,15 +23,31 @@
 }
 .back:hover { color: rgba(255, 255, 255, 0.85); }
 
-.heading {
+/* ── Header ── */
+.header {
+  flex-shrink: 0;
+  padding: 0 1.5rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.title {
   font-family: var(--font-fraunces), Georgia, serif;
   font-style: italic;
   font-weight: 900;
-  font-size: clamp(28px, 8vw, 40px);
+  font-size: clamp(26px, 7vw, 36px);
   color: #ffffff;
   letter-spacing: -0.02em;
-  padding: 0 1.5rem 1rem;
-  flex-shrink: 0;
+  line-height: 1;
+}
+
+.count {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
 }
 
 /* ── Empty state ── */
@@ -41,7 +57,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
   padding: 0 2.5rem;
   text-align: center;
 }
@@ -51,62 +67,94 @@
   font-style: italic;
   font-weight: 900;
   font-size: 22px;
-  color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.22);
 }
 
 .emptyHint {
   font-size: 13px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.18);
   line-height: 1.6;
-  max-width: 260px;
+  max-width: 240px;
 }
 
-/* ── List ── */
-.list {
+/* ── Card grid ── */
+.grid {
   flex: 1;
   overflow-y: auto;
-  padding: 0 1.5rem calc(28px + env(safe-area-inset-bottom, 0px));
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  padding: 8px 1.25rem calc(32px + env(safe-area-inset-bottom, 0px));
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  align-content: start;
   scrollbar-width: none;
 }
-.list::-webkit-scrollbar { display: none; }
+.grid::-webkit-scrollbar { display: none; }
 
-.row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 12px;
-}
-
-.rowText {
-  flex: 1;
-  min-width: 0;
+/* ── Individual word card ── */
+.card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 12px 12px 14px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 6px;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-.word {
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: -4px -4px 0;
+}
+
+.speakBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.18);
+  border-radius: 50%;
+  transition: color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+}
+.speakBtn:hover { color: rgba(0, 0, 0, 0.45); }
+
+.cardWord {
   font-family: var(--font-fraunces), Georgia, serif;
   font-style: italic;
   font-weight: 900;
-  font-size: 18px;
-  color: #ffffff;
+  font-size: clamp(18px, 4.5vw, 22px);
+  color: #0d2137;
+  line-height: 1.1;
   letter-spacing: -0.01em;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
-.def {
-  font-size: 12px;
+.cardDivider {
+  width: 22px;
+  height: 2px;
+  background: #eeeeee;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+.cardDef {
+  font-size: 11px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(0, 0, 0, 0.45);
   line-height: 1.5;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
