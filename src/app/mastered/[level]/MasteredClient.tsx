@@ -2,10 +2,26 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import { motion, AnimatePresence } from 'framer-motion'
 import { completedInLevel } from '@/lib/progress'
 import BookmarkButton from '@/components/ui/BookmarkButton'
 import type { GREWord } from '@/lib/gre-words'
 import styles from './mastered.module.css'
+
+const SWIPE_THRESHOLD = 60
+
+const variants = {
+  enter: (dir: number) => ({ x: dir >= 0 ? '55%' : '-55%', opacity: 0 }),
+  center: { x: 0, opacity: 1 },
+  exit:  (dir: number) => ({ x: dir >= 0 ? '-55%' : '55%', opacity: 0 }),
+}
+
+const transition = {
+  type: 'spring' as const,
+  stiffness: 340,
+  damping: 30,
+  mass: 0.85,
+}
 
 interface Props { level: number; words: GREWord[] }
 
@@ -13,8 +29,7 @@ export default function MasteredClient({ level, words }: Props) {
   const router = useRouter()
   const [mastered, setMastered] = useState<GREWord[]>([])
   const [currentIdx, setCurrentIdx] = useState(0)
-  const carouselRef   = useRef<HTMLDivElement>(null)
-  const stripRef      = useRef<HTMLDivElement>(null)
+  const [direction, setDirection]   = useState(1)
   const activeChipRef = useRef<HTMLButtonElement | null>(null)
 
   useEffect(() => {
@@ -26,20 +41,13 @@ export default function MasteredClient({ level, words }: Props) {
     activeChipRef.current?.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' })
   }, [currentIdx])
 
-  const handleScroll = useCallback(() => {
-    const el = carouselRef.current
-    if (!el) return
-    const idx = Math.round(el.scrollLeft / el.clientWidth)
+  const goTo = useCallback((idx: number) => {
+    setDirection(idx >= currentIdx ? 1 : -1)
     setCurrentIdx(idx)
-  }, [])
-
-  const jumpTo = useCallback((idx: number) => {
-    const el = carouselRef.current
-    if (!el) return
-    el.scrollTo({ left: idx * el.clientWidth, behavior: 'smooth' })
-  }, [])
+  }, [currentIdx])
 
   const len = mastered.length
+  const w = mastered[currentIdx]
 
   return (
     <div className={styles.page}>
@@ -61,53 +69,69 @@ export default function MasteredClient({ level, words }: Props) {
         <div className={styles.empty}>Start playing to build your collection.</div>
       ) : (
         <>
-          <div className={styles.carousel} ref={carouselRef} onScroll={handleScroll}>
-            {mastered.map((w, i) => {
-              const correctSentence = w.sentences.find(s => s.correct)?.sentence ?? ''
-              const wlen = w.word.length
-              const wordSize = wlen <= 8 ? undefined : wlen <= 11 ? '1.8rem' : wlen <= 14 ? '1.5rem' : '1.2rem'
-              return (
-                <div key={w.word} className={styles.slide}>
-                  <div className={styles.card}>
+          {/* Card stage — clips entering/exiting cards */}
+          <div className={styles.cardStage}>
+            <AnimatePresence custom={direction} mode="popLayout">
+              <motion.div
+                key={currentIdx}
+                custom={direction}
+                variants={variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={transition}
+                className={styles.slide}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.12}
+                onDragEnd={(_, info) => {
+                  if (info.offset.x < -SWIPE_THRESHOLD && currentIdx < len - 1) goTo(currentIdx + 1)
+                  else if (info.offset.x > SWIPE_THRESHOLD && currentIdx > 0)   goTo(currentIdx - 1)
+                }}
+              >
+                {w && (() => {
+                  const correctSentence = w.sentences.find(s => s.correct)?.sentence ?? ''
+                  const wlen = w.word.length
+                  const wordSize = wlen <= 8 ? undefined : wlen <= 11 ? '1.8rem' : wlen <= 14 ? '1.5rem' : '1.2rem'
+                  return (
+                    <div className={styles.card}>
+                      <div className={styles.cardTop}>
+                        <BookmarkButton word={w.word} definition={w.definition} size={18} />
+                        <span className={styles.cardMeta}>{currentIdx + 1} / {len}</span>
+                      </div>
 
-                    {/* Top row: bookmark left, counter right */}
-                    <div className={styles.cardTop}>
-                      <BookmarkButton word={w.word} definition={w.definition} size={18} />
-                      <span className={styles.cardMeta}>{i + 1} / {len}</span>
-                    </div>
-
-                    <div className={styles.cardContent}>
-                      <div className={styles.cardBody}>
-                        <div className={styles.cardWord} style={wordSize ? { fontSize: wordSize } : undefined}>
-                          {w.word}
+                      <div className={styles.cardContent}>
+                        <div className={styles.cardBody}>
+                          <div className={styles.cardWord} style={wordSize ? { fontSize: wordSize } : undefined}>
+                            {w.word}
+                          </div>
+                          <div className={styles.cardDivider} />
+                          <div className={styles.cardDef}>{w.definition}</div>
                         </div>
-                        <div className={styles.cardDivider} />
-                        <div className={styles.cardDef}>{w.definition}</div>
-                      </div>
 
-                      <div className={styles.cardSentence}>
-                        <div className={styles.sentenceLabel}>USED IN A SENTENCE</div>
-                        <p className={styles.sentenceText}>&ldquo;{correctSentence}&rdquo;</p>
+                        <div className={styles.cardSentence}>
+                          <div className={styles.sentenceLabel}>USED IN A SENTENCE</div>
+                          <p className={styles.sentenceText}>&ldquo;{correctSentence}&rdquo;</p>
+                        </div>
                       </div>
                     </div>
-
-                  </div>
-                </div>
-              )
-            })}
+                  )
+                })()}
+              </motion.div>
+            </AnimatePresence>
           </div>
 
           {/* Word strip */}
-          <div className={styles.wordStrip} ref={stripRef}>
-            {mastered.map((w, i) => (
+          <div className={styles.wordStrip}>
+            {mastered.map((word, i) => (
               <button
-                key={w.word}
+                key={word.word}
                 ref={i === currentIdx ? activeChipRef : null}
                 className={`${styles.wordChip} ${i === currentIdx ? styles.wordChipActive : ''}`}
-                onClick={() => jumpTo(i)}
+                onClick={() => goTo(i)}
               >
                 <span className={styles.chipNum}>{i + 1}</span>
-                {w.word}
+                {word.word}
               </button>
             ))}
           </div>
