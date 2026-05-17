@@ -111,13 +111,22 @@
   margin-left: -6px; /* nudge bookmark flush with card edge */
 }
 
-.cardMeta {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+.speakBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: none;
+  cursor: pointer;
   color: rgba(0, 0, 0, 0.2);
-  flex-shrink: 0;
+  border-radius: 50%;
+  transition: color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  margin-right: -6px;
 }
+.speakBtn:hover { color: rgba(0, 0, 0, 0.45); }
 
 /* Groups word+def+sentence and centres the whole block vertically */
 .cardContent {

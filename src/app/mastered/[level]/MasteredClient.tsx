@@ -1,5 +1,7 @@
 'use client'
 
+'use client'
+
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -7,6 +9,24 @@ import { completedInLevel } from '@/lib/progress'
 import BookmarkButton from '@/components/ui/BookmarkButton'
 import type { GREWord } from '@/lib/gre-words'
 import styles from './mastered.module.css'
+
+function speak(word: string) {
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return
+  const ss = window.speechSynthesis
+  if (ss.paused) ss.resume()
+  ss.cancel()
+  const utt = new SpeechSynthesisUtterance(word)
+  utt.rate = 0.82
+  utt.lang = 'en-US'
+  const go = () => {
+    const voices = ss.getVoices()
+    const v = voices.find(v => v.lang.startsWith('en-US')) ?? voices.find(v => v.lang.startsWith('en'))
+    if (v) utt.voice = v
+    ss.speak(utt)
+  }
+  if (ss.getVoices().length > 0) go()
+  else ss.addEventListener('voiceschanged', go, { once: true })
+}
 
 const SWIPE_THRESHOLD = 60
 
@@ -97,7 +117,16 @@ export default function MasteredClient({ level, words }: Props) {
                     <div className={styles.card}>
                       <div className={styles.cardTop}>
                         <BookmarkButton word={w.word} definition={w.definition} size={18} />
-                        <span className={styles.cardMeta}>{currentIdx + 1} / {len}</span>
+                        <button
+                          className={styles.speakBtn}
+                          onClick={e => { e.stopPropagation(); speak(w.word) }}
+                          aria-label="Pronounce"
+                        >
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                            <path d="M11 5L6 9H2v6h4l5 4V5Z" fill="currentColor"/>
+                            <path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                          </svg>
+                        </button>
                       </div>
 
                       <div className={styles.cardContent}>

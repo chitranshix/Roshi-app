@@ -229,7 +229,6 @@ export default function WordCard({ word, level, muted, onMastered, onRetry, onMc
   const canDrag   = face === 'result' && !swiping && mcqCorrect
   const isFlipped = face !== 'word'
   const correctSentence = sentences.find(s => s.correct)?.sentence
-  const resultMeta = !mcqCorrect ? 'WRONG' : defCorrect === true ? 'NAILED IT' : 'CLOSE ENOUGH'
   const difficulty = DIFFICULTY[level] ?? 'MEDIUM'
 
   const backFaceClass = [
@@ -397,7 +396,7 @@ export default function WordCard({ word, level, muted, onMastered, onRetry, onMc
 
                 {face === 'result' && <>
                   <div className={styles.faceTopRow}>
-                    <span className={styles.metaLabel}>{resultMeta}</span>
+                    <div />
                     <BookmarkButton word={word.word} definition={word.definition} size={18} />
                   </div>
                   <div className={styles.resultMain}>
