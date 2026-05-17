@@ -141,7 +141,9 @@
 .perspective {
   perspective: 2000px;
   width: min(360px, 86vw);
-  aspect-ratio: 5 / 7;
+  /* Cap height so card never overflows on small screens.
+     280px = 60px top padding + 160px bottom padding + ~60px for HUD/floor */
+  height: min(504px, calc(100dvh - 280px));
 }
 
 /* ── Flip container — 3D preserve ── */
@@ -301,8 +303,12 @@
   flex-direction: column;
   gap: 6px;
   flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
   justify-content: center;
 }
+.options::-webkit-scrollbar { display: none; }
 
 .option {
   padding: clamp(8px, 2vw, 10px) 12px;
