@@ -4,7 +4,7 @@
  * localStorage as before — this just keeps it up to date across devices.
  */
 import { createClient } from '@/lib/supabase'
-import { saveProgress } from '@/lib/progress'
+import { getProgress, saveProgress } from '@/lib/progress'
 
 export async function syncAll(userId: string): Promise<void> {
   if (typeof window === 'undefined') return
@@ -36,13 +36,20 @@ export async function syncAll(userId: string): Promise<void> {
 
   // ── Level progress ──────────────────────────────────────────────
   if (levelEvents?.length) {
-    const completed: Record<number, string[]> = {}
+    const serverCompleted: Record<number, string[]> = {}
     for (const e of levelEvents) {
       if (!e.word || !e.level) continue
-      if (!completed[e.level]) completed[e.level] = []
-      if (!completed[e.level].includes(e.word)) completed[e.level].push(e.word)
+      if (!serverCompleted[e.level]) serverCompleted[e.level] = []
+      if (!serverCompleted[e.level].includes(e.word)) serverCompleted[e.level].push(e.word)
     }
-    saveProgress({ level: 1, completed })
+    // Merge server into local — never wipe retry words or the level field
+    const existing = getProgress()
+    const merged: Record<number, string[]> = { ...existing.completed }
+    for (const [lvStr, serverWords] of Object.entries(serverCompleted)) {
+      const lv = Number(lvStr)
+      merged[lv] = [...new Set([...(merged[lv] ?? []), ...serverWords])]
+    }
+    saveProgress({ ...existing, completed: merged })
   }
 
   // ── Streak ──────────────────────────────────────────────────────

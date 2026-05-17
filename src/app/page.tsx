@@ -178,7 +178,7 @@ export default function Home() {
           </div>
           <div className={styles.pileMeta}>
             <span className={styles.playHint}>
-              {mastered.length === 0 ? 'Begin →' : 'Continue →'}
+              {mastered.length === 0 ? 'Begin' : 'Continue'}
             </span>
           </div>
         </div>
