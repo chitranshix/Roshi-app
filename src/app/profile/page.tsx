@@ -5,13 +5,17 @@ import { useRouter } from 'next/navigation'
 import Avatar from '@/components/ui/Avatar'
 import { createClient } from '@/lib/supabase'
 import { getStreak } from '@/lib/daily'
+import { getProgress } from '@/lib/progress'
 import styles from './profile.module.css'
+
+const LEVELS = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 export default function ProfilePage() {
   const router = useRouter()
   const [name, setName]               = useState('')
   const [saved, setSaved]             = useState(false)
   const [streak, setStreak]           = useState(0)
+  const [wordsTotal, setWordsTotal]   = useState(0)
   const [points, setPoints]           = useState<number | null>(null)
   const [newPassword, setNewPassword] = useState('')
   const [pwSaved, setPwSaved]         = useState(false)
@@ -20,6 +24,8 @@ export default function ProfilePage() {
   useEffect(() => {
     setName(localStorage.getItem('roshi_name') ?? '')
     setStreak(getStreak().count)
+    const p = getProgress()
+    setWordsTotal(LEVELS.reduce((sum, lv) => sum + (p.completed[lv]?.length ?? 0), 0))
 
     const supabase = createClient()
     supabase.auth.getUser().then(async ({ data: { user } }) => {
@@ -74,9 +80,20 @@ export default function ProfilePage() {
       <div className={styles.avatarRow}>
         <Avatar name={name} size={80} />
         <div className={styles.displayName}>{name || '—'}</div>
-        <div className={styles.statRow}>
-          {streak > 0 && <span className={styles.stat}>{streak} day streak</span>}
-          {points !== null && <span className={styles.stat}>{points} pts</span>}
+      </div>
+
+      <div className={styles.statsGrid}>
+        <div className={styles.statCard}>
+          <div className={styles.statNum}>{wordsTotal}</div>
+          <div className={styles.statLabel}>Mastered</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statNum}>{streak}</div>
+          <div className={styles.statLabel}>Day streak</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statNum}>{points ?? '—'}</div>
+          <div className={styles.statLabel}>Points</div>
         </div>
       </div>
 

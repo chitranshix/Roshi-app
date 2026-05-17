@@ -21,21 +21,21 @@ const SLIDES: Slide[] = [
     lines: [
       "Hii, I'm Roshi.",
       "I know a great many words. You probably don't. But I suppose I can help with that.",
+      "Let's fix that — one word at a time.",
     ],
   },
   {
     expression: 'idle',
     lines: [
       "Here's the game —",
-      "You dare your friends with a word you know. They dare you back.",
-      "No friends? You can play with me.",
+      "Each level has 100 words. Flip a card. I'll show you 4 sentences — one uses the word correctly. (The others exist purely to humble you.)",
     ],
   },
   {
     expression: 'happy',
     lines: [
-      "Each dare comes with a word and 4 sentences. 1 of the sentences is correct. (The others exist purely to embarrass you...)",
-      "Get the sentence right and you get to define the word. Get that right too and you get points. Fail either one and well... you try again.",
+      "Pick the right sentence and I'll ask you to define the word in your own words.",
+      "Nail the definition: 5 points. Close enough: 3 points. Wrong sentence: back to the retry pile you go.",
     ],
   },
   {

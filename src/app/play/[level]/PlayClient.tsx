@@ -10,6 +10,42 @@ import type { GREWord } from '@/lib/gre-words'
 import WordCard from './WordCard'
 import styles from './play.module.css'
 
+function CompleteScreen({ level, retryOnly, masteredCount, totalPts }: {
+  level: number; retryOnly: boolean; masteredCount: number; totalPts: number
+}) {
+  const router = useRouter()
+  const delay = retryOnly ? 2000 : 3000
+
+  useEffect(() => {
+    const t = setTimeout(() => router.push('/'), delay)
+    return () => clearTimeout(t)
+  }, [router, delay])
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.completeScreen}>
+        {masteredCount > 0 ? (
+          <>
+            <div className={styles.completeTitle}>
+              {retryOnly ? 'Retry session done.' : `Level ${level} complete.`}
+            </div>
+            <div className={styles.completeSub}>
+              {masteredCount} mastered · {totalPts} pts
+            </div>
+          </>
+        ) : (
+          <div className={styles.completeSub}>
+            {retryOnly
+              ? 'No retry words left — great work!'
+              : `You've already mastered all words in Level ${level}.`}
+          </div>
+        )}
+        <Link href="/" className={styles.homeLink}>← Home</Link>
+      </div>
+    </div>
+  )
+}
+
 interface Props {
   level: number
   words: GREWord[]
@@ -127,31 +163,9 @@ export default function PlayClient({ level, words }: Props) {
     setCardKey(k => k + 1)
   }, [deck, level, recordPoints])
 
-  // Session complete
+  // Session complete — auto-redirect home
   if (deck.length === 0) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.completeScreen}>
-          {masteredCount > 0 ? (
-            <>
-              <div className={styles.completeTitle}>
-                {retryOnly ? 'Retry session done.' : `Mission ${level} complete.`}
-              </div>
-              <div className={styles.completeSub}>
-                {masteredCount} mastered · {totalPts} pts
-              </div>
-            </>
-          ) : (
-            <div className={styles.completeSub}>
-              {retryOnly
-                ? 'No retry words left — great work!'
-                : `You've already mastered all words in Mission ${level}.`}
-            </div>
-          )}
-          <Link href="/" className={styles.homeLink}>← Home</Link>
-        </div>
-      </div>
-    )
+    return <CompleteScreen level={level} retryOnly={retryOnly} masteredCount={masteredCount} totalPts={totalPts} />
   }
 
   const current = deck[0]
