@@ -212,13 +212,6 @@
 .metaPtsAmber { color: #b08d57 !important; }
 .metaPtsRed   { color: #CC3333 !important; }
 
-.metaRight {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-right: -6px; /* nudge bookmark flush with card edge */
-}
-
 /* ── Word display (front face) ── */
 .wordArea {
   flex: 1;

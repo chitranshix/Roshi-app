@@ -398,15 +398,7 @@ export default function WordCard({ word, level, muted, onMastered, onRetry, onMc
                 {face === 'result' && <>
                   <div className={styles.faceTopRow}>
                     <span className={styles.metaLabel}>{resultMeta}</span>
-                    <div className={styles.metaRight}>
-                      <span className={[
-                        styles.metaPtsGreen,
-                        !mcqCorrect ? styles.metaPtsRed : defCorrect === false ? styles.metaPtsAmber : '',
-                      ].filter(Boolean).join(' ')}>
-                        {pts > 0 ? `+${pts}` : '0'}
-                      </span>
-                      <BookmarkButton word={word.word} definition={word.definition} size={18} />
-                    </div>
+                    <BookmarkButton word={word.word} definition={word.definition} size={18} />
                   </div>
                   <div className={styles.resultMain}>
                     <div className={styles.resultIllustration}>
