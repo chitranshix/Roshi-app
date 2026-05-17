@@ -3,8 +3,33 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { completedInLevel } from '@/lib/progress'
+import { isStarred, toggleStar } from '@/lib/starred'
 import type { GREWord } from '@/lib/gre-words'
 import styles from './mastered.module.css'
+
+function BookmarkButton({ word, definition }: { word: string; definition: string }) {
+  const [saved, setSaved] = useState(false)
+  useEffect(() => { setSaved(isStarred(word)) }, [word])
+
+  const handle = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    const now = await toggleStar(word, definition)
+    setSaved(now)
+    if (navigator.vibrate) navigator.vibrate(30)
+  }
+
+  return (
+    <button
+      className={`${styles.bookmarkBtn} ${saved ? styles.bookmarkBtnActive : ''}`}
+      onClick={handle}
+      aria-label={saved ? 'Remove bookmark' : 'Bookmark word'}
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill={saved ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+      </svg>
+    </button>
+  )
+}
 
 interface Props { level: number; words: GREWord[] }
 
@@ -85,6 +110,10 @@ export default function MasteredClient({ level, words }: Props) {
                       <p className={styles.sentenceText}>&ldquo;{correctSentence}&rdquo;</p>
                     </div>
                     </div>
+
+                  <div className={styles.cardActions}>
+                    <BookmarkButton word={w.word} definition={w.definition} />
+                  </div>
                   </div>
                 </div>
               )
