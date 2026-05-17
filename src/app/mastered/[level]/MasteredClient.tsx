@@ -100,6 +100,7 @@ export default function MasteredClient({ level, words }: Props) {
                 className={`${styles.wordChip} ${i === currentIdx ? styles.wordChipActive : ''}`}
                 onClick={() => jumpTo(i)}
               >
+                <span className={styles.chipNum}>{i + 1}</span>
                 {w.word}
               </button>
             ))}
