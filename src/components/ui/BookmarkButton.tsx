@@ -8,9 +8,10 @@ interface Props {
   word: string
   definition: string
   size?: number
+  onToggle?: () => void
 }
 
-export default function BookmarkButton({ word, definition, size = 20 }: Props) {
+export default function BookmarkButton({ word, definition, size = 20, onToggle }: Props) {
   const [saved, setSaved] = useState(false)
 
   useEffect(() => { setSaved(isStarred(word)) }, [word])
@@ -20,6 +21,7 @@ export default function BookmarkButton({ word, definition, size = 20 }: Props) {
     const now = await toggleStar(word, definition)
     setSaved(now)
     if (navigator.vibrate) navigator.vibrate(30)
+    onToggle?.()
   }
 
   return (

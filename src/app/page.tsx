@@ -137,6 +137,9 @@ export default function Home() {
                 <Link href="/profile" className={styles.profileMenuItem} onClick={() => setMenuOpen(false)}>
                   Profile
                 </Link>
+                <Link href="/bookmarks" className={styles.profileMenuItem} onClick={() => setMenuOpen(false)}>
+                  Bookmarks
+                </Link>
                 <Link href="/leaderboard" className={styles.profileMenuItem} onClick={() => setMenuOpen(false)}>
                   Leaderboard
                 </Link>
