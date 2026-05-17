@@ -3,33 +3,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { completedInLevel } from '@/lib/progress'
-import { isStarred, toggleStar } from '@/lib/starred'
+import BookmarkButton from '@/components/ui/BookmarkButton'
 import type { GREWord } from '@/lib/gre-words'
 import styles from './mastered.module.css'
-
-function BookmarkButton({ word, definition }: { word: string; definition: string }) {
-  const [saved, setSaved] = useState(false)
-  useEffect(() => { setSaved(isStarred(word)) }, [word])
-
-  const handle = async (e: React.MouseEvent) => {
-    e.stopPropagation()
-    const now = await toggleStar(word, definition)
-    setSaved(now)
-    if (navigator.vibrate) navigator.vibrate(30)
-  }
-
-  return (
-    <button
-      className={`${styles.bookmarkBtn} ${saved ? styles.bookmarkBtnActive : ''}`}
-      onClick={handle}
-      aria-label={saved ? 'Remove bookmark' : 'Bookmark word'}
-    >
-      <svg width="20" height="20" viewBox="0 0 24 24" fill={saved ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
-      </svg>
-    </button>
-  )
-}
 
 interface Props { level: number; words: GREWord[] }
 
@@ -37,8 +13,8 @@ export default function MasteredClient({ level, words }: Props) {
   const router = useRouter()
   const [mastered, setMastered] = useState<GREWord[]>([])
   const [currentIdx, setCurrentIdx] = useState(0)
-  const carouselRef  = useRef<HTMLDivElement>(null)
-  const stripRef     = useRef<HTMLDivElement>(null)
+  const carouselRef   = useRef<HTMLDivElement>(null)
+  const stripRef      = useRef<HTMLDivElement>(null)
   const activeChipRef = useRef<HTMLButtonElement | null>(null)
 
   useEffect(() => {
@@ -46,7 +22,6 @@ export default function MasteredClient({ level, words }: Props) {
     setMastered(words.filter(w => completed.includes(w.word)))
   }, [level, words])
 
-  // Keep active chip centred in the strip
   useEffect(() => {
     activeChipRef.current?.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' })
   }, [currentIdx])
@@ -94,7 +69,12 @@ export default function MasteredClient({ level, words }: Props) {
               return (
                 <div key={w.word} className={styles.slide}>
                   <div className={styles.card}>
-                    <div className={styles.cardMeta}>{i + 1} / {len}</div>
+
+                    {/* Top row: bookmark left, counter right */}
+                    <div className={styles.cardTop}>
+                      <BookmarkButton word={w.word} definition={w.definition} size={18} />
+                      <span className={styles.cardMeta}>{i + 1} / {len}</span>
+                    </div>
 
                     <div className={styles.cardContent}>
                       <div className={styles.cardBody}>
@@ -105,15 +85,12 @@ export default function MasteredClient({ level, words }: Props) {
                         <div className={styles.cardDef}>{w.definition}</div>
                       </div>
 
-                    <div className={styles.cardSentence}>
-                      <div className={styles.sentenceLabel}>USED IN A SENTENCE</div>
-                      <p className={styles.sentenceText}>&ldquo;{correctSentence}&rdquo;</p>
-                    </div>
+                      <div className={styles.cardSentence}>
+                        <div className={styles.sentenceLabel}>USED IN A SENTENCE</div>
+                        <p className={styles.sentenceText}>&ldquo;{correctSentence}&rdquo;</p>
+                      </div>
                     </div>
 
-                  <div className={styles.cardActions}>
-                    <BookmarkButton word={w.word} definition={w.definition} />
-                  </div>
                   </div>
                 </div>
               )

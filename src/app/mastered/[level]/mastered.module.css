@@ -104,14 +104,22 @@
   -webkit-user-select: none;
 }
 
+/* Top row: bookmark left, X/Y counter right */
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  margin-bottom: 2px;
+  margin-left: -6px; /* nudge bookmark flush with card edge */
+}
+
 .cardMeta {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.08em;
   color: rgba(0, 0, 0, 0.2);
-  text-align: right;
   flex-shrink: 0;
-  margin-bottom: 4px;
 }
 
 /* Groups word+def+sentence and centres the whole block vertically */
@@ -231,33 +239,6 @@
   letter-spacing: 0.02em;
 }
 
-/* ── Bookmark button — lives at the bottom of each card ── */
-.cardActions {
-  flex-shrink: 0;
-  display: flex;
-  justify-content: center;
-  padding-top: 8px;
-}
-
-.bookmarkBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  color: rgba(0, 0, 0, 0.2);
-  transition: color 0.15s, transform 0.12s;
-  -webkit-tap-highlight-color: transparent;
-  border-radius: 50%;
-}
-.bookmarkBtn:active { transform: scale(0.88); }
-
-.bookmarkBtnActive {
-  color: #0d2137;
-}
 .wordChip:active { transform: scale(0.94); }
 
 .wordChipActive {

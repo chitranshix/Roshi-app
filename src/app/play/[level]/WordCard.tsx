@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { motion, useMotionValue, useTransform, animate, AnimatePresence } from 'framer-motion'
+import BookmarkButton from '@/components/ui/BookmarkButton'
 import type { GREWord } from '@/lib/gre-words'
 import styles from './play.module.css'
 
@@ -397,12 +398,15 @@ export default function WordCard({ word, level, muted, onMastered, onRetry, onMc
                 {face === 'result' && <>
                   <div className={styles.faceTopRow}>
                     <span className={styles.metaLabel}>{resultMeta}</span>
-                    <span className={[
-                      styles.metaPtsGreen,
-                      !mcqCorrect ? styles.metaPtsRed : defCorrect === false ? styles.metaPtsAmber : '',
-                    ].filter(Boolean).join(' ')}>
-                      {pts > 0 ? `+${pts}` : '0'}
-                    </span>
+                    <div className={styles.metaRight}>
+                      <span className={[
+                        styles.metaPtsGreen,
+                        !mcqCorrect ? styles.metaPtsRed : defCorrect === false ? styles.metaPtsAmber : '',
+                      ].filter(Boolean).join(' ')}>
+                        {pts > 0 ? `+${pts}` : '0'}
+                      </span>
+                      <BookmarkButton word={word.word} definition={word.definition} size={18} />
+                    </div>
                   </div>
                   <div className={styles.resultMain}>
                     <div className={styles.resultIllustration}>
